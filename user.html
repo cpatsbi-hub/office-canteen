@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Office Canteen — Mark Attendance</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<style>
+:root{
+  --amber:#c2692a;--green:#2d6a4f;--gold:#e8a020;--cream:#fdf8f2;--white:#ffffff;
+  --text:#1a1a1a;--muted:#6b7280;--border:#e5e0d8;--shadow:0 4px 24px rgba(0,0,0,.10);
+  --shadow2:0 8px 40px rgba(0,0,0,.18);--radius:20px;--present:#059669;--absent:#dc2626;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:'DM Sans',sans-serif;color:var(--text)}
+
+/* BG */
+#bg{
+  position:fixed;inset:0;z-index:0;
+  background:url('https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=1920&q=80') center/cover no-repeat;
+  transition:filter .5s;
+}
+#bg::after{content:'';position:absolute;inset:0;background:linear-gradient(160deg,rgba(12,40,25,.78) 0%,rgba(80,35,5,.65) 100%)}
+
+/* LAYOUT */
+#root{position:relative;z-index:10;min-height:100vh;display:flex;flex-direction:column}
+
+/* ── AUTH SCREEN ── */
+#authScreen{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:1rem;
+}
+.auth-brand{text-align:center;margin-bottom:2rem;color:#fff}
+.auth-brand-icon{
+  width:72px;height:72px;background:linear-gradient(135deg,var(--gold),var(--amber));
+  border-radius:20px;display:flex;align-items:center;justify-content:center;
+  margin:0 auto 1rem;font-size:2rem;color:#fff;box-shadow:0 8px 24px rgba(194,105,42,.4);
+}
+.auth-brand h1{font-family:'Playfair Display',serif;font-size:2rem;letter-spacing:-.01em}
+.auth-brand p{opacity:.75;font-size:.9rem;margin-top:.25rem}
+
+.auth-card{
+  background:rgba(255,255,255,.97);backdrop-filter:blur(12px);
+  border-radius:var(--radius);width:100%;max-width:420px;overflow:hidden;
+  box-shadow:var(--shadow2);
+}
+.auth-tabs{display:flex;border-bottom:2px solid var(--border)}
+.auth-tab{
+  flex:1;padding:.85rem;text-align:center;font-size:.82rem;font-weight:700;
+  cursor:pointer;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;
+  transition:all .2s;border-bottom:3px solid transparent;margin-bottom:-2px;
+}
+.auth-tab.active{color:var(--green);border-bottom-color:var(--green)}
+.auth-panel{padding:1.75rem;display:none}
+.auth-panel.active{display:block;animation:fadeUp .3s ease}
+
+/* FORM */
+.field{margin-bottom:1.1rem}
+.field label{display:block;font-size:.78rem;font-weight:700;color:var(--muted);
+  margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.06em}
+.field input,.field select{
+  width:100%;padding:.8rem 1rem;border:2px solid var(--border);border-radius:12px;
+  font-family:'DM Sans',sans-serif;font-size:.95rem;background:var(--cream);
+  transition:all .2s;color:var(--text);
+}
+.field input:focus,.field select:focus{
+  outline:none;border-color:var(--green);box-shadow:0 0 0 4px rgba(45,106,79,.12);background:var(--white);
+}
+.field .hint{font-size:.75rem;color:var(--muted);margin-top:.3rem}
+.btn{
+  display:inline-flex;align-items:center;gap:.5rem;justify-content:center;
+  padding:.82rem 1.5rem;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:.95rem;
+  font-weight:700;cursor:pointer;border:none;transition:all .2s;width:100%;
+}
+.btn-green{background:linear-gradient(135deg,var(--green),#1a4a32);color:#fff}
+.btn-green:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(45,106,79,.4)}
+.btn-amber{background:linear-gradient(135deg,var(--amber),#9a4418);color:#fff}
+.btn-amber:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(194,105,42,.4)}
+.btn-outline{background:transparent;color:var(--green);border:2px solid var(--green)}
+.btn-outline:hover{background:var(--green);color:#fff}
+.btn:disabled{opacity:.6;cursor:not-allowed;transform:none!important}
+
+.msg{padding:.7rem 1rem;border-radius:10px;font-size:.83rem;margin-top:.75rem;display:none}
+.msg.error{background:#fee2e2;color:#991b1b;border-left:3px solid var(--absent)}
+.msg.success{background:#d1fae5;color:#065f46;border-left:3px solid var(--present)}
+.msg.show{display:block}
+
+/* ── APP SCREEN ── */
+#appScreen{display:none;flex:1;flex-direction:column}
+
+/* HEADER */
+.app-header{
+  background:rgba(18,50,30,.9);backdrop-filter:blur(12px);
+  padding:1rem 1.25rem;display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid rgba(255,255,255,.1);
+}
+.user-greeting{color:#fff}
+.user-greeting .label{font-size:.72rem;opacity:.6;text-transform:uppercase;letter-spacing:.06em}
+.user-greeting .name{font-family:'Playfair Display',serif;font-size:1.1rem}
+.user-greeting .dept{font-size:.75rem;opacity:.65;margin-top:.1rem}
+.header-right{display:flex;align-items:center;gap:.75rem}
+.btn-history{
+  background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.2);
+  padding:.4rem .85rem;border-radius:8px;cursor:pointer;font-size:.78rem;
+  font-family:'DM Sans',sans-serif;transition:all .2s;display:flex;align-items:center;gap:.35rem;
+}
+.btn-history:hover{background:rgba(255,255,255,.22)}
+.btn-logout{
+  background:rgba(220,38,38,.2);color:#fca5a5;border:1px solid rgba(220,38,38,.3);
+  padding:.4rem .75rem;border-radius:8px;cursor:pointer;font-size:.78rem;
+  font-family:'DM Sans',sans-serif;transition:all .2s;
+}
+.btn-logout:hover{background:rgba(220,38,38,.4);color:#fff}
+
+/* MAIN CONTENT */
+.app-body{flex:1;padding:1.25rem 1rem 4rem;max-width:520px;margin:0 auto;width:100%}
+
+/* DATE STRIP */
+.date-strip{
+  text-align:center;color:rgba(255,255,255,.85);font-size:.82rem;
+  margin-bottom:1.25rem;display:flex;align-items:center;justify-content:center;gap:.5rem;
+}
+.date-strip .dot{width:6px;height:6px;background:var(--gold);border-radius:50%}
+
+/* MENU CARD */
+.menu-card{
+  background:var(--white);border-radius:22px;overflow:hidden;
+  box-shadow:var(--shadow2);margin-bottom:1.25rem;animation:fadeUp .4s ease;
+}
+.menu-card-img{
+  width:100%;height:200px;object-fit:cover;display:block;
+}
+.menu-card-img-placeholder{
+  width:100%;height:160px;background:linear-gradient(135deg,#e8f4ea,#d0e8d8);
+  display:flex;align-items:center;justify-content:center;font-size:4rem;
+}
+.menu-card-body{padding:1.5rem}
+.menu-label{font-size:.72rem;font-weight:700;color:var(--amber);text-transform:uppercase;
+  letter-spacing:.1em;margin-bottom:.4rem;display:flex;align-items:center;gap:.35rem}
+.menu-name{font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--green);line-height:1.2}
+.menu-desc{font-size:.88rem;color:var(--muted);margin-top:.6rem;line-height:1.5}
+.menu-divider{height:1px;background:var(--border);margin:1.25rem 0}
+
+/* ATTENDANCE SECTION */
+.att-question{
+  font-size:.9rem;font-weight:600;color:var(--text);margin-bottom:1rem;
+  display:flex;align-items:center;gap:.5rem;
+}
+.att-question i{color:var(--amber)}
+.att-buttons{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+.att-btn{
+  padding:1rem;border-radius:14px;cursor:pointer;border:2px solid var(--border);
+  font-family:'DM Sans',sans-serif;font-weight:700;font-size:1rem;
+  display:flex;flex-direction:column;align-items:center;gap:.4rem;transition:all .25s;
+  background:var(--cream);
+}
+.att-btn .att-icon{font-size:1.75rem;transition:transform .2s}
+.att-btn .att-label{font-size:.8rem;font-weight:600}
+.att-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:var(--shadow)}
+.att-btn-present:hover:not(:disabled){background:#d1fae5;border-color:var(--present);color:var(--present)}
+.att-btn-absent:hover:not(:disabled){background:#fee2e2;border-color:var(--absent);color:var(--absent)}
+.att-btn:disabled{opacity:.5;cursor:not-allowed}
+
+/* MARKED STATE */
+.att-marked{
+  border-radius:16px;padding:1.25rem;text-align:center;animation:fadeUp .3s ease;
+}
+.att-marked.present{background:linear-gradient(135deg,#d1fae5,#a7f3d0);border:2px solid #6ee7b7}
+.att-marked.absent{background:linear-gradient(135deg,#fee2e2,#fecaca);border:2px solid #fca5a5}
+.att-marked .marked-icon{font-size:2.5rem;margin-bottom:.5rem;display:block}
+.att-marked .marked-title{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700}
+.att-marked .marked-sub{font-size:.82rem;margin-top:.25rem;opacity:.75}
+
+/* NO MENU */
+.no-menu-card{
+  background:rgba(255,255,255,.92);border-radius:22px;padding:2.5rem;text-align:center;
+  box-shadow:var(--shadow2);animation:fadeUp .4s ease;
+}
+.no-menu-card .nm-icon{font-size:3.5rem;margin-bottom:1rem;display:block}
+.no-menu-card h2{font-family:'Playfair Display',serif;color:var(--green);font-size:1.3rem}
+.no-menu-card p{color:var(--muted);font-size:.88rem;margin-top:.5rem}
+
+/* HISTORY PANEL */
+.history-panel{
+  background:rgba(255,255,255,.95);border-radius:22px;overflow:hidden;
+  box-shadow:var(--shadow2);margin-bottom:1.25rem;animation:fadeUp .3s ease;display:none;
+}
+.history-header{
+  padding:1rem 1.25rem;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.history-header h3{font-family:'Playfair Display',serif;color:var(--green);font-size:1rem}
+.history-close{background:none;border:none;color:var(--muted);cursor:pointer;font-size:1rem;padding:.25rem}
+.history-list{padding:.75rem}
+.history-item{
+  display:flex;align-items:center;justify-content:space-between;padding:.6rem .75rem;
+  border-radius:10px;margin-bottom:.35rem;background:var(--cream);
+}
+.history-item:last-child{margin-bottom:0}
+.hi-date{font-size:.85rem;font-weight:600;color:var(--text)}
+.hi-day{font-size:.72rem;color:var(--muted)}
+.badge{display:inline-flex;align-items:center;gap:.25rem;padding:.22rem .65rem;border-radius:20px;font-size:.75rem;font-weight:700}
+.badge-present{background:#d1fae5;color:var(--present)}
+.badge-absent{background:#fee2e2;color:var(--absent)}
+
+/* TOAST */
+.toast{
+  position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(100px);
+  background:#1a1a1a;color:#fff;padding:.75rem 1.5rem;border-radius:12px;font-size:.88rem;
+  font-weight:500;z-index:999;transition:transform .3s ease;white-space:nowrap;box-shadow:var(--shadow2);
+}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast.success{background:var(--present)}
+.toast.error{background:var(--absent)}
+
+/* SPINNER */
+.spinner{display:inline-block;width:18px;height:18px;border:2px solid rgba(255,255,255,.4);
+  border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite}
+.spinner-dark{border-color:rgba(45,106,79,.3);border-top-color:var(--green)}
+
+/* LOADING OVERLAY */
+.loading-card{
+  background:rgba(255,255,255,.92);border-radius:22px;padding:3rem;text-align:center;
+  box-shadow:var(--shadow2);
+}
+.loading-card .l-spinner{
+  width:40px;height:40px;border-width:3px;
+  border-color:rgba(45,106,79,.2);border-top-color:var(--green);
+  margin:0 auto 1rem;
+}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+.pulse{animation:pulse 2s ease infinite}
+</style>
+</head>
+<body>
+<div id="bg"></div>
+<div id="root">
+
+<!-- ── AUTH SCREEN ── -->
+<div id="authScreen">
+  <div class="auth-brand">
+    <div class="auth-brand-icon"><i class="fa-solid fa-bowl-food"></i></div>
+    <h1>Office Canteen</h1>
+    <p>Mark your meal attendance</p>
+  </div>
+
+  <div class="auth-card">
+    <div class="auth-tabs">
+      <div class="auth-tab active" onclick="switchTab('login')" id="tab-login">Login</div>
+      <div class="auth-tab" onclick="switchTab('register')" id="tab-register">Register</div>
+      <div class="auth-tab" onclick="switchTab('forgot')" id="tab-forgot">Forgot</div>
+    </div>
+
+    <!-- LOGIN -->
+    <div class="auth-panel active" id="panel-login">
+      <div class="field"><label>Employee ID</label><input type="text" id="l-empid" placeholder="e.g. SBI001" autocomplete="username" onkeydown="if(event.key==='Enter')document.getElementById('l-pass').focus()"></div>
+      <div class="field"><label>Password</label><input type="password" id="l-pass" placeholder="Your password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"></div>
+      <button class="btn btn-green" id="loginBtn" onclick="doLogin()">
+        <i class="fa-solid fa-right-to-bracket"></i> Sign In
+      </button>
+      <div class="msg" id="loginMsg"></div>
+      <p style="text-align:center;font-size:.8rem;color:var(--muted);margin-top:1rem">
+        New here? <a href="#" onclick="switchTab('register')" style="color:var(--amber);font-weight:600">Register →</a>
+      </p>
+    </div>
+
+    <!-- REGISTER -->
+    <div class="auth-panel" id="panel-register">
+      <div class="field"><label>Full Name *</label><input type="text" id="r-name" placeholder="Your full name"></div>
+      <div class="field"><label>Employee ID *</label><input type="text" id="r-empid" placeholder="e.g. SBI001"><div class="hint">Use your official employee or staff ID</div></div>
+      <div class="field">
+        <label>Department *</label>
+        <select id="r-dept">
+          <option value="">— Select Department —</option>
+          <option>Administration</option><option>Accounts</option><option>Operations</option>
+          <option>IT</option><option>HR</option><option>Credit</option><option>Marketing</option>
+          <option>Customer Service</option><option>Security</option><option>Other</option>
+        </select>
+      </div>
+      <div class="field"><label>Password * (min 4 chars)</label><input type="password" id="r-pass" placeholder="Create a password" autocomplete="new-password"></div>
+      <div class="field">
+        <label>Security Question *</label>
+        <select id="r-secq">
+          <option value="">— Choose a security question —</option>
+          <option value="What is your mother's maiden name?">Mother's maiden name?</option>
+          <option value="What was the name of your first pet?">Name of first pet?</option>
+          <option value="What is your place of birth?">Place of birth?</option>
+          <option value="What was your childhood nickname?">Childhood nickname?</option>
+          <option value="What is the name of your hometown?">Name of hometown?</option>
+        </select>
+      </div>
+      <div class="field"><label>Security Answer *</label><input type="text" id="r-seca" placeholder="Answer to your security question"></div>
+      <button class="btn btn-amber" id="registerBtn" onclick="doRegister()">
+        <i class="fa-solid fa-user-plus"></i> Create Account
+      </button>
+      <div class="msg" id="registerMsg"></div>
+    </div>
+
+    <!-- FORGOT PASSWORD -->
+    <div class="auth-panel" id="panel-forgot">
+      <!-- Step 1: Enter EmpID -->
+      <div id="forgot-step1">
+        <p style="font-size:.85rem;color:var(--muted);margin-bottom:1.25rem">Enter your Employee ID to retrieve your security question.</p>
+        <div class="field"><label>Employee ID</label><input type="text" id="f-empid" placeholder="e.g. SBI001"></div>
+        <button class="btn btn-outline" onclick="doForgotStep1()"><i class="fa-solid fa-search"></i> Find Account</button>
+        <div class="msg" id="forgotMsg1"></div>
+      </div>
+      <!-- Step 2: Answer security Q -->
+      <div id="forgot-step2" style="display:none">
+        <div style="background:var(--cream);border-radius:10px;padding:.85rem;margin-bottom:1rem;font-size:.88rem;color:var(--text)">
+          <strong style="display:block;font-size:.72rem;text-transform:uppercase;color:var(--muted);margin-bottom:.3rem">Security Question</strong>
+          <span id="f-secq-display"></span>
+        </div>
+        <div class="field"><label>Your Answer</label><input type="text" id="f-seca" placeholder="Answer exactly as entered during registration"></div>
+        <div class="field"><label>New Password (min 4 chars)</label><input type="password" id="f-newpass" placeholder="New password" autocomplete="new-password"></div>
+        <button class="btn btn-green" onclick="doResetPassword()"><i class="fa-solid fa-key"></i> Reset Password</button>
+        <div class="msg" id="forgotMsg2"></div>
+        <p style="text-align:center;margin-top:.75rem"><a href="#" onclick="resetForgotFlow()" style="font-size:.8rem;color:var(--muted)">← Back</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── APP SCREEN ── -->
+<div id="appScreen">
+  <div class="app-header">
+    <div class="user-greeting">
+      <div class="label">Welcome back</div>
+      <div class="name" id="userName">—</div>
+      <div class="dept" id="userDept"></div>
+    </div>
+    <div class="header-right">
+      <button class="btn-history" onclick="toggleHistory()"><i class="fa-solid fa-clock-rotate-left"></i> History</button>
+      <button class="btn-logout" onclick="doLogout()"><i class="fa-solid fa-right-from-bracket"></i></button>
+    </div>
+  </div>
+
+  <div class="app-body">
+    <div class="date-strip">
+      <div class="dot"></div>
+      <span id="todayStr">Today</span>
+      <div class="dot"></div>
+    </div>
+
+    <!-- HISTORY PANEL -->
+    <div class="history-panel" id="historyPanel">
+      <div class="history-header">
+        <h3><i class="fa-solid fa-clock-rotate-left" style="color:var(--amber)"></i> My Attendance History</h3>
+        <button class="history-close" onclick="toggleHistory()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="history-list" id="historyList">
+        <div style="text-align:center;padding:1rem;color:var(--muted)"><span class="spinner spinner-dark"></span></div>
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="mainContent">
+      <div class="loading-card">
+        <div class="spinner spinner-dark l-spinner pulse"></div>
+        <p style="color:var(--muted);font-size:.9rem">Loading today's menu…</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</div><!-- /root -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ─────────────────────────────────────────────
+//  CONFIG — CHANGE THIS
+// ─────────────────────────────────────────────
+const API_URL = 'YOUR_APPS_SCRIPT_WEB_APP_URL'; // Paste your deployed Apps Script URL here
+
+// ─────────────────────────────────────────────
+//  STATE
+// ─────────────────────────────────────────────
+let userToken = localStorage.getItem('userToken') || '';
+let userData  = JSON.parse(localStorage.getItem('userData') || 'null');
+let historyOpen = false;
+
+// ─────────────────────────────────────────────
+//  INIT
+// ─────────────────────────────────────────────
+window.onload = () => {
+  document.getElementById('todayStr').textContent =
+    new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  if (userToken && userData) {
+    showApp(userData);
+  }
+};
+
+// ─────────────────────────────────────────────
+//  API (JSONP)
+// ─────────────────────────────────────────────
+function api(params) {
+  return new Promise((resolve, reject) => {
+    const cbName = '_cb' + Date.now() + Math.random().toString(36).slice(2);
+    const url = API_URL + '?' + Object.entries({...params, callback: cbName})
+      .map(([k,v]) => encodeURIComponent(k) + '=' + encodeURIComponent(v)).join('&');
+    window[cbName] = data => {
+      delete window[cbName];
+      if (script.parentNode) document.head.removeChild(script);
+      resolve(data);
+    };
+    const script = document.createElement('script');
+    script.src = url;
+    script.onerror = () => { delete window[cbName]; reject(new Error('Network error')); };
+    document.head.appendChild(script);
+    setTimeout(() => { if (window[cbName]) { delete window[cbName]; reject(new Error('Timeout')); }}, 15000);
+  });
+}
+
+// ─────────────────────────────────────────────
+//  AUTH TABS
+// ─────────────────────────────────────────────
+function switchTab(name) {
+  ['login','register','forgot'].forEach(t => {
+    document.getElementById('tab-' + t).classList.toggle('active', t === name);
+    document.getElementById('panel-' + t).classList.toggle('active', t === name);
+  });
+}
+
+// ─────────────────────────────────────────────
+//  LOGIN
+// ─────────────────────────────────────────────
+async function doLogin() {
+  const empid = document.getElementById('l-empid').value.trim();
+  const pass  = document.getElementById('l-pass').value;
+  const btn   = document.getElementById('loginBtn');
+  if (!empid || !pass) { showMsg('loginMsg','Please enter Employee ID and password','error'); return; }
+  btn.innerHTML = '<span class="spinner"></span> Signing in…';
+  btn.disabled = true;
+  try {
+    const res = await api({ action:'login', empid, password:pass });
+    if (res.success) {
+      saveSession(res);
+      showApp(res);
+    } else {
+      showMsg('loginMsg', res.message || 'Login failed', 'error');
+      btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Sign In';
+      btn.disabled = false;
+    }
+  } catch(e) {
+    showMsg('loginMsg','Cannot reach server. Check your network.','error');
+    btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Sign In';
+    btn.disabled = false;
+  }
+}
+
+// ─────────────────────────────────────────────
+//  REGISTER
+// ─────────────────────────────────────────────
+async function doRegister() {
+  const name = document.getElementById('r-name').value.trim();
+  const empid= document.getElementById('r-empid').value.trim();
+  const dept = document.getElementById('r-dept').value;
+  const pass = document.getElementById('r-pass').value;
+  const secQ = document.getElementById('r-secq').value;
+  const secA = document.getElementById('r-seca').value.trim();
+  const btn  = document.getElementById('registerBtn');
+
+  if (!name||!empid||!dept||!pass||!secQ||!secA) {
+    showMsg('registerMsg','All fields are required','error'); return;
+  }
+  if (pass.length < 4) { showMsg('registerMsg','Password must be at least 4 characters','error'); return; }
+
+  btn.innerHTML = '<span class="spinner"></span> Creating account…';
+  btn.disabled = true;
+  try {
+    const res = await api({ action:'register', name, empid, dept, password:pass, secQ, secA });
+    if (res.success) {
+      saveSession(res);
+      showApp(res);
+      toast('Welcome, ' + res.name + '!','success');
+    } else {
+      showMsg('registerMsg', res.message, 'error');
+      btn.innerHTML = '<i class="fa-solid fa-user-plus"></i> Create Account';
+      btn.disabled = false;
+    }
+  } catch(e) {
+    showMsg('registerMsg','Network error. Please try again.','error');
+    btn.innerHTML = '<i class="fa-solid fa-user-plus"></i> Create Account';
+    btn.disabled = false;
+  }
+}
+
+// ─────────────────────────────────────────────
+//  FORGOT PASSWORD
+// ─────────────────────────────────────────────
+let forgotEmpid = '';
+
+async function doForgotStep1() {
+  const empid = document.getElementById('f-empid').value.trim();
+  if (!empid) { showMsg('forgotMsg1','Enter your Employee ID','error'); return; }
+  try {
+    const res = await api({ action:'forgotPassword', empid });
+    if (res.success) {
+      forgotEmpid = empid;
+      document.getElementById('f-secq-display').textContent = res.secQ;
+      document.getElementById('forgot-step1').style.display = 'none';
+      document.getElementById('forgot-step2').style.display = 'block';
+    } else {
+      showMsg('forgotMsg1', res.message, 'error');
+    }
+  } catch(e) { showMsg('forgotMsg1','Network error','error'); }
+}
+
+async function doResetPassword() {
+  const secA   = document.getElementById('f-seca').value.trim();
+  const newPass= document.getElementById('f-newpass').value;
+  if (!secA||!newPass) { showMsg('forgotMsg2','All fields required','error'); return; }
+  if (newPass.length < 4) { showMsg('forgotMsg2','Password too short','error'); return; }
+  try {
+    const res = await api({ action:'resetPassword', empid:forgotEmpid, secA, newPass });
+    if (res.success) {
+      saveSession(res);
+      showApp(res);
+      toast('Password reset! Welcome back, ' + res.name,'success');
+    } else {
+      showMsg('forgotMsg2', res.message,'error');
+    }
+  } catch(e) { showMsg('forgotMsg2','Network error','error'); }
+}
+
+function resetForgotFlow() {
+  document.getElementById('forgot-step1').style.display = 'block';
+  document.getElementById('forgot-step2').style.display = 'none';
+  forgotEmpid = '';
+  document.getElementById('f-empid').value = '';
+  document.getElementById('f-seca').value = '';
+  document.getElementById('f-newpass').value = '';
+  hideMsg('forgotMsg1'); hideMsg('forgotMsg2');
+}
+
+// ─────────────────────────────────────────────
+//  SESSION
+// ─────────────────────────────────────────────
+function saveSession(res) {
+  userToken = res.token;
+  userData  = { name:res.name, empid:res.empid, dept:res.dept };
+  localStorage.setItem('userToken', userToken);
+  localStorage.setItem('userData',  JSON.stringify(userData));
+}
+
+function doLogout() {
+  userToken = ''; userData = null;
+  localStorage.removeItem('userToken');
+  localStorage.removeItem('userData');
+  document.getElementById('authScreen').style.display = 'flex';
+  document.getElementById('appScreen').style.display  = 'none';
+  document.getElementById('bg').style.filter = '';
+  document.getElementById('l-empid').value = '';
+  document.getElementById('l-pass').value = '';
+  document.getElementById('loginBtn').innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Sign In';
+  document.getElementById('loginBtn').disabled = false;
+}
+
+// ─────────────────────────────────────────────
+//  SHOW APP
+// ─────────────────────────────────────────────
+function showApp(user) {
+  document.getElementById('authScreen').style.display = 'none';
+  document.getElementById('appScreen').style.display  = 'flex';
+  document.getElementById('bg').style.filter = 'brightness(.35)';
+  document.getElementById('userName').textContent = user.name;
+  document.getElementById('userDept').textContent = user.dept + ' · ' + user.empid;
+  loadMenu();
+}
+
+// ─────────────────────────────────────────────
+//  MENU + ATTENDANCE
+// ─────────────────────────────────────────────
+async function loadMenu() {
+  document.getElementById('mainContent').innerHTML = `
+    <div class="loading-card">
+      <div class="spinner spinner-dark l-spinner pulse" style="width:40px;height:40px;border-width:3px;margin:0 auto 1rem"></div>
+      <p style="color:var(--muted);font-size:.9rem">Loading today's menu…</p>
+    </div>`;
+  try {
+    const [menuRes, attRes] = await Promise.all([
+      api({ action:'getMenu' }),
+      api({ action:'checkAttendance', token:userToken })
+    ]);
+
+    if (!attRes.success && attRes.message?.includes('session')) { doLogout(); return; }
+
+    if (!menuRes.menu) {
+      document.getElementById('mainContent').innerHTML = `
+        <div class="no-menu-card">
+          <span class="nm-icon">🍽️</span>
+          <h2>Menu Not Set Yet</h2>
+          <p>Today's menu hasn't been announced. Check back later!</p>
+        </div>`;
+      return;
+    }
+
+    renderMenuAndAttendance(menuRes.menu, attRes);
+  } catch(e) {
+    document.getElementById('mainContent').innerHTML = `
+      <div class="no-menu-card">
+        <span class="nm-icon">⚠️</span>
+        <h2>Connection Error</h2>
+        <p>Could not load menu. Please check your network and <a href="#" onclick="loadMenu()" style="color:var(--amber)">try again</a>.</p>
+      </div>`;
+  }
+}
+
+function renderMenuAndAttendance(menu, attRes) {
+  const imgHtml = menu.imageUrl
+    ? `<img src="${escHtml(menu.imageUrl)}" class="menu-card-img" loading="lazy" alt="${escHtml(menu.name)}" onerror="this.style.display='none'">`
+    : `<div class="menu-card-img-placeholder">🍱</div>`;
+
+  const attHtml = attRes.marked
+    ? buildMarkedHtml(attRes.status)
+    : `<div class="att-question"><i class="fa-solid fa-circle-question"></i> Will you have lunch today?</div>
+       <div class="att-buttons">
+         <button class="att-btn att-btn-present" onclick="markAttendance('present')">
+           <span class="att-icon">✅</span><span class="att-label">Yes, I'll eat!</span>
+         </button>
+         <button class="att-btn att-btn-absent" onclick="markAttendance('absent')">
+           <span class="att-icon">🚫</span><span class="att-label">No, I'll skip</span>
+         </button>
+       </div>`;
+
+  document.getElementById('mainContent').innerHTML = `
+    <div class="menu-card">
+      ${imgHtml}
+      <div class="menu-card-body">
+        <div class="menu-label"><i class="fa-solid fa-star"></i> Today's Menu</div>
+        <div class="menu-name">${escHtml(menu.name)}</div>
+        ${menu.description ? `<div class="menu-desc">${escHtml(menu.description)}</div>` : ''}
+        <div class="menu-divider"></div>
+        <div id="attendanceSection">${attHtml}</div>
+      </div>
+    </div>`;
+}
+
+function buildMarkedHtml(status) {
+  const isPresent = status === 'present';
+  return `<div class="att-marked ${status}">
+    <span class="marked-icon">${isPresent ? '✅' : '🚫'}</span>
+    <div class="marked-title">${isPresent ? 'Attending Lunch!' : 'Skipping Today'}</div>
+    <div class="marked-sub">${isPresent ? 'Your attendance is confirmed. Enjoy your meal!' : 'You\'ve marked as absent for today.'}</div>
+  </div>`;
+}
+
+async function markAttendance(status) {
+  // Disable buttons immediately
+  document.querySelectorAll('.att-btn').forEach(b => b.disabled = true);
+  try {
+    const res = await api({ action:'markAttendance', token:userToken, status });
+    if (res.success) {
+      document.getElementById('attendanceSection').innerHTML = buildMarkedHtml(status);
+      toast(res.message,'success');
+    } else if (res.alreadyMarked) {
+      document.getElementById('attendanceSection').innerHTML = buildMarkedHtml(res.status);
+    } else if (res.message?.includes('session')) {
+      doLogout();
+    } else {
+      toast(res.message || 'Error','error');
+      document.querySelectorAll('.att-btn').forEach(b => b.disabled = false);
+    }
+  } catch(e) {
+    toast('Network error. Please try again.','error');
+    document.querySelectorAll('.att-btn').forEach(b => b.disabled = false);
+  }
+}
+
+// ─────────────────────────────────────────────
+//  HISTORY
+// ─────────────────────────────────────────────
+async function toggleHistory() {
+  const panel = document.getElementById('historyPanel');
+  historyOpen = !historyOpen;
+  panel.style.display = historyOpen ? 'block' : 'none';
+  if (historyOpen) {
+    document.getElementById('historyList').innerHTML =
+      '<div style="text-align:center;padding:1rem;color:var(--muted)"><span class="spinner spinner-dark"></span></div>';
+    try {
+      const res = await api({ action:'getMyAttendance', token:userToken });
+      if (!res.records || !res.records.length) {
+        document.getElementById('historyList').innerHTML =
+          '<div style="text-align:center;padding:1rem;color:var(--muted);font-size:.88rem">No attendance records yet.</div>';
+        return;
+      }
+      document.getElementById('historyList').innerHTML = res.records.map(r => {
+        const d = new Date(r.date + 'T00:00:00');
+        const dayName = d.toLocaleDateString('en-IN',{weekday:'short'});
+        const dateStr = d.toLocaleDateString('en-IN',{day:'numeric',month:'short'});
+        return `<div class="history-item">
+          <div><div class="hi-date">${dateStr}</div><div class="hi-day">${dayName}</div></div>
+          <span class="badge badge-${r.status}">${r.status==='present'?'✓ Present':'✗ Absent'}</span>
+        </div>`;
+      }).join('');
+    } catch(e) {
+      document.getElementById('historyList').innerHTML =
+        '<div style="text-align:center;padding:1rem;color:var(--muted);font-size:.88rem">Could not load history.</div>';
+    }
+  }
+}
+
+// ─────────────────────────────────────────────
+//  UTILS
+// ─────────────────────────────────────────────
+function showMsg(id, text, type) {
+  const el = document.getElementById(id);
+  el.textContent = text; el.className = 'msg ' + type + ' show';
+}
+function hideMsg(id) { const el=document.getElementById(id); if(el){el.className='msg';el.textContent='';} }
+let toastTimer;
+function toast(msg, type='') {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.className = 'toast show' + (type ? ' '+type : '');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>el.className='toast', 3200);
+}
+function escHtml(str) {
+  return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+</script>
+</body>
+</html>

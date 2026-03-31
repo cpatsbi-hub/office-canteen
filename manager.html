@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Canteen Manager — Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<style>
+:root {
+  --amber:   #c2692a;
+  --green:   #2d6a4f;
+  --gold:    #e8a020;
+  --cream:   #fdf8f2;
+  --white:   #ffffff;
+  --text:    #1a1a1a;
+  --muted:   #6b7280;
+  --border:  #e5e0d8;
+  --shadow:  0 4px 24px rgba(0,0,0,.10);
+  --shadow2: 0 8px 40px rgba(0,0,0,.15);
+  --radius:  16px;
+  --present: #059669;
+  --absent:  #dc2626;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:'DM Sans',sans-serif;color:var(--text)}
+
+/* ── BG ── */
+#bg{
+  position:fixed;inset:0;z-index:0;
+  background:url('https://images.unsplash.com/photo-1567337710282-00832b415979?w=1920&q=80') center/cover no-repeat;
+}
+#bg::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(18,50,30,.82) 0%,rgba(90,40,10,.70) 100%)}
+
+/* ── LOGIN SCREEN ── */
+#loginScreen{
+  position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;padding:1rem;
+}
+.login-card{
+  background:var(--white);border-radius:var(--radius);padding:2.5rem;width:100%;max-width:420px;
+  box-shadow:var(--shadow2);animation:fadeUp .5s ease;
+}
+.login-card .brand{text-align:center;margin-bottom:2rem}
+.login-card .brand-icon{width:64px;height:64px;background:linear-gradient(135deg,var(--green),var(--amber));
+  border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:1.8rem;color:#fff}
+.login-card h1{font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--green)}
+.login-card p{color:var(--muted);font-size:.9rem;margin-top:.25rem}
+.field{margin-bottom:1.2rem}
+.field label{display:block;font-size:.8rem;font-weight:600;color:var(--muted);margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.05em}
+.field input,.field select,.field textarea{
+  width:100%;padding:.75rem 1rem;border:2px solid var(--border);border-radius:10px;
+  font-family:'DM Sans',sans-serif;font-size:.95rem;transition:border .2s,box-shadow .2s;background:var(--cream);
+}
+.field input:focus,.field select:focus,.field textarea:focus{
+  outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(45,106,79,.15);background:var(--white);
+}
+.field textarea{resize:vertical;min-height:80px}
+.btn{
+  display:inline-flex;align-items:center;gap:.5rem;justify-content:center;
+  padding:.75rem 1.5rem;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.95rem;
+  font-weight:600;cursor:pointer;border:none;transition:all .2s;text-decoration:none;
+}
+.btn-primary{background:linear-gradient(135deg,var(--green),#1a4a32);color:#fff;width:100%}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(45,106,79,.35)}
+.btn-secondary{background:var(--cream);color:var(--green);border:2px solid var(--green)}
+.btn-secondary:hover{background:var(--green);color:#fff}
+.btn-amber{background:linear-gradient(135deg,var(--amber),#a0501a);color:#fff}
+.btn-amber:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(194,105,42,.35)}
+.btn-gold{background:linear-gradient(135deg,var(--gold),#c8860a);color:#fff}
+.btn-gold:hover{box-shadow:0 4px 16px rgba(232,160,32,.4)}
+.btn-danger{background:#fee2e2;color:var(--absent);border:2px solid #fca5a5}
+.btn-danger:hover{background:var(--absent);color:#fff}
+.btn-sm{padding:.45rem 1rem;font-size:.82rem;border-radius:8px}
+.btn-block{width:100%;display:flex}
+.msg{padding:.7rem 1rem;border-radius:8px;font-size:.85rem;margin-top:.75rem;display:none}
+.msg.error{background:#fee2e2;color:#991b1b;border-left:3px solid var(--absent)}
+.msg.success{background:#d1fae5;color:#065f46;border-left:3px solid var(--present)}
+.msg.show{display:block}
+
+/* ── MAIN APP ── */
+#app{display:none;position:relative;z-index:10;min-height:100vh}
+
+/* TOP BAR */
+.topbar{
+  background:rgba(18,50,30,.92);backdrop-filter:blur(12px);padding:.85rem 1.5rem;
+  display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;
+  border-bottom:1px solid rgba(255,255,255,.1);
+}
+.topbar-brand{display:flex;align-items:center;gap:.75rem;color:#fff}
+.topbar-brand-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--gold),var(--amber));
+  border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem}
+.topbar-brand h2{font-family:'Playfair Display',serif;font-size:1.15rem}
+.topbar-brand span{font-size:.7rem;opacity:.6;display:block;margin-top:-2px}
+.topbar-right{display:flex;align-items:center;gap:.75rem}
+.topbar-date{color:rgba(255,255,255,.7);font-size:.8rem}
+.topbar-logout{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.2);
+  padding:.4rem .9rem;border-radius:8px;cursor:pointer;font-size:.8rem;font-family:'DM Sans',sans-serif;
+  transition:all .2s}
+.topbar-logout:hover{background:rgba(255,255,255,.25)}
+
+/* NAV */
+.nav{
+  background:rgba(255,255,255,.96);backdrop-filter:blur(8px);
+  display:flex;overflow-x:auto;border-bottom:2px solid var(--border);
+  scrollbar-width:none;
+}
+.nav::-webkit-scrollbar{display:none}
+.nav-item{
+  display:flex;align-items:center;gap:.45rem;padding:.85rem 1.2rem;
+  font-size:.82rem;font-weight:600;color:var(--muted);cursor:pointer;
+  border-bottom:3px solid transparent;white-space:nowrap;transition:all .2s;
+}
+.nav-item:hover{color:var(--green);background:rgba(45,106,79,.05)}
+.nav-item.active{color:var(--green);border-bottom-color:var(--green)}
+.nav-item i{font-size:.9rem}
+
+/* CONTENT */
+.content{max-width:960px;margin:0 auto;padding:1.5rem 1rem 3rem}
+
+/* CARDS */
+.card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;margin-bottom:1.25rem}
+.card-header{
+  padding:1rem 1.25rem;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.card-title{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--green);
+  display:flex;align-items:center;gap:.5rem}
+.card-title i{font-size:.9rem;color:var(--amber)}
+.card-body{padding:1.25rem}
+
+/* STAT CARDS */
+.stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.75rem;margin-bottom:1.25rem}
+@media(min-width:600px){.stats-grid{grid-template-columns:repeat(4,1fr)}}
+.stat-card{
+  background:var(--white);border-radius:14px;padding:1.1rem;box-shadow:var(--shadow);
+  display:flex;flex-direction:column;gap:.35rem;
+}
+.stat-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem}
+.stat-val{font-family:'Playfair Display',serif;font-size:1.7rem;font-weight:700;line-height:1}
+.stat-label{font-size:.75rem;color:var(--muted);font-weight:500}
+.stat-g .stat-icon{background:#d1fae5;color:var(--present)}
+.stat-r .stat-icon{background:#fee2e2;color:var(--absent)}
+.stat-b .stat-icon{background:#dbeafe;color:#1d4ed8}
+.stat-a .stat-icon{background:#fef3c7;color:var(--amber)}
+
+/* MENU DISPLAY */
+.menu-preview{
+  background:linear-gradient(135deg,var(--cream) 0%,#f0ece4 100%);
+  border-radius:12px;padding:1rem;display:flex;gap:1rem;align-items:center;
+}
+.menu-img-preview{width:80px;height:80px;border-radius:10px;object-fit:cover;flex-shrink:0;
+  border:3px solid var(--white);box-shadow:var(--shadow)}
+.menu-img-placeholder{width:80px;height:80px;border-radius:10px;background:linear-gradient(135deg,#e5e0d8,#d0cab8);
+  display:flex;align-items:center;justify-content:center;font-size:2rem;flex-shrink:0}
+.menu-info h3{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--green)}
+.menu-info p{font-size:.85rem;color:var(--muted);margin-top:.25rem}
+.menu-info .menu-date{font-size:.75rem;color:var(--amber);font-weight:600;margin-bottom:.25rem}
+
+/* ATTENDANCE TABLE */
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+th{background:var(--cream);color:var(--muted);font-size:.75rem;text-transform:uppercase;
+  letter-spacing:.06em;padding:.65rem 1rem;text-align:left;font-weight:700;border-bottom:2px solid var(--border)}
+td{padding:.7rem 1rem;border-bottom:1px solid var(--border);font-size:.88rem;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--cream)}
+.badge{
+  display:inline-flex;align-items:center;gap:.3rem;padding:.25rem .7rem;
+  border-radius:20px;font-size:.75rem;font-weight:700;
+}
+.badge-present{background:#d1fae5;color:var(--present)}
+.badge-absent{background:#fee2e2;color:var(--absent)}
+.badge-info{background:#dbeafe;color:#1d4ed8}
+
+/* IMAGE GALLERY */
+.img-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.75rem}
+.img-tile{
+  border-radius:12px;overflow:hidden;position:relative;cursor:pointer;
+  box-shadow:var(--shadow);transition:transform .2s,box-shadow .2s;aspect-ratio:1;
+}
+.img-tile:hover{transform:translateY(-2px);box-shadow:var(--shadow2)}
+.img-tile img{width:100%;height:100%;object-fit:cover;display:block}
+.img-tile .img-overlay{
+  position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.7) 0%,transparent 50%);
+  padding:.5rem;display:flex;flex-direction:column;justify-content:flex-end;
+  opacity:0;transition:opacity .2s;
+}
+.img-tile:hover .img-overlay{opacity:1}
+.img-tile .img-name{color:#fff;font-size:.75rem;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.img-tile.selected{outline:3px solid var(--green);outline-offset:2px}
+.img-tile .del-btn{
+  position:absolute;top:.4rem;right:.4rem;width:26px;height:26px;border-radius:50%;
+  background:rgba(220,38,38,.9);color:#fff;border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-size:.7rem;
+  opacity:0;transition:opacity .2s;
+}
+.img-tile:hover .del-btn{opacity:1}
+.img-tile .select-indicator{
+  position:absolute;top:.4rem;left:.4rem;width:22px;height:22px;border-radius:50%;
+  background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;
+  font-size:.65rem;display:none;
+}
+.img-tile.selected .select-indicator{display:flex}
+
+/* WHATSAPP BTN */
+.whatsapp-btn{
+  background:linear-gradient(135deg,#25d366,#128c7e);color:#fff;
+  display:flex;align-items:center;gap:.6rem;padding:.8rem 1.4rem;
+  border-radius:12px;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;
+  font-size:.95rem;font-weight:700;transition:all .2s;width:100%;justify-content:center;
+}
+.whatsapp-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(37,211,102,.4)}
+.whatsapp-btn i{font-size:1.2rem}
+
+/* FILTERS */
+.filter-row{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;margin-bottom:1rem}
+.filter-row label{font-size:.82rem;font-weight:600;color:var(--muted)}
+.filter-row input,.filter-row select{
+  padding:.45rem .8rem;border:2px solid var(--border);border-radius:8px;
+  font-family:'DM Sans',sans-serif;font-size:.85rem;background:var(--cream);
+  transition:border .2s;
+}
+.filter-row input:focus,.filter-row select:focus{outline:none;border-color:var(--green)}
+
+/* EMPTY STATE */
+.empty{text-align:center;padding:2.5rem 1rem;color:var(--muted)}
+.empty i{font-size:2.5rem;opacity:.3;display:block;margin-bottom:.75rem}
+.empty p{font-size:.9rem}
+
+/* COUNT BARS */
+.count-bar{display:flex;align-items:center;gap:.75rem;margin-bottom:.5rem}
+.count-label{font-size:.85rem;color:var(--muted);width:80px;text-align:right}
+.bar-track{flex:1;height:8px;background:var(--border);border-radius:4px;overflow:hidden}
+.bar-fill{height:100%;border-radius:4px;transition:width .6s ease}
+.bar-present .bar-fill{background:var(--present)}
+.bar-absent .bar-fill{background:var(--absent)}
+.count-num{font-weight:700;font-size:.9rem;width:28px}
+
+/* SECTION TITLE */
+.section-title{
+  font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--white);
+  margin-bottom:1rem;display:flex;align-items:center;gap:.5rem;
+}
+.section-title i{color:var(--gold);font-size:1rem}
+
+/* LOADING */
+.spinner{display:inline-block;width:18px;height:18px;border:2px solid rgba(255,255,255,.4);
+  border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{animation:fadeUp .35s ease}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:flex;align-items:center;justify-content:center;padding:1rem;display:none}
+.modal-overlay.open{display:flex}
+.modal{background:var(--white);border-radius:var(--radius);padding:1.75rem;max-width:480px;width:100%;box-shadow:var(--shadow2)}
+.modal h3{font-family:'Playfair Display',serif;font-size:1.15rem;color:var(--green);margin-bottom:1.25rem}
+.modal-footer{display:flex;gap:.75rem;margin-top:1.25rem}
+
+/* IMAGE UPLOAD AREA */
+.upload-area{
+  border:2px dashed var(--border);border-radius:12px;padding:2rem;text-align:center;
+  cursor:pointer;transition:all .2s;background:var(--cream);
+}
+.upload-area:hover,.upload-area.drag{border-color:var(--green);background:rgba(45,106,79,.05)}
+.upload-area i{font-size:2rem;color:var(--muted);display:block;margin-bottom:.5rem}
+
+/* TOAST */
+.toast{
+  position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(100px);
+  background:#1a1a1a;color:#fff;padding:.75rem 1.5rem;border-radius:12px;
+  font-size:.88rem;font-weight:500;z-index:999;transition:transform .3s ease;
+  white-space:nowrap;box-shadow:var(--shadow2);
+}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast.success{background:var(--present)}
+.toast.error{background:var(--absent)}
+
+/* RESPONSIVE */
+@media(max-width:480px){
+  .topbar{padding:.7rem 1rem}
+  .content{padding:1rem .75rem 4rem}
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .nav-item{padding:.8rem .9rem;font-size:.78rem}
+}
+</style>
+</head>
+<body>
+<div id="bg"></div>
+
+<!-- LOGIN SCREEN -->
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="brand">
+      <div class="brand-icon"><i class="fa-solid fa-utensils"></i></div>
+      <h1>Canteen Manager</h1>
+      <p>Sign in to your management dashboard</p>
+    </div>
+    <div class="field">
+      <label>Manager Password</label>
+      <input type="password" id="mgrPass" placeholder="Enter your password" onkeydown="if(event.key==='Enter')doManagerLogin()">
+    </div>
+    <button class="btn btn-primary" onclick="doManagerLogin()" id="loginBtn">
+      <i class="fa-solid fa-right-to-bracket"></i> Sign In
+    </button>
+    <div class="msg" id="loginMsg"></div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app">
+  <div class="topbar">
+    <div class="topbar-brand">
+      <div class="topbar-brand-icon"><i class="fa-solid fa-utensils"></i></div>
+      <div>
+        <h2>Canteen Manager</h2>
+        <span>Management Dashboard</span>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <span class="topbar-date" id="topbarDate"></span>
+      <button class="topbar-logout" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+    </div>
+  </div>
+
+  <div class="nav" id="mainNav">
+    <div class="nav-item active" onclick="showTab('dashboard')" data-tab="dashboard"><i class="fa-solid fa-chart-pie"></i> Dashboard</div>
+    <div class="nav-item" onclick="showTab('attendance')" data-tab="attendance"><i class="fa-solid fa-clipboard-check"></i> Attendance</div>
+    <div class="nav-item" onclick="showTab('setmenu')" data-tab="setmenu"><i class="fa-solid fa-bowl-food"></i> Set Menu</div>
+    <div class="nav-item" onclick="showTab('images')" data-tab="images"><i class="fa-regular fa-image"></i> Images</div>
+    <div class="nav-item" onclick="showTab('report')" data-tab="report"><i class="fa-solid fa-file-arrow-down"></i> Monthly Report</div>
+    <div class="nav-item" onclick="showTab('users')" data-tab="users"><i class="fa-solid fa-users"></i> Users</div>
+  </div>
+
+  <div class="content">
+
+    <!-- DASHBOARD TAB -->
+    <div id="tab-dashboard" class="tab-content fade-in">
+      <div class="section-title"><i class="fa-solid fa-sun"></i> Good day! Here's your overview</div>
+      <div class="stats-grid" id="statsGrid">
+        <div class="stat-card stat-b"><div class="stat-icon"><i class="fa-solid fa-users"></i></div><div class="stat-val" id="s-total">—</div><div class="stat-label">Total Staff</div></div>
+        <div class="stat-card stat-g"><div class="stat-icon"><i class="fa-solid fa-check-circle"></i></div><div class="stat-val" id="s-present">—</div><div class="stat-label">Present Today</div></div>
+        <div class="stat-card stat-r"><div class="stat-icon"><i class="fa-solid fa-times-circle"></i></div><div class="stat-val" id="s-absent">—</div><div class="stat-label">Absent Today</div></div>
+        <div class="stat-card stat-a"><div class="stat-icon"><i class="fa-solid fa-percent"></i></div><div class="stat-val" id="s-pct">—</div><div class="stat-label">Response Rate</div></div>
+      </div>
+
+      <!-- Today's Menu Card -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><i class="fa-solid fa-star"></i> Today's Menu</div>
+          <button class="btn btn-secondary btn-sm" onclick="showTab('setmenu')"><i class="fa-solid fa-edit"></i> Edit</button>
+        </div>
+        <div class="card-body" id="dashMenuBody">
+          <div class="empty"><i class="fa-solid fa-bowl-food"></i><p>No menu set for today yet.</p></div>
+        </div>
+      </div>
+
+      <!-- WhatsApp Share -->
+      <div class="card" id="waCard" style="display:none">
+        <div class="card-header"><div class="card-title"><i class="fa-brands fa-whatsapp"></i> Share to WhatsApp</div></div>
+        <div class="card-body">
+          <div class="field"><label>User Page Link (your GitHub Pages URL)</label>
+            <input type="text" id="userPageUrl" placeholder="https://yourusername.github.io/canteen/user.html" oninput="buildWaMsg()">
+          </div>
+          <div class="field"><label>Custom Message (editable)</label>
+            <textarea id="waMsg" rows="4" style="resize:vertical"></textarea>
+          </div>
+          <button class="whatsapp-btn" onclick="shareWhatsApp()">
+            <i class="fa-brands fa-whatsapp"></i> Share on WhatsApp
+          </button>
+        </div>
+      </div>
+
+      <!-- Live Count Summary -->
+      <div class="card">
+        <div class="card-header"><div class="card-title"><i class="fa-solid fa-chart-bar"></i> Today's Response</div></div>
+        <div class="card-body" id="dashCountBody">
+          <div class="empty"><i class="fa-solid fa-spinner fa-spin"></i><p>Loading...</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ATTENDANCE TAB -->
+    <div id="tab-attendance" class="tab-content fade-in" style="display:none">
+      <div class="section-title"><i class="fa-solid fa-clipboard-check"></i> Attendance Records</div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><i class="fa-solid fa-calendar-day"></i> View by Date</div>
+        </div>
+        <div class="card-body">
+          <div class="filter-row">
+            <label>Date:</label>
+            <input type="date" id="attDate" onchange="loadAttendance()">
+            <button class="btn btn-primary btn-sm" onclick="loadAttendance()"><i class="fa-solid fa-search"></i> Fetch</button>
+          </div>
+          <div id="attSummaryBars" style="margin-bottom:1rem"></div>
+          <div class="table-wrap">
+            <table id="attTable">
+              <thead><tr><th>#</th><th>Emp ID</th><th>Name</th><th>Department</th><th>Status</th><th>Time</th></tr></thead>
+              <tbody id="attTbody"><tr><td colspan="6" style="text-align:center;color:var(--muted);padding:2rem">Select a date to view attendance</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SET MENU TAB -->
+    <div id="tab-setmenu" class="tab-content fade-in" style="display:none">
+      <div class="section-title"><i class="fa-solid fa-bowl-food"></i> Set Today's Menu</div>
+      <div class="card">
+        <div class="card-header"><div class="card-title"><i class="fa-solid fa-pen-to-square"></i> Menu Details</div></div>
+        <div class="card-body">
+          <div class="field"><label>Date</label><input type="date" id="menuDate"></div>
+          <div class="field"><label>Menu Name *</label><input type="text" id="menuName" placeholder="e.g. Kerala Meals with Fish Curry"></div>
+          <div class="field"><label>Description</label><textarea id="menuDesc" placeholder="Optional details about the menu..."></textarea></div>
+          <div class="field">
+            <label>Menu Image <span style="color:var(--muted);font-weight:400">(select from library below or paste URL)</span></label>
+            <input type="text" id="menuImgUrl" placeholder="Image URL — or click one from the gallery below" oninput="previewMenuImg()">
+          </div>
+          <div id="menuImgPreviewWrap" style="display:none;margin-bottom:1rem">
+            <img id="menuImgPreview" src="" style="max-height:180px;border-radius:10px;box-shadow:var(--shadow);border:3px solid var(--white)">
+          </div>
+          <div class="field">
+            <label>Select from Image Library</label>
+            <div class="img-grid" id="menuImgPicker" style="max-height:280px;overflow-y:auto"></div>
+          </div>
+          <button class="btn btn-primary" onclick="saveMenu()">
+            <i class="fa-solid fa-floppy-disk"></i> Save Menu
+          </button>
+          <div class="msg" id="menuMsg"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- IMAGES TAB -->
+    <div id="tab-images" class="tab-content fade-in" style="display:none">
+      <div class="section-title"><i class="fa-regular fa-image"></i> Image Library</div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><i class="fa-solid fa-photo-film"></i> Uploaded Images</div>
+          <button class="btn btn-amber btn-sm" onclick="openAddImageModal()"><i class="fa-solid fa-plus"></i> Add Image</button>
+        </div>
+        <div class="card-body">
+          <p style="font-size:.82rem;color:var(--muted);margin-bottom:1rem">
+            <i class="fa-solid fa-circle-info"></i> Upload images to Google Drive, share them publicly, then paste the direct image link here. 
+            <a href="https://drive.google.com" target="_blank" style="color:var(--amber)">Open Google Drive →</a>
+          </p>
+          <div class="img-grid" id="imgGallery">
+            <div class="empty" style="grid-column:1/-1"><i class="fa-regular fa-image"></i><p>No images yet. Add your first image!</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MONTHLY REPORT TAB -->
+    <div id="tab-report" class="tab-content fade-in" style="display:none">
+      <div class="section-title"><i class="fa-solid fa-file-arrow-down"></i> Monthly Report</div>
+      <div class="card">
+        <div class="card-header"><div class="card-title"><i class="fa-solid fa-calendar-month"></i> Filter & Download</div></div>
+        <div class="card-body">
+          <div class="filter-row">
+            <label>Month:</label>
+            <input type="month" id="reportMonth">
+            <button class="btn btn-primary btn-sm" onclick="loadReport()"><i class="fa-solid fa-search"></i> Load</button>
+            <button class="btn btn-gold btn-sm" onclick="downloadCSV()"><i class="fa-solid fa-download"></i> Download CSV</button>
+          </div>
+          <div id="reportSummary" style="margin-bottom:1rem"></div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Date</th><th>Emp ID</th><th>Name</th><th>Department</th><th>Status</th></tr></thead>
+              <tbody id="reportTbody"><tr><td colspan="5" style="text-align:center;color:var(--muted);padding:2rem">Select a month and click Load</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- USERS TAB -->
+    <div id="tab-users" class="tab-content fade-in" style="display:none">
+      <div class="section-title"><i class="fa-solid fa-users"></i> Registered Staff</div>
+      <div class="card">
+        <div class="card-header"><div class="card-title"><i class="fa-solid fa-address-book"></i> All Users</div></div>
+        <div class="card-body">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>#</th><th>Emp ID</th><th>Name</th><th>Department</th><th>Joined</th></tr></thead>
+              <tbody id="usersTbody"><tr><td colspan="5" style="text-align:center;color:var(--muted);padding:2rem"><span class="spinner"></span></td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /app -->
+
+<!-- ADD IMAGE MODAL -->
+<div class="modal-overlay" id="addImgModal">
+  <div class="modal">
+    <h3><i class="fa-regular fa-image"></i> Add Image to Library</h3>
+    <div class="field"><label>Image Name *</label><input type="text" id="newImgName" placeholder="e.g. Kerala Fish Curry"></div>
+    <div class="field">
+      <label>Image URL *</label>
+      <input type="text" id="newImgUrl" placeholder="https://... (Google Drive, Imgur, etc.)" oninput="previewNewImg()">
+    </div>
+    <div id="newImgPreviewWrap" style="display:none;margin-top:.5rem">
+      <img id="newImgPreview" src="" style="max-height:160px;border-radius:8px;border:2px solid var(--border)">
+    </div>
+    <p style="font-size:.78rem;color:var(--muted);margin-top:.5rem">
+      <i class="fa-brands fa-google-drive"></i> Google Drive tip: Share file → "Anyone with link" → Replace 
+      <code>open?id=</code> with <code>uc?export=view&id=</code>
+    </p>
+    <div class="modal-footer">
+      <button class="btn btn-primary" onclick="saveNewImage()"><i class="fa-solid fa-plus"></i> Add Image</button>
+      <button class="btn btn-secondary" onclick="closeModal('addImgModal')">Cancel</button>
+    </div>
+    <div class="msg" id="imgModalMsg"></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ─────────────────────────────────────────────
+//  CONFIG — CHANGE THIS
+// ─────────────────────────────────────────────
+const API_URL = 'YOUR_APPS_SCRIPT_WEB_APP_URL'; // Paste your deployed Apps Script URL here
+
+// ─────────────────────────────────────────────
+//  STATE
+// ─────────────────────────────────────────────
+let mgrToken = localStorage.getItem('mgrToken') || '';
+let statsCache = null;
+let reportData = [];
+let images = [];
+
+// ─────────────────────────────────────────────
+//  INIT
+// ─────────────────────────────────────────────
+window.onload = () => {
+  setTodayDates();
+  if (mgrToken) showApp();
+};
+
+function setTodayDates() {
+  const today = new Date();
+  const iso = today.toISOString().split('T')[0];
+  const el = id => document.getElementById(id);
+  if (el('menuDate')) el('menuDate').value = iso;
+  if (el('attDate')) el('attDate').value = iso;
+  const monthStr = iso.slice(0,7);
+  if (el('reportMonth')) el('reportMonth').value = monthStr;
+  if (el('topbarDate')) el('topbarDate').textContent = today.toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long'});
+}
+
+// ─────────────────────────────────────────────
+//  API CALL (JSONP)
+// ─────────────────────────────────────────────
+function api(params) {
+  return new Promise((resolve, reject) => {
+    const cbName = '_cb' + Date.now() + Math.random().toString(36).slice(2);
+    const url = API_URL + '?' + Object.entries({...params, callback: cbName})
+      .map(([k,v]) => encodeURIComponent(k) + '=' + encodeURIComponent(v)).join('&');
+    window[cbName] = data => {
+      delete window[cbName];
+      if (script.parentNode) document.head.removeChild(script);
+      resolve(data);
+    };
+    const script = document.createElement('script');
+    script.src = url;
+    script.onerror = () => { delete window[cbName]; reject(new Error('Network error')); };
+    document.head.appendChild(script);
+    setTimeout(() => { if (window[cbName]) { delete window[cbName]; reject(new Error('Timeout')); } }, 15000);
+  });
+}
+
+// ─────────────────────────────────────────────
+//  LOGIN
+// ─────────────────────────────────────────────
+async function doManagerLogin() {
+  const pass = document.getElementById('mgrPass').value.trim();
+  const btn  = document.getElementById('loginBtn');
+  const msg  = document.getElementById('loginMsg');
+  if (!pass) { showMsg('loginMsg','Please enter your password','error'); return; }
+  btn.innerHTML = '<span class="spinner"></span> Signing in...';
+  btn.disabled = true;
+  try {
+    const res = await api({ action:'managerLogin', password:pass });
+    if (res.success) {
+      mgrToken = res.token;
+      localStorage.setItem('mgrToken', mgrToken);
+      showApp();
+    } else {
+      showMsg('loginMsg', res.message || 'Login failed', 'error');
+      btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Sign In';
+      btn.disabled = false;
+    }
+  } catch(e) {
+    showMsg('loginMsg','Could not reach server. Check API URL.','error');
+    btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Sign In';
+    btn.disabled = false;
+  }
+}
+
+function showApp() {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  document.getElementById('bg').style.filter = 'brightness(.4)';
+  loadDashboard();
+  loadImages();
+}
+
+function logout() {
+  mgrToken = '';
+  localStorage.removeItem('mgrToken');
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('bg').style.filter = '';
+  document.getElementById('mgrPass').value = '';
+  document.getElementById('loginBtn').innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Sign In';
+  document.getElementById('loginBtn').disabled = false;
+}
+
+// ─────────────────────────────────────────────
+//  TAB NAVIGATION
+// ─────────────────────────────────────────────
+function showTab(name) {
+  document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + name).style.display = 'block';
+  document.querySelector(`[data-tab="${name}"]`).classList.add('active');
+  if (name === 'dashboard') loadDashboard();
+  if (name === 'users') loadUsers();
+  if (name === 'images') loadImages();
+  if (name === 'attendance') loadAttendance();
+}
+
+// ─────────────────────────────────────────────
+//  DASHBOARD
+// ─────────────────────────────────────────────
+async function loadDashboard() {
+  try {
+    const res = await api({ action:'getStats', mtoken:mgrToken });
+    if (!res.success) { if(res.message?.includes('Unauthorized')) logout(); return; }
+    statsCache = res;
+    document.getElementById('s-total').textContent   = res.totalUsers;
+    document.getElementById('s-present').textContent = res.todayPresent;
+    document.getElementById('s-absent').textContent  = res.todayAbsent;
+    const pct = res.todayTotal > 0 ? Math.round((res.todayPresent/res.todayTotal)*100) : 0;
+    document.getElementById('s-pct').textContent = pct + '%';
+
+    // Menu preview
+    const menuBody = document.getElementById('dashMenuBody');
+    if (res.menu) {
+      menuBody.innerHTML = buildMenuPreview(res.menu);
+      document.getElementById('waCard').style.display = 'block';
+      buildWaMsg(res.menu);
+    } else {
+      menuBody.innerHTML = '<div class="empty"><i class="fa-solid fa-bowl-food"></i><p>No menu set for today yet. <a href="#" onclick="showTab(\'setmenu\')" style="color:var(--amber)">Set it now →</a></p></div>';
+      document.getElementById('waCard').style.display = 'none';
+    }
+
+    // Count bars
+    const total = res.todayTotal || 1;
+    document.getElementById('dashCountBody').innerHTML = `
+      <div class="count-bar bar-present">
+        <div class="count-label">Present</div>
+        <div class="bar-track"><div class="bar-fill" style="width:${(res.todayPresent/total*100).toFixed(1)}%"></div></div>
+        <div class="count-num" style="color:var(--present)">${res.todayPresent}</div>
+      </div>
+      <div class="count-bar bar-absent">
+        <div class="count-label">Absent</div>
+        <div class="bar-track"><div class="bar-fill" style="width:${(res.todayAbsent/total*100).toFixed(1)}%"></div></div>
+        <div class="count-num" style="color:var(--absent)">${res.todayAbsent}</div>
+      </div>
+      <p style="font-size:.8rem;color:var(--muted);margin-top:.75rem">Total responses: <strong>${res.todayTotal}</strong> of <strong>${res.totalUsers}</strong> staff</p>
+    `;
+  } catch(e) { console.error(e); }
+}
+
+function buildMenuPreview(menu) {
+  const img = menu.imageUrl
+    ? `<img src="${escHtml(menu.imageUrl)}" class="menu-img-preview" onerror="this.style.display='none'">`
+    : `<div class="menu-img-placeholder">🍱</div>`;
+  return `<div class="menu-preview">${img}<div class="menu-info">
+    <div class="menu-date">📅 ${menu.date}</div>
+    <h3>${escHtml(menu.name)}</h3>
+    ${menu.description ? `<p>${escHtml(menu.description)}</p>` : ''}
+  </div></div>`;
+}
+
+// ─────────────────────────────────────────────
+//  WHATSAPP
+// ─────────────────────────────────────────────
+function buildWaMsg(menu) {
+  menu = menu || (statsCache && statsCache.menu);
+  if (!menu) return;
+  const url  = document.getElementById('userPageUrl').value.trim() || 'YOUR_USER_PAGE_URL';
+  const name = menu.name;
+  const desc = menu.description ? `\n_${menu.description}_` : '';
+  const msg  = `🍱 *Today's Canteen Menu*\n\n*${name}*${desc}\n\n✅ Please mark your attendance:\n${url}\n\n_Bon appétit! 🌿_`;
+  document.getElementById('waMsg').value = msg;
+}
+
+function shareWhatsApp() {
+  const msg = document.getElementById('waMsg').value.trim();
+  if (!msg) { toast('Please generate a message first','error'); return; }
+  const encoded = encodeURIComponent(msg);
+  window.open(`https://wa.me/?text=${encoded}`, '_blank');
+}
+
+// ─────────────────────────────────────────────
+//  ATTENDANCE
+// ─────────────────────────────────────────────
+async function loadAttendance() {
+  const date = document.getElementById('attDate').value;
+  if (!date) return;
+  const tbody = document.getElementById('attTbody');
+  tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:1.5rem"><span class="spinner" style="border-color:rgba(45,106,79,.3);border-top-color:var(--green)"></span></td></tr>';
+  try {
+    const res = await api({ action:'getAttendanceSummary', mtoken:mgrToken, date });
+    if (!res.success) { toast(res.message,'error'); return; }
+    // Bars
+    const total = res.presentCount + res.absentCount || 1;
+    document.getElementById('attSummaryBars').innerHTML = `
+      <div style="display:flex;gap:1rem;margin-bottom:.75rem">
+        <span class="badge badge-present">✓ ${res.presentCount} Present</span>
+        <span class="badge badge-absent">✗ ${res.absentCount} Absent</span>
+        <span class="badge badge-info">${res.presentCount+res.absentCount} Total Responses</span>
+      </div>`;
+    if (!res.records.length) {
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:2rem">No records for this date</td></tr>';
+      return;
+    }
+    tbody.innerHTML = res.records.map((r,i) => `<tr>
+      <td style="color:var(--muted)">${i+1}</td>
+      <td><strong>${escHtml(r.empid)}</strong></td>
+      <td>${escHtml(r.name)}</td>
+      <td><span class="badge badge-info">${escHtml(r.dept)}</span></td>
+      <td><span class="badge badge-${r.status}">${r.status==='present'?'✓ Present':'✗ Absent'}</span></td>
+      <td style="color:var(--muted);font-size:.8rem">${formatTime(r.markedAt)}</td>
+    </tr>`).join('');
+  } catch(e) { toast('Network error','error'); }
+}
+
+// ─────────────────────────────────────────────
+//  SET MENU
+// ─────────────────────────────────────────────
+async function saveMenu() {
+  const name   = document.getElementById('menuName').value.trim();
+  const date   = document.getElementById('menuDate').value;
+  const desc   = document.getElementById('menuDesc').value.trim();
+  const imgUrl = document.getElementById('menuImgUrl').value.trim();
+  if (!name) { showMsg('menuMsg','Menu name is required','error'); return; }
+  if (!date) { showMsg('menuMsg','Date is required','error'); return; }
+  try {
+    const res = await api({ action:'setMenu', mtoken:mgrToken, name, date, desc, imgUrl });
+    if (res.success) {
+      showMsg('menuMsg', res.message, 'success');
+      toast(res.message,'success');
+      if (date === new Date().toISOString().split('T')[0]) loadDashboard();
+    } else {
+      showMsg('menuMsg', res.message, 'error');
+    }
+  } catch(e) { showMsg('menuMsg','Network error','error'); }
+}
+
+function previewMenuImg() {
+  const url = document.getElementById('menuImgUrl').value.trim();
+  const wrap = document.getElementById('menuImgPreviewWrap');
+  const img  = document.getElementById('menuImgPreview');
+  if (url) { img.src = url; wrap.style.display = 'block'; }
+  else wrap.style.display = 'none';
+}
+
+// ─────────────────────────────────────────────
+//  IMAGES
+// ─────────────────────────────────────────────
+async function loadImages() {
+  try {
+    const res = await api({ action:'getImages', mtoken:mgrToken });
+    images = res.images || [];
+    renderImageGallery(images, 'imgGallery', true);
+    renderImageGallery(images, 'menuImgPicker', false);
+  } catch(e) {}
+}
+
+function renderImageGallery(imgs, containerId, withDelete) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  if (!imgs.length) {
+    el.innerHTML = '<div class="empty" style="grid-column:1/-1"><i class="fa-regular fa-image"></i><p>No images added yet.</p></div>';
+    return;
+  }
+  el.innerHTML = imgs.map(img => `
+    <div class="img-tile" onclick="${withDelete ? '' : `pickImage('${escHtml(img.url)}','${escHtml(img.name)}')`}" title="${escHtml(img.name)}">
+      <div class="select-indicator"><i class="fa-solid fa-check"></i></div>
+      <img src="${escHtml(img.url)}" alt="${escHtml(img.name)}" loading="lazy" onerror="this.src='https://via.placeholder.com/140x140?text=Error'">
+      <div class="img-overlay">
+        <div class="img-name">${escHtml(img.name)}</div>
+      </div>
+      ${withDelete ? `<button class="del-btn" onclick="event.stopPropagation();deleteImage('${img.id}','${escHtml(img.name)}')" title="Delete"><i class="fa-solid fa-trash"></i></button>` : ''}
+    </div>
+  `).join('');
+}
+
+function pickImage(url, name) {
+  document.getElementById('menuImgUrl').value = url;
+  previewMenuImg();
+  document.querySelectorAll('#menuImgPicker .img-tile').forEach(el => el.classList.remove('selected'));
+  event.currentTarget.classList.add('selected');
+  showTab('setmenu');
+  toast('Image selected: ' + name);
+}
+
+async function deleteImage(id, name) {
+  if (!confirm(`Delete "${name}"?`)) return;
+  try {
+    const res = await api({ action:'deleteImage', mtoken:mgrToken, id });
+    if (res.success) { toast('Image deleted'); loadImages(); }
+    else toast(res.message,'error');
+  } catch(e) { toast('Network error','error'); }
+}
+
+function openAddImageModal() { document.getElementById('addImgModal').classList.add('open'); }
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+  document.getElementById('newImgName').value = '';
+  document.getElementById('newImgUrl').value = '';
+  document.getElementById('newImgPreviewWrap').style.display = 'none';
+  hideMsg('imgModalMsg');
+}
+
+function previewNewImg() {
+  const url = document.getElementById('newImgUrl').value.trim();
+  const wrap = document.getElementById('newImgPreviewWrap');
+  const img  = document.getElementById('newImgPreview');
+  if (url) { img.src = url; wrap.style.display = 'block'; }
+  else wrap.style.display = 'none';
+}
+
+async function saveNewImage() {
+  const name = document.getElementById('newImgName').value.trim();
+  const url  = document.getElementById('newImgUrl').value.trim();
+  if (!name || !url) { showMsg('imgModalMsg','Name and URL are required','error'); return; }
+  try {
+    const res = await api({ action:'addImage', mtoken:mgrToken, name, url });
+    if (res.success) {
+      toast('Image added!','success');
+      closeModal('addImgModal');
+      loadImages();
+    } else showMsg('imgModalMsg', res.message,'error');
+  } catch(e) { showMsg('imgModalMsg','Network error','error'); }
+}
+
+// ─────────────────────────────────────────────
+//  MONTHLY REPORT
+// ─────────────────────────────────────────────
+async function loadReport() {
+  const month = document.getElementById('reportMonth').value;
+  if (!month) { toast('Please select a month','error'); return; }
+  const tbody = document.getElementById('reportTbody');
+  tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:1.5rem"><span class="spinner" style="border-color:rgba(45,106,79,.3);border-top-color:var(--green)"></span></td></tr>';
+  try {
+    const res = await api({ action:'getMonthlyData', mtoken:mgrToken, month });
+    if (!res.success) { toast(res.message,'error'); return; }
+    reportData = res.records;
+    const present = reportData.filter(r=>r.status==='present').length;
+    const absent  = reportData.filter(r=>r.status==='absent').length;
+    document.getElementById('reportSummary').innerHTML = `
+      <div style="display:flex;gap:.75rem;flex-wrap:wrap">
+        <span class="badge badge-present">✓ ${present} Present</span>
+        <span class="badge badge-absent">✗ ${absent} Absent</span>
+        <span class="badge badge-info">${reportData.length} Total Entries</span>
+      </div>`;
+    if (!reportData.length) {
+      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:2rem">No data for ' + month + '</td></tr>';
+      return;
+    }
+    tbody.innerHTML = reportData.map((r,i) => `<tr>
+      <td>${r.date}</td>
+      <td><strong>${escHtml(r.empid)}</strong></td>
+      <td>${escHtml(r.name)}</td>
+      <td>${escHtml(r.dept)}</td>
+      <td><span class="badge badge-${r.status}">${r.status==='present'?'✓ Present':'✗ Absent'}</span></td>
+    </tr>`).join('');
+  } catch(e) { toast('Network error','error'); }
+}
+
+function downloadCSV() {
+  if (!reportData.length) { toast('No data to download. Load a month first.','error'); return; }
+  const month = document.getElementById('reportMonth').value;
+  const headers = ['Date','Employee ID','Name','Department','Status','Marked At'];
+  const rows = reportData.map(r=>[r.date,r.empid,r.name,r.dept,r.status,r.markedAt]);
+  const csv = [headers,...rows].map(r=>r.map(c=>'"'+(c||'').toString().replace(/"/g,'""')+'"').join(',')).join('\n');
+  const blob = new Blob([csv],{type:'text/csv'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `canteen-attendance-${month}.csv`;
+  a.click();
+  toast('CSV downloaded!','success');
+}
+
+// ─────────────────────────────────────────────
+//  USERS
+// ─────────────────────────────────────────────
+async function loadUsers() {
+  const tbody = document.getElementById('usersTbody');
+  try {
+    const res = await api({ action:'getAllUsers', mtoken:mgrToken });
+    if (!res.success) { toast(res.message,'error'); return; }
+    if (!res.users.length) {
+      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:2rem">No users registered yet</td></tr>';
+      return;
+    }
+    tbody.innerHTML = res.users.map((u,i) => `<tr>
+      <td style="color:var(--muted)">${i+1}</td>
+      <td><strong>${escHtml(u.empid)}</strong></td>
+      <td>${escHtml(u.name)}</td>
+      <td><span class="badge badge-info">${escHtml(u.dept)}</span></td>
+      <td style="color:var(--muted);font-size:.8rem">${u.joinedAt ? new Date(u.joinedAt).toLocaleDateString('en-IN') : '—'}</td>
+    </tr>`).join('');
+  } catch(e) { toast('Network error','error'); }
+}
+
+// ─────────────────────────────────────────────
+//  UTILITIES
+// ─────────────────────────────────────────────
+function showMsg(id, text, type) {
+  const el = document.getElementById(id);
+  el.textContent = text; el.className = 'msg ' + type + ' show';
+}
+function hideMsg(id) {
+  const el = document.getElementById(id);
+  if (el) { el.className = 'msg'; el.textContent = ''; }
+}
+let toastTimer;
+function toast(msg, type='') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'toast show' + (type ? ' ' + type : '');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.className = 'toast', 3000);
+}
+function escHtml(str) {
+  return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function formatTime(iso) {
+  if (!iso) return '—';
+  try { return new Date(iso).toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'}); } catch(e){ return iso; }
+}
+</script>
+</body>
+</html>
