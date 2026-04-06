@@ -3,539 +3,372 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Office Canteen — Mark Attendance</title>
+<title>Office Canteen</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 <style>
 :root{
-  --amber:#c2692a;--green:#2d6a4f;--gold:#e8a020;--cream:#fdf8f2;--white:#ffffff;
+  --amber:#c2692a;--green:#2d6a4f;--gold:#e8a020;--cream:#fdf8f2;--white:#fff;
   --text:#1a1a1a;--muted:#6b7280;--border:#e5e0d8;--shadow:0 4px 24px rgba(0,0,0,.10);
   --shadow2:0 8px 40px rgba(0,0,0,.18);--radius:20px;--present:#059669;--absent:#dc2626;
+  --star:#f59e0b;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;font-family:'DM Sans',sans-serif;color:var(--text)}
-
-/* BG */
-#bg{
-  position:fixed;inset:0;z-index:0;
-  background:url('https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=1920&q=80') center/cover no-repeat;
-  transition:filter .5s;
-}
+#bg{position:fixed;inset:0;z-index:0;background:url('https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=1920&q=80') center/cover no-repeat}
 #bg::after{content:'';position:absolute;inset:0;background:linear-gradient(160deg,rgba(12,40,25,.78) 0%,rgba(80,35,5,.65) 100%)}
-
-/* LAYOUT */
 #root{position:relative;z-index:10;min-height:100vh;display:flex;flex-direction:column}
 
 /* ── AUTH SCREEN ── */
-#authScreen{
-  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:1rem;
-}
-.auth-brand{text-align:center;margin-bottom:2rem;color:#fff}
-.auth-brand-icon{
-  width:72px;height:72px;background:linear-gradient(135deg,var(--gold),var(--amber));
-  border-radius:20px;display:flex;align-items:center;justify-content:center;
-  margin:0 auto 1rem;font-size:2rem;color:#fff;box-shadow:0 8px 24px rgba(194,105,42,.4);
-}
-.auth-brand h1{font-family:'Playfair Display',serif;font-size:2rem;letter-spacing:-.01em}
-.auth-brand p{opacity:.75;font-size:.9rem;margin-top:.25rem}
+#authScreen{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1rem}
+.auth-brand{text-align:center;margin-bottom:1.75rem;color:#fff}
+.auth-brand-icon{width:70px;height:70px;background:linear-gradient(135deg,var(--gold),var(--amber));border-radius:20px;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:2rem;color:#fff;box-shadow:0 8px 24px rgba(194,105,42,.4)}
+.auth-brand h1{font-family:'Playfair Display',serif;font-size:1.9rem;letter-spacing:-.01em}
+.auth-brand p{opacity:.75;font-size:.88rem;margin-top:.2rem}
 
-.auth-card{
-  background:rgba(255,255,255,.97);backdrop-filter:blur(12px);
-  border-radius:var(--radius);width:100%;max-width:420px;overflow:hidden;
-  box-shadow:var(--shadow2);
-}
+.auth-card{background:rgba(255,255,255,.97);border-radius:var(--radius);width:100%;max-width:420px;overflow:hidden;box-shadow:var(--shadow2)}
 .auth-tabs{display:flex;border-bottom:2px solid var(--border)}
-.auth-tab{
-  flex:1;padding:.85rem;text-align:center;font-size:.82rem;font-weight:700;
-  cursor:pointer;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;
-  transition:all .2s;border-bottom:3px solid transparent;margin-bottom:-2px;
-}
+.auth-tab{flex:1;padding:.8rem;text-align:center;font-size:.78rem;font-weight:700;cursor:pointer;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;transition:all .2s;border-bottom:3px solid transparent;margin-bottom:-2px}
 .auth-tab.active{color:var(--green);border-bottom-color:var(--green)}
-.auth-panel{padding:1.75rem;display:none}
+.auth-panel{padding:1.6rem;display:none}
 .auth-panel.active{display:block;animation:fadeUp .3s ease}
 
 /* FORM */
-.field{margin-bottom:1.1rem}
-.field label{display:block;font-size:.78rem;font-weight:700;color:var(--muted);
-  margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.06em}
-.field input,.field select{
-  width:100%;padding:.8rem 1rem;border:2px solid var(--border);border-radius:12px;
-  font-family:'DM Sans',sans-serif;font-size:.95rem;background:var(--cream);
-  transition:all .2s;color:var(--text);
-}
-.field input:focus,.field select:focus{
-  outline:none;border-color:var(--green);box-shadow:0 0 0 4px rgba(45,106,79,.12);background:var(--white);
-}
-.field .hint{font-size:.75rem;color:var(--muted);margin-top:.3rem}
-.btn{
-  display:inline-flex;align-items:center;gap:.5rem;justify-content:center;
-  padding:.82rem 1.5rem;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:.95rem;
-  font-weight:700;cursor:pointer;border:none;transition:all .2s;width:100%;
-}
+.field{margin-bottom:1rem}
+.field label{display:block;font-size:.76rem;font-weight:700;color:var(--muted);margin-bottom:.35rem;text-transform:uppercase;letter-spacing:.06em}
+.field input{width:100%;padding:.78rem 1rem;border:2px solid var(--border);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:.93rem;background:var(--cream);transition:all .2s;color:var(--text)}
+.field input:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 4px rgba(45,106,79,.12);background:var(--white)}
+.field .hint{font-size:.72rem;color:var(--muted);margin-top:.3rem}
+.btn{display:inline-flex;align-items:center;gap:.5rem;justify-content:center;padding:.8rem 1.5rem;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:.93rem;font-weight:700;cursor:pointer;border:none;transition:all .2s;width:100%}
 .btn-green{background:linear-gradient(135deg,var(--green),#1a4a32);color:#fff}
 .btn-green:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(45,106,79,.4)}
 .btn-amber{background:linear-gradient(135deg,var(--amber),#9a4418);color:#fff}
 .btn-amber:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(194,105,42,.4)}
-.btn-outline{background:transparent;color:var(--green);border:2px solid var(--green)}
-.btn-outline:hover{background:var(--green);color:#fff}
-.btn:disabled{opacity:.6;cursor:not-allowed;transform:none!important}
-
-.msg{padding:.7rem 1rem;border-radius:10px;font-size:.83rem;margin-top:.75rem;display:none}
+.btn-ghost{background:transparent;color:var(--green);border:2px solid var(--green)}
+.btn-ghost:hover{background:var(--green);color:#fff}
+.btn:disabled{opacity:.55;cursor:not-allowed;transform:none!important}
+.msg{padding:.65rem 1rem;border-radius:10px;font-size:.82rem;margin-top:.7rem;display:none}
 .msg.error{background:#fee2e2;color:#991b1b;border-left:3px solid var(--absent)}
 .msg.success{background:#d1fae5;color:#065f46;border-left:3px solid var(--present)}
 .msg.show{display:block}
 
 /* ── APP SCREEN ── */
 #appScreen{display:none;flex:1;flex-direction:column}
-
-/* HEADER */
-.app-header{
-  background:rgba(18,50,30,.9);backdrop-filter:blur(12px);
-  padding:1rem 1.25rem;display:flex;align-items:center;justify-content:space-between;
-  border-bottom:1px solid rgba(255,255,255,.1);
-}
+.app-header{background:rgba(18,50,30,.9);backdrop-filter:blur(12px);padding:1rem 1.25rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.1)}
 .user-greeting{color:#fff}
-.user-greeting .label{font-size:.72rem;opacity:.6;text-transform:uppercase;letter-spacing:.06em}
+.user-greeting .label{font-size:.7rem;opacity:.6;text-transform:uppercase;letter-spacing:.06em}
 .user-greeting .name{font-family:'Playfair Display',serif;font-size:1.1rem}
-.user-greeting .dept{font-size:.75rem;opacity:.65;margin-top:.1rem}
-.header-right{display:flex;align-items:center;gap:.75rem}
-.btn-history{
-  background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.2);
-  padding:.4rem .85rem;border-radius:8px;cursor:pointer;font-size:.78rem;
-  font-family:'DM Sans',sans-serif;transition:all .2s;display:flex;align-items:center;gap:.35rem;
-}
-.btn-history:hover{background:rgba(255,255,255,.22)}
-.btn-logout{
-  background:rgba(220,38,38,.2);color:#fca5a5;border:1px solid rgba(220,38,38,.3);
-  padding:.4rem .75rem;border-radius:8px;cursor:pointer;font-size:.78rem;
-  font-family:'DM Sans',sans-serif;transition:all .2s;
-}
-.btn-logout:hover{background:rgba(220,38,38,.4);color:#fff}
+.header-actions{display:flex;align-items:center;gap:.6rem}
+.btn-hdr{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.2);padding:.38rem .8rem;border-radius:8px;cursor:pointer;font-size:.76rem;font-family:'DM Sans',sans-serif;transition:all .2s;display:flex;align-items:center;gap:.3rem}
+.btn-hdr:hover{background:rgba(255,255,255,.22)}
+.btn-hdr-red{background:rgba(220,38,38,.18);color:#fca5a5;border-color:rgba(220,38,38,.3)}
+.btn-hdr-red:hover{background:rgba(220,38,38,.4);color:#fff}
 
-/* MAIN CONTENT */
-.app-body{flex:1;padding:1.25rem 1rem 4rem;max-width:520px;margin:0 auto;width:100%}
-
-/* DATE STRIP */
-.date-strip{
-  text-align:center;color:rgba(255,255,255,.85);font-size:.82rem;
-  margin-bottom:1.25rem;display:flex;align-items:center;justify-content:center;gap:.5rem;
-}
+.app-body{flex:1;padding:1.2rem 1rem 5rem;max-width:520px;margin:0 auto;width:100%}
+.date-strip{text-align:center;color:rgba(255,255,255,.82);font-size:.8rem;margin-bottom:1.2rem;display:flex;align-items:center;justify-content:center;gap:.5rem}
 .date-strip .dot{width:6px;height:6px;background:var(--gold);border-radius:50%}
 
 /* MENU CARD */
-.menu-card{
-  background:var(--white);border-radius:22px;overflow:hidden;
-  box-shadow:var(--shadow2);margin-bottom:1.25rem;animation:fadeUp .4s ease;
-}
-.menu-card-img{
-  width:100%;height:200px;object-fit:cover;display:block;
-}
-.menu-card-img-placeholder{
-  width:100%;height:160px;background:linear-gradient(135deg,#e8f4ea,#d0e8d8);
-  display:flex;align-items:center;justify-content:center;font-size:4rem;
-}
-.menu-card-body{padding:1.5rem}
-.menu-label{font-size:.72rem;font-weight:700;color:var(--amber);text-transform:uppercase;
-  letter-spacing:.1em;margin-bottom:.4rem;display:flex;align-items:center;gap:.35rem}
-.menu-name{font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--green);line-height:1.2}
-.menu-desc{font-size:.88rem;color:var(--muted);margin-top:.6rem;line-height:1.5}
-.menu-divider{height:1px;background:var(--border);margin:1.25rem 0}
+.menu-card{background:var(--white);border-radius:22px;overflow:hidden;box-shadow:var(--shadow2);margin-bottom:1.1rem;animation:fadeUp .4s ease}
+.menu-hero{width:100%;height:200px;object-fit:cover;display:block}
+.menu-hero-placeholder{width:100%;height:160px;background:linear-gradient(135deg,#e8f4ea,#d0e8d8);display:flex;align-items:center;justify-content:center;font-size:4rem}
+.menu-card-body{padding:1.4rem}
+.menu-label{font-size:.7rem;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.35rem;display:flex;align-items:center;gap:.3rem}
+.menu-name{font-family:'Playfair Display',serif;font-size:1.55rem;color:var(--green);line-height:1.2}
+.menu-divider{height:1px;background:var(--border);margin:1.1rem 0}
 
-/* ATTENDANCE SECTION */
-.att-question{
-  font-size:.9rem;font-weight:600;color:var(--text);margin-bottom:1rem;
-  display:flex;align-items:center;gap:.5rem;
-}
+/* SIDE DISHES */
+.sides-section{margin-top:.8rem}
+.sides-label{font-size:.73rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.6rem}
+.side-dish-item{display:flex;align-items:center;gap:.75rem;background:var(--cream);border-radius:12px;padding:.65rem .85rem;margin-bottom:.5rem;border:1px solid var(--border)}
+.side-dish-img{width:44px;height:44px;border-radius:8px;object-fit:cover;flex-shrink:0;border:2px solid var(--white)}
+.side-dish-img-placeholder{width:44px;height:44px;border-radius:8px;background:linear-gradient(135deg,#d0e8d8,#b8d8c0);display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
+.side-dish-name{font-size:.9rem;font-weight:600;color:var(--text)}
+
+/* ATTENDANCE */
+.att-question{font-size:.88rem;font-weight:600;color:var(--text);margin-bottom:.9rem;display:flex;align-items:center;gap:.45rem}
 .att-question i{color:var(--amber)}
-.att-buttons{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
-.att-btn{
-  padding:1rem;border-radius:14px;cursor:pointer;border:2px solid var(--border);
-  font-family:'DM Sans',sans-serif;font-weight:700;font-size:1rem;
-  display:flex;flex-direction:column;align-items:center;gap:.4rem;transition:all .25s;
-  background:var(--cream);
-}
-.att-btn .att-icon{font-size:1.75rem;transition:transform .2s}
-.att-btn .att-label{font-size:.8rem;font-weight:600}
+.att-buttons{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}
+.att-btn{padding:.95rem;border-radius:14px;cursor:pointer;border:2px solid var(--border);font-family:'DM Sans',sans-serif;font-weight:700;font-size:.95rem;display:flex;flex-direction:column;align-items:center;gap:.35rem;transition:all .25s;background:var(--cream)}
+.att-btn .att-icon{font-size:1.65rem}
+.att-btn .att-label{font-size:.78rem;font-weight:600}
 .att-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:var(--shadow)}
 .att-btn-present:hover:not(:disabled){background:#d1fae5;border-color:var(--present);color:var(--present)}
 .att-btn-absent:hover:not(:disabled){background:#fee2e2;border-color:var(--absent);color:var(--absent)}
 .att-btn:disabled{opacity:.5;cursor:not-allowed}
-
-/* MARKED STATE */
-.att-marked{
-  border-radius:16px;padding:1.25rem;text-align:center;animation:fadeUp .3s ease;
-}
+.att-marked{border-radius:16px;padding:1.2rem;text-align:center;animation:fadeUp .3s ease}
 .att-marked.present{background:linear-gradient(135deg,#d1fae5,#a7f3d0);border:2px solid #6ee7b7}
 .att-marked.absent{background:linear-gradient(135deg,#fee2e2,#fecaca);border:2px solid #fca5a5}
-.att-marked .marked-icon{font-size:2.5rem;margin-bottom:.5rem;display:block}
-.att-marked .marked-title{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700}
-.att-marked .marked-sub{font-size:.82rem;margin-top:.25rem;opacity:.75}
+.att-marked .marked-icon{font-size:2.2rem;margin-bottom:.4rem;display:block}
+.att-marked .marked-title{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700}
+.att-marked .marked-sub{font-size:.8rem;margin-top:.2rem;opacity:.75}
+
+/* RATING CARD */
+.rating-card{background:var(--white);border-radius:18px;overflow:hidden;box-shadow:var(--shadow);margin-bottom:1.1rem}
+.rating-card-header{background:linear-gradient(135deg,var(--green),#1a4a32);color:#fff;padding:.9rem 1.2rem;display:flex;align-items:center;gap:.6rem}
+.rating-card-header i{font-size:.95rem;color:var(--gold)}
+.rating-card-header h3{font-family:'Playfair Display',serif;font-size:1rem}
+.rating-item{padding:1rem 1.2rem;border-bottom:1px solid var(--border)}
+.rating-item:last-child{border-bottom:none}
+.rating-item-name{font-weight:700;font-size:.92rem;color:var(--text);margin-bottom:.5rem;display:flex;align-items:center;gap:.5rem}
+.rating-item-type-badge{font-size:.66rem;background:rgba(45,106,79,.1);color:var(--green);border-radius:20px;padding:.1rem .45rem;font-weight:600}
+.star-row{display:flex;align-items:center;gap:.3rem;margin-bottom:.5rem}
+.star{font-size:1.6rem;cursor:pointer;color:#d1d5db;transition:color .15s,transform .1s;user-select:none;line-height:1}
+.star.active{color:var(--star)}
+.star:hover{transform:scale(1.15)}
+.rating-comment{width:100%;padding:.55rem .85rem;border:2px solid var(--border);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.85rem;resize:vertical;min-height:56px;background:var(--cream);transition:border .2s}
+.rating-comment:focus{outline:none;border-color:var(--green);background:var(--white)}
+.rated-badge{display:inline-flex;align-items:center;gap:.35rem;background:#d1fae5;color:#065f46;border-radius:20px;padding:.25rem .75rem;font-size:.78rem;font-weight:700;margin-bottom:.4rem}
+.rating-submit-row{padding:.85rem 1.2rem;background:var(--cream);display:flex;justify-content:flex-end}
+.btn-submit-rating{background:linear-gradient(135deg,var(--amber),#9a4418);color:#fff;border:none;padding:.6rem 1.4rem;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:.4rem}
+.btn-submit-rating:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(194,105,42,.4)}
+.btn-submit-rating:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+/* HISTORY */
+.history-panel{background:rgba(255,255,255,.95);border-radius:18px;overflow:hidden;box-shadow:var(--shadow);margin-top:1rem;animation:fadeUp .3s ease}
+.history-header{background:var(--cream);padding:.85rem 1.1rem;border-bottom:1px solid var(--border);font-weight:700;font-size:.88rem;color:var(--text);display:flex;align-items:center;gap:.4rem}
+.history-item{display:flex;align-items:center;justify-content:space-between;padding:.65rem 1.1rem;border-bottom:1px solid var(--border)}
+.history-item:last-child{border-bottom:none}
+.hi-date{font-weight:700;font-size:.85rem}
+.hi-day{font-size:.72rem;color:var(--muted)}
+.badge{display:inline-flex;align-items:center;gap:.25rem;padding:.2rem .6rem;border-radius:20px;font-size:.72rem;font-weight:700}
+.badge-present{background:#d1fae5;color:#065f46}
+.badge-absent{background:#fee2e2;color:#991b1b}
 
 /* NO MENU */
-.no-menu-card{
-  background:rgba(255,255,255,.92);border-radius:22px;padding:2.5rem;text-align:center;
-  box-shadow:var(--shadow2);animation:fadeUp .4s ease;
-}
-.no-menu-card .nm-icon{font-size:3.5rem;margin-bottom:1rem;display:block}
-.no-menu-card h2{font-family:'Playfair Display',serif;color:var(--green);font-size:1.3rem}
-.no-menu-card p{color:var(--muted);font-size:.88rem;margin-top:.5rem}
+.no-menu-card{background:rgba(255,255,255,.92);border-radius:22px;padding:2.5rem;text-align:center;box-shadow:var(--shadow2)}
+.nm-icon{font-size:3.5rem;display:block;margin-bottom:1rem}
+.no-menu-card h2{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--green);margin-bottom:.5rem}
+.no-menu-card p{color:var(--muted);font-size:.88rem}
 
-/* HISTORY PANEL */
-.history-panel{
-  background:rgba(255,255,255,.95);border-radius:22px;overflow:hidden;
-  box-shadow:var(--shadow2);margin-bottom:1.25rem;animation:fadeUp .3s ease;display:none;
-}
-.history-header{
-  padding:1rem 1.25rem;border-bottom:1px solid var(--border);
-  display:flex;align-items:center;justify-content:space-between;
-}
-.history-header h3{font-family:'Playfair Display',serif;color:var(--green);font-size:1rem}
-.history-close{background:none;border:none;color:var(--muted);cursor:pointer;font-size:1rem;padding:.25rem}
-.history-list{padding:.75rem}
-.history-item{
-  display:flex;align-items:center;justify-content:space-between;padding:.6rem .75rem;
-  border-radius:10px;margin-bottom:.35rem;background:var(--cream);
-}
-.history-item:last-child{margin-bottom:0}
-.hi-date{font-size:.85rem;font-weight:600;color:var(--text)}
-.hi-day{font-size:.72rem;color:var(--muted)}
-.badge{display:inline-flex;align-items:center;gap:.25rem;padding:.22rem .65rem;border-radius:20px;font-size:.75rem;font-weight:700}
-.badge-present{background:#d1fae5;color:var(--present)}
-.badge-absent{background:#fee2e2;color:var(--absent)}
+/* LOADING */
+.loading-card{background:rgba(255,255,255,.85);border-radius:22px;padding:2.5rem;text-align:center;box-shadow:var(--shadow2)}
+.spinner{width:28px;height:28px;border:3px solid rgba(45,106,79,.18);border-top-color:var(--green);border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
 
 /* TOAST */
-.toast{
-  position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(100px);
-  background:#1a1a1a;color:#fff;padding:.75rem 1.5rem;border-radius:12px;font-size:.88rem;
-  font-weight:500;z-index:999;transition:transform .3s ease;white-space:nowrap;box-shadow:var(--shadow2);
-}
-.toast.show{transform:translateX(-50%) translateY(0)}
+.toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(100px);background:#1a1a1a;color:#fff;padding:.65rem 1.3rem;border-radius:30px;font-size:.83rem;font-weight:500;z-index:9999;transition:transform .3s,opacity .3s;opacity:0;pointer-events:none}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
 .toast.success{background:var(--present)}
 .toast.error{background:var(--absent)}
 
-/* SPINNER */
-.spinner{display:inline-block;width:18px;height:18px;border:2px solid rgba(255,255,255,.4);
-  border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite}
-.spinner-dark{border-color:rgba(45,106,79,.3);border-top-color:var(--green)}
-
-/* LOADING OVERLAY */
-.loading-card{
-  background:rgba(255,255,255,.92);border-radius:22px;padding:3rem;text-align:center;
-  box-shadow:var(--shadow2);
-}
-.loading-card .l-spinner{
-  width:40px;height:40px;border-width:3px;
-  border-color:rgba(45,106,79,.2);border-top-color:var(--green);
-  margin:0 auto 1rem;
-}
-
-@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 @keyframes spin{to{transform:rotate(360deg)}}
-@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
-.pulse{animation:pulse 2s ease infinite}
 </style>
 </head>
 <body>
 <div id="bg"></div>
 <div id="root">
 
-<!-- ── AUTH SCREEN ── -->
-<div id="authScreen">
-  <div class="auth-brand">
-    <div class="auth-brand-icon"><i class="fa-solid fa-bowl-food"></i></div>
-    <h1>Office Canteen</h1>
-    <p>Mark your meal attendance</p>
-  </div>
-
-  <div class="auth-card">
-    <div class="auth-tabs">
-      <div class="auth-tab active" onclick="switchTab('login')" id="tab-login">Login</div>
-      <div class="auth-tab" onclick="switchTab('register')" id="tab-register">Register</div>
-      <div class="auth-tab" onclick="switchTab('forgot')" id="tab-forgot">Forgot</div>
+  <!-- ═══ AUTH SCREEN ═══ -->
+  <div id="authScreen">
+    <div class="auth-brand">
+      <div class="auth-brand-icon"><i class="fa-solid fa-utensils"></i></div>
+      <h1>Office Canteen</h1>
+      <p>Mark attendance & rate your meal</p>
     </div>
 
-    <!-- LOGIN -->
-    <div class="auth-panel active" id="panel-login">
-      <div class="field"><label>Employee ID</label><input type="text" id="l-empid" placeholder="e.g. SBI001" autocomplete="username" onkeydown="if(event.key==='Enter')document.getElementById('l-pass').focus()"></div>
-      <div class="field"><label>Password</label><input type="password" id="l-pass" placeholder="Your password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"></div>
-      <button class="btn btn-green" id="loginBtn" onclick="doLogin()">
-        <i class="fa-solid fa-right-to-bracket"></i> Sign In
-      </button>
-      <div class="msg" id="loginMsg"></div>
-      <p style="text-align:center;font-size:.8rem;color:var(--muted);margin-top:1rem">
-        New here? <a href="#" onclick="switchTab('register')" style="color:var(--amber);font-weight:600">Register →</a>
-      </p>
-    </div>
+    <div class="auth-card">
+      <div class="auth-tabs">
+        <div class="auth-tab active" onclick="switchAuthTab('login')" id="atab-login">Login</div>
+        <div class="auth-tab" onclick="switchAuthTab('register')" id="atab-register">Register</div>
+        <div class="auth-tab" onclick="switchAuthTab('reset')" id="atab-reset">Reset</div>
+      </div>
 
-    <!-- REGISTER -->
-    <div class="auth-panel" id="panel-register">
-      <div class="field"><label>Full Name *</label><input type="text" id="r-name" placeholder="Your full name"></div>
-      <div class="field"><label>Employee ID *</label><input type="text" id="r-empid" placeholder="e.g. SBI001"><div class="hint">Use your official employee or staff ID</div></div>
-      <div class="field">
-        <label>Department *</label>
-        <select id="r-dept">
-          <option value="">— Select Department —</option>
-          <option>Administration</option><option>Accounts</option><option>Operations</option>
-          <option>IT</option><option>HR</option><option>Credit</option><option>Marketing</option>
-          <option>Customer Service</option><option>Security</option><option>Other</option>
-        </select>
+      <!-- LOGIN -->
+      <div class="auth-panel active" id="apanel-login">
+        <div class="field"><label>Username</label><input type="text" id="l-username" placeholder="your.username" autocomplete="username" onkeydown="if(event.key==='Enter')doLogin()"></div>
+        <div class="field"><label>Password</label><input type="password" id="l-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
+        <button class="btn btn-green" id="loginBtn" onclick="doLogin()"><i class="fa-solid fa-right-to-bracket"></i> Sign In</button>
+        <div id="loginMsg" class="msg"></div>
       </div>
-      <div class="field"><label>Password * (min 4 chars)</label><input type="password" id="r-pass" placeholder="Create a password" autocomplete="new-password"></div>
-      <div class="field">
-        <label>Security Question *</label>
-        <select id="r-secq">
-          <option value="">— Choose a security question —</option>
-          <option value="What is your mother's maiden name?">Mother's maiden name?</option>
-          <option value="What was the name of your first pet?">Name of first pet?</option>
-          <option value="What is your place of birth?">Place of birth?</option>
-          <option value="What was your childhood nickname?">Childhood nickname?</option>
-          <option value="What is the name of your hometown?">Name of hometown?</option>
-        </select>
-      </div>
-      <div class="field"><label>Security Answer *</label><input type="text" id="r-seca" placeholder="Answer to your security question"></div>
-      <button class="btn btn-amber" id="registerBtn" onclick="doRegister()">
-        <i class="fa-solid fa-user-plus"></i> Create Account
-      </button>
-      <div class="msg" id="registerMsg"></div>
-    </div>
 
-    <!-- FORGOT PASSWORD -->
-    <div class="auth-panel" id="panel-forgot">
-      <!-- Step 1: Enter EmpID -->
-      <div id="forgot-step1">
-        <p style="font-size:.85rem;color:var(--muted);margin-bottom:1.25rem">Enter your Employee ID to retrieve your security question.</p>
-        <div class="field"><label>Employee ID</label><input type="text" id="f-empid" placeholder="e.g. SBI001"></div>
-        <button class="btn btn-outline" onclick="doForgotStep1()"><i class="fa-solid fa-search"></i> Find Account</button>
-        <div class="msg" id="forgotMsg1"></div>
-      </div>
-      <!-- Step 2: Answer security Q -->
-      <div id="forgot-step2" style="display:none">
-        <div style="background:var(--cream);border-radius:10px;padding:.85rem;margin-bottom:1rem;font-size:.88rem;color:var(--text)">
-          <strong style="display:block;font-size:.72rem;text-transform:uppercase;color:var(--muted);margin-bottom:.3rem">Security Question</strong>
-          <span id="f-secq-display"></span>
+      <!-- REGISTER -->
+      <div class="auth-panel" id="apanel-register">
+        <div class="field">
+          <label>Full Name</label>
+          <input type="text" id="r-name" placeholder="Your full name" autocomplete="name">
         </div>
-        <div class="field"><label>Your Answer</label><input type="text" id="f-seca" placeholder="Answer exactly as entered during registration"></div>
-        <div class="field"><label>New Password (min 4 chars)</label><input type="password" id="f-newpass" placeholder="New password" autocomplete="new-password"></div>
-        <button class="btn btn-green" onclick="doResetPassword()"><i class="fa-solid fa-key"></i> Reset Password</button>
-        <div class="msg" id="forgotMsg2"></div>
-        <p style="text-align:center;margin-top:.75rem"><a href="#" onclick="resetForgotFlow()" style="font-size:.8rem;color:var(--muted)">← Back</a></p>
+        <div class="field">
+          <label>Username</label>
+          <input type="text" id="r-username" placeholder="e.g. john.doe" autocomplete="username">
+          <div class="hint">Only letters, numbers, dot, underscore. No spaces.</div>
+        </div>
+        <div class="field"><label>Password</label><input type="password" id="r-pass" placeholder="Min 4 characters"></div>
+        <div class="field"><label>Confirm Password</label><input type="password" id="r-pass2" placeholder="Repeat password" onkeydown="if(event.key==='Enter')doRegister()"></div>
+        <button class="btn btn-amber" id="regBtn" onclick="doRegister()"><i class="fa-solid fa-user-plus"></i> Create Account</button>
+        <div id="regMsg" class="msg"></div>
+      </div>
+
+      <!-- RESET PASSWORD -->
+      <div class="auth-panel" id="apanel-reset">
+        <p style="font-size:.82rem;color:var(--muted);margin-bottom:1rem">Enter your username and full name to reset your password.</p>
+        <div class="field"><label>Username</label><input type="text" id="rp-username" placeholder="your.username"></div>
+        <div class="field">
+          <label>Full Name (for verification)</label>
+          <input type="text" id="rp-name" placeholder="Exactly as registered">
+        </div>
+        <div class="field"><label>New Password</label><input type="password" id="rp-pass" placeholder="Min 4 characters"></div>
+        <div class="field"><label>Confirm New Password</label><input type="password" id="rp-pass2" placeholder="Repeat new password" onkeydown="if(event.key==='Enter')doReset()"></div>
+        <button class="btn btn-ghost" id="resetBtn" onclick="doReset()"><i class="fa-solid fa-key"></i> Reset Password</button>
+        <div id="resetMsg" class="msg"></div>
       </div>
     </div>
   </div>
-</div>
 
-<!-- ── APP SCREEN ── -->
-<div id="appScreen">
-  <div class="app-header">
-    <div class="user-greeting">
-      <div class="label">Welcome back</div>
-      <div class="name" id="userName">—</div>
-      <div class="dept" id="userDept"></div>
+  <!-- ═══ APP SCREEN ═══ -->
+  <div id="appScreen">
+    <div class="app-header">
+      <div class="user-greeting">
+        <div class="label">Signed in as</div>
+        <div class="name" id="userName">—</div>
+        <div style="font-size:.72rem;color:rgba(255,255,255,.5);margin-top:.1rem" id="userUsername"></div>
+      </div>
+      <div class="header-actions">
+        <button class="btn-hdr" onclick="toggleHistory()"><i class="fa-solid fa-clock-rotate-left"></i> History</button>
+        <button class="btn-hdr btn-hdr-red" onclick="doLogout()"><i class="fa-solid fa-right-from-bracket"></i></button>
+      </div>
     </div>
-    <div class="header-right">
-      <button class="btn-history" onclick="toggleHistory()"><i class="fa-solid fa-clock-rotate-left"></i> History</button>
-      <button class="btn-logout" onclick="doLogout()"><i class="fa-solid fa-right-from-bracket"></i></button>
+
+    <div class="app-body">
+      <div class="date-strip">
+        <span class="dot"></span>
+        <span id="dateStrip">—</span>
+        <span class="dot"></span>
+      </div>
+
+      <div id="mainContent"></div>
+      <div id="ratingSection"></div>
+      <div id="historyPanel" style="display:none"></div>
     </div>
   </div>
-
-  <div class="app-body">
-    <div class="date-strip">
-      <div class="dot"></div>
-      <span id="todayStr">Today</span>
-      <div class="dot"></div>
-    </div>
-
-    <!-- HISTORY PANEL -->
-    <div class="history-panel" id="historyPanel">
-      <div class="history-header">
-        <h3><i class="fa-solid fa-clock-rotate-left" style="color:var(--amber)"></i> My Attendance History</h3>
-        <button class="history-close" onclick="toggleHistory()"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-      <div class="history-list" id="historyList">
-        <div style="text-align:center;padding:1rem;color:var(--muted)"><span class="spinner spinner-dark"></span></div>
-      </div>
-    </div>
-
-    <!-- MAIN CONTENT -->
-    <div id="mainContent">
-      <div class="loading-card">
-        <div class="spinner spinner-dark l-spinner pulse"></div>
-        <p style="color:var(--muted);font-size:.9rem">Loading today's menu…</p>
-      </div>
-    </div>
-
-  </div>
-</div>
 
 </div><!-- /root -->
 <div class="toast" id="toast"></div>
 
 <script>
 // ─────────────────────────────────────────────
-//  CONFIG — CHANGE THIS
+//  CONFIG — replace with your deployed Apps Script URL
 // ─────────────────────────────────────────────
-const API_URL = 'https://script.google.com/macros/s/AKfycbyc3lIQsb7FFTJ9vgcH-6gkhmqwhqogKc9ipNMpdhn7-oiCzAUDaVuVm0jUw2fdajOG/exec'; // Paste your deployed Apps Script URL here
+const API_URL = 'YOUR_APPS_SCRIPT_WEB_APP_URL';
 
 // ─────────────────────────────────────────────
 //  STATE
 // ─────────────────────────────────────────────
-let userToken = localStorage.getItem('userToken') || '';
-let userData  = JSON.parse(localStorage.getItem('userData') || 'null');
+let userToken  = '';
+let userData   = null;
 let historyOpen = false;
-
-// ─────────────────────────────────────────────
-//  INIT
-// ─────────────────────────────────────────────
-window.onload = () => {
-  document.getElementById('todayStr').textContent =
-    new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-  if (userToken && userData) {
-    showApp(userData);
-  }
-};
+let currentMenu = null;
+let userRatings = {};  // { itemName: { rating, comment } }
+let pendingRatings = {}; // { itemName: { rating, comment } } — staging
 
 // ─────────────────────────────────────────────
 //  API (JSONP)
 // ─────────────────────────────────────────────
 function api(params) {
   return new Promise((resolve, reject) => {
-    const cbName = '_cb' + Date.now() + Math.random().toString(36).slice(2);
-    const url = API_URL + '?' + Object.entries({...params, callback: cbName})
-      .map(([k,v]) => encodeURIComponent(k) + '=' + encodeURIComponent(v)).join('&');
-    window[cbName] = data => {
-      delete window[cbName];
-      if (script.parentNode) document.head.removeChild(script);
-      resolve(data);
-    };
+    const cb  = 'cb_' + Date.now() + '_' + Math.floor(Math.random()*9999);
+    const qs  = Object.entries({ ...params, callback: cb })
+                      .map(([k,v]) => encodeURIComponent(k) + '=' + encodeURIComponent(v)).join('&');
     const script = document.createElement('script');
-    script.src = url;
-    script.onerror = () => { delete window[cbName]; reject(new Error('Network error')); };
+    const timer  = setTimeout(() => { cleanup(); reject(new Error('Timeout')); }, 15000);
+    window[cb]   = data => { cleanup(); resolve(data); };
+    function cleanup() { clearTimeout(timer); delete window[cb]; script.remove(); }
+    script.onerror = () => { cleanup(); reject(new Error('Network error')); };
+    script.src = API_URL + '?' + qs;
     document.head.appendChild(script);
-    setTimeout(() => { if (window[cbName]) { delete window[cbName]; reject(new Error('Timeout')); }}, 15000);
   });
 }
+
+// ─────────────────────────────────────────────
+//  INIT
+// ─────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  userToken = localStorage.getItem('userToken') || '';
+  userData  = JSON.parse(localStorage.getItem('userData') || 'null');
+  if (userToken && userData) showApp(userData);
+
+  document.getElementById('dateStrip').textContent =
+    new Date().toLocaleDateString('en-IN', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+});
 
 // ─────────────────────────────────────────────
 //  AUTH TABS
 // ─────────────────────────────────────────────
-function switchTab(name) {
-  ['login','register','forgot'].forEach(t => {
-    document.getElementById('tab-' + t).classList.toggle('active', t === name);
-    document.getElementById('panel-' + t).classList.toggle('active', t === name);
-  });
-}
-
-// ─────────────────────────────────────────────
-//  LOGIN
-// ─────────────────────────────────────────────
-async function doLogin() {
-  const empid = document.getElementById('l-empid').value.trim();
-  const pass  = document.getElementById('l-pass').value;
-  const btn   = document.getElementById('loginBtn');
-  if (!empid || !pass) { showMsg('loginMsg','Please enter Employee ID and password','error'); return; }
-  btn.innerHTML = '<span class="spinner"></span> Signing in…';
-  btn.disabled = true;
-  try {
-    const res = await api({ action:'login', empid, password:pass });
-    if (res.success) {
-      saveSession(res);
-      showApp(res);
-    } else {
-      showMsg('loginMsg', res.message || 'Login failed', 'error');
-      btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Sign In';
-      btn.disabled = false;
-    }
-  } catch(e) {
-    showMsg('loginMsg','Cannot reach server. Check your network.','error');
-    btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Sign In';
-    btn.disabled = false;
-  }
+function switchAuthTab(name) {
+  document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.auth-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('atab-'   + name).classList.add('active');
+  document.getElementById('apanel-' + name).classList.add('active');
 }
 
 // ─────────────────────────────────────────────
 //  REGISTER
 // ─────────────────────────────────────────────
 async function doRegister() {
-  const name = document.getElementById('r-name').value.trim();
-  const empid= document.getElementById('r-empid').value.trim();
-  const dept = document.getElementById('r-dept').value;
-  const pass = document.getElementById('r-pass').value;
-  const secQ = document.getElementById('r-secq').value;
-  const secA = document.getElementById('r-seca').value.trim();
-  const btn  = document.getElementById('registerBtn');
+  const name  = document.getElementById('r-name').value.trim();
+  const uname = document.getElementById('r-username').value.trim().toLowerCase();
+  const pass  = document.getElementById('r-pass').value;
+  const pass2 = document.getElementById('r-pass2').value;
 
-  if (!name||!empid||!dept||!pass||!secQ||!secA) {
-    showMsg('registerMsg','All fields are required','error'); return;
-  }
-  if (pass.length < 4) { showMsg('registerMsg','Password must be at least 4 characters','error'); return; }
+  if (!name||!uname||!pass||!pass2) { showMsg('regMsg','All fields are required','error'); return; }
+  if (pass !== pass2) { showMsg('regMsg','Passwords do not match','error'); return; }
+  if (pass.length < 4) { showMsg('regMsg','Password must be at least 4 characters','error'); return; }
 
-  btn.innerHTML = '<span class="spinner"></span> Creating account…';
-  btn.disabled = true;
+  const btn = document.getElementById('regBtn');
+  btn.disabled = true; btn.innerHTML = '<span class="spinner" style="width:16px;height:16px;border-width:2px"></span> Creating…';
   try {
-    const res = await api({ action:'register', name, empid, dept, password:pass, secQ, secA });
+    const res = await api({ action:'register', name, username:uname, password:pass });
     if (res.success) {
       saveSession(res);
       showApp(res);
-      toast('Welcome, ' + res.name + '!','success');
-    } else {
-      showMsg('registerMsg', res.message, 'error');
-      btn.innerHTML = '<i class="fa-solid fa-user-plus"></i> Create Account';
-      btn.disabled = false;
-    }
-  } catch(e) {
-    showMsg('registerMsg','Network error. Please try again.','error');
-    btn.innerHTML = '<i class="fa-solid fa-user-plus"></i> Create Account';
-    btn.disabled = false;
-  }
+      toast('Welcome, ' + res.name + '! 🎉','success');
+    } else showMsg('regMsg', res.message,'error');
+  } catch(e) { showMsg('regMsg','Connection error. Check API_URL.','error'); }
+  btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-user-plus"></i> Create Account';
 }
 
 // ─────────────────────────────────────────────
-//  FORGOT PASSWORD
+//  LOGIN
 // ─────────────────────────────────────────────
-let forgotEmpid = '';
+async function doLogin() {
+  const uname = document.getElementById('l-username').value.trim().toLowerCase();
+  const pass  = document.getElementById('l-pass').value;
+  if (!uname||!pass) { showMsg('loginMsg','Enter username and password','error'); return; }
 
-async function doForgotStep1() {
-  const empid = document.getElementById('f-empid').value.trim();
-  if (!empid) { showMsg('forgotMsg1','Enter your Employee ID','error'); return; }
+  const btn = document.getElementById('loginBtn');
+  btn.disabled = true; btn.innerHTML = '<span class="spinner" style="width:16px;height:16px;border-width:2px"></span> Signing in…';
   try {
-    const res = await api({ action:'forgotPassword', empid });
-    if (res.success) {
-      forgotEmpid = empid;
-      document.getElementById('f-secq-display').textContent = res.secQ;
-      document.getElementById('forgot-step1').style.display = 'none';
-      document.getElementById('forgot-step2').style.display = 'block';
-    } else {
-      showMsg('forgotMsg1', res.message, 'error');
-    }
-  } catch(e) { showMsg('forgotMsg1','Network error','error'); }
-}
-
-async function doResetPassword() {
-  const secA   = document.getElementById('f-seca').value.trim();
-  const newPass= document.getElementById('f-newpass').value;
-  if (!secA||!newPass) { showMsg('forgotMsg2','All fields required','error'); return; }
-  if (newPass.length < 4) { showMsg('forgotMsg2','Password too short','error'); return; }
-  try {
-    const res = await api({ action:'resetPassword', empid:forgotEmpid, secA, newPass });
+    const res = await api({ action:'login', username:uname, password:pass });
     if (res.success) {
       saveSession(res);
       showApp(res);
-      toast('Password reset! Welcome back, ' + res.name,'success');
-    } else {
-      showMsg('forgotMsg2', res.message,'error');
-    }
-  } catch(e) { showMsg('forgotMsg2','Network error','error'); }
+    } else showMsg('loginMsg', res.message,'error');
+  } catch(e) { showMsg('loginMsg','Connection error. Check API_URL.','error'); }
+  btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Sign In';
 }
 
-function resetForgotFlow() {
-  document.getElementById('forgot-step1').style.display = 'block';
-  document.getElementById('forgot-step2').style.display = 'none';
-  forgotEmpid = '';
-  document.getElementById('f-empid').value = '';
-  document.getElementById('f-seca').value = '';
-  document.getElementById('f-newpass').value = '';
-  hideMsg('forgotMsg1'); hideMsg('forgotMsg2');
+// ─────────────────────────────────────────────
+//  RESET PASSWORD
+// ─────────────────────────────────────────────
+async function doReset() {
+  const uname   = document.getElementById('rp-username').value.trim().toLowerCase();
+  const name    = document.getElementById('rp-name').value.trim();
+  const newPass = document.getElementById('rp-pass').value;
+  const newPass2= document.getElementById('rp-pass2').value;
+
+  if (!uname||!name||!newPass||!newPass2) { showMsg('resetMsg','All fields are required','error'); return; }
+  if (newPass !== newPass2) { showMsg('resetMsg','Passwords do not match','error'); return; }
+
+  const btn = document.getElementById('resetBtn');
+  btn.disabled = true; btn.innerHTML = '<span class="spinner" style="width:16px;height:16px;border-width:2px"></span> Resetting…';
+  try {
+    const res = await api({ action:'resetPassword', username:uname, name, newPass });
+    if (res.success) {
+      showMsg('resetMsg', res.message + ' You can now login.','success');
+      setTimeout(() => switchAuthTab('login'), 2000);
+    } else showMsg('resetMsg', res.message,'error');
+  } catch(e) { showMsg('resetMsg','Connection error.','error'); }
+  btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-key"></i> Reset Password';
 }
 
 // ─────────────────────────────────────────────
@@ -543,9 +376,9 @@ function resetForgotFlow() {
 // ─────────────────────────────────────────────
 function saveSession(res) {
   userToken = res.token;
-  userData  = { name:res.name, empid:res.empid, dept:res.dept };
+  userData  = { name: res.name, username: res.username };
   localStorage.setItem('userToken', userToken);
-  localStorage.setItem('userData',  JSON.stringify(userData));
+  localStorage.setItem('userData', JSON.stringify(userData));
 }
 
 function doLogout() {
@@ -554,11 +387,9 @@ function doLogout() {
   localStorage.removeItem('userData');
   document.getElementById('authScreen').style.display = 'flex';
   document.getElementById('appScreen').style.display  = 'none';
-  document.getElementById('bg').style.filter = '';
-  document.getElementById('l-empid').value = '';
+  document.getElementById('l-username').value = '';
   document.getElementById('l-pass').value = '';
-  document.getElementById('loginBtn').innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Sign In';
-  document.getElementById('loginBtn').disabled = false;
+  switchAuthTab('login');
 }
 
 // ─────────────────────────────────────────────
@@ -567,30 +398,36 @@ function doLogout() {
 function showApp(user) {
   document.getElementById('authScreen').style.display = 'none';
   document.getElementById('appScreen').style.display  = 'flex';
-  document.getElementById('bg').style.filter = 'brightness(.35)';
-  document.getElementById('userName').textContent = user.name;
-  document.getElementById('userDept').textContent = user.dept + ' · ' + user.empid;
-  loadMenu();
+  document.getElementById('userName').textContent    = user.name;
+  document.getElementById('userUsername').textContent = '@' + user.username;
+  loadMenuAndAttendance();
 }
 
 // ─────────────────────────────────────────────
 //  MENU + ATTENDANCE
 // ─────────────────────────────────────────────
-async function loadMenu() {
+async function loadMenuAndAttendance() {
   document.getElementById('mainContent').innerHTML = `
     <div class="loading-card">
-      <div class="spinner spinner-dark l-spinner pulse" style="width:40px;height:40px;border-width:3px;margin:0 auto 1rem"></div>
-      <p style="color:var(--muted);font-size:.9rem">Loading today's menu…</p>
+      <span class="spinner" style="width:36px;height:36px;border-width:3px;display:block;margin:0 auto 1rem"></span>
+      <p style="color:var(--muted);font-size:.88rem">Loading today's menu…</p>
     </div>`;
+  document.getElementById('ratingSection').innerHTML = '';
+
   try {
-    const [menuRes, attRes] = await Promise.all([
+    const [menuRes, attRes, ratRes] = await Promise.all([
       api({ action:'getMenu' }),
-      api({ action:'checkAttendance', token:userToken })
+      api({ action:'checkAttendance', token:userToken }),
+      api({ action:'getMyRatings',   token:userToken })
     ]);
 
-    if (!attRes.success && attRes.message?.includes('session')) { doLogout(); return; }
+    if (attRes.message && attRes.message.includes('session')) { doLogout(); return; }
 
-    if (!menuRes.menu) {
+    currentMenu  = menuRes.menu;
+    userRatings  = ratRes.ratings || {};
+    pendingRatings = {};
+
+    if (!currentMenu) {
       document.getElementById('mainContent').innerHTML = `
         <div class="no-menu-card">
           <span class="nm-icon">🍽️</span>
@@ -600,24 +437,43 @@ async function loadMenu() {
       return;
     }
 
-    renderMenuAndAttendance(menuRes.menu, attRes);
+    renderMenuCard(currentMenu, attRes);
+    renderRatingSection(currentMenu);
   } catch(e) {
     document.getElementById('mainContent').innerHTML = `
       <div class="no-menu-card">
         <span class="nm-icon">⚠️</span>
         <h2>Connection Error</h2>
-        <p>Could not load menu. Please check your network and <a href="#" onclick="loadMenu()" style="color:var(--amber)">try again</a>.</p>
+        <p>Could not load menu. <a href="#" onclick="loadMenuAndAttendance()" style="color:var(--amber)">Try again</a></p>
       </div>`;
   }
 }
 
-function renderMenuAndAttendance(menu, attRes) {
-  const imgHtml = menu.imageUrl
-    ? `<img src="${escHtml(menu.imageUrl)}" class="menu-card-img" loading="lazy" alt="${escHtml(menu.name)}" onerror="this.style.display='none'">`
-    : `<div class="menu-card-img-placeholder">🍱</div>`;
+function renderMenuCard(menu, attRes) {
+  // Main course image
+  const heroHtml = menu.mainCourseImg
+    ? `<img src="${escHtml(menu.mainCourseImg)}" class="menu-hero" loading="eager"
+           alt="${escHtml(menu.mainCourse)}"
+           onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+    : '';
+  const heroPlaceholder = (!menu.mainCourseImg)
+    ? `<div class="menu-hero-placeholder">🍱</div>`
+    : `<div class="menu-hero-placeholder" style="display:none">🍱</div>`;
 
-  const attHtml = attRes.marked
-    ? buildMarkedHtml(attRes.status)
+  // Side dishes
+  const sidesHtml = (menu.sideDishes||[]).length ? `
+    <div class="sides-section">
+      <div class="sides-label"><i class="fa-solid fa-leaf" style="color:var(--green);font-size:.75rem"></i> Side Dishes</div>
+      ${menu.sideDishes.map(s => {
+        const sImg = s.imgUrl
+          ? `<img src="${escHtml(s.imgUrl)}" class="side-dish-img" alt="${escHtml(s.name||'')}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="side-dish-img-placeholder" style="display:none">🥗</div>`
+          : `<div class="side-dish-img-placeholder">🥗</div>`;
+        return `<div class="side-dish-item">${sImg}<div class="side-dish-name">${escHtml(s.name||'')}</div></div>`;
+      }).join('')}
+    </div>` : '';
+
+  // Attendance section
+  const attHtml = attRes.marked ? buildMarkedHtml(attRes.status)
     : `<div class="att-question"><i class="fa-solid fa-circle-question"></i> Will you have lunch today?</div>
        <div class="att-buttons">
          <button class="att-btn att-btn-present" onclick="markAttendance('present')">
@@ -630,11 +486,11 @@ function renderMenuAndAttendance(menu, attRes) {
 
   document.getElementById('mainContent').innerHTML = `
     <div class="menu-card">
-      ${imgHtml}
+      ${heroHtml}${heroPlaceholder}
       <div class="menu-card-body">
-        <div class="menu-label"><i class="fa-solid fa-star"></i> Today's Menu</div>
-        <div class="menu-name">${escHtml(menu.name)}</div>
-        ${menu.description ? `<div class="menu-desc">${escHtml(menu.description)}</div>` : ''}
+        <div class="menu-label"><i class="fa-solid fa-star"></i> Today's Main Course</div>
+        <div class="menu-name">${escHtml(menu.mainCourse)}</div>
+        ${sidesHtml}
         <div class="menu-divider"></div>
         <div id="attendanceSection">${attHtml}</div>
       </div>
@@ -642,16 +498,15 @@ function renderMenuAndAttendance(menu, attRes) {
 }
 
 function buildMarkedHtml(status) {
-  const isPresent = status === 'present';
+  const p = status === 'present';
   return `<div class="att-marked ${status}">
-    <span class="marked-icon">${isPresent ? '✅' : '🚫'}</span>
-    <div class="marked-title">${isPresent ? 'Attending Lunch!' : 'Skipping Today'}</div>
-    <div class="marked-sub">${isPresent ? 'Your attendance is confirmed. Enjoy your meal!' : 'You\'ve marked as absent for today.'}</div>
+    <span class="marked-icon">${p?'✅':'🚫'}</span>
+    <div class="marked-title">${p?'Attending Lunch!':'Skipping Today'}</div>
+    <div class="marked-sub">${p?'Your attendance is confirmed. Enjoy your meal!':'You\'ve marked absent for today.'}</div>
   </div>`;
 }
 
 async function markAttendance(status) {
-  // Disable buttons immediately
   document.querySelectorAll('.att-btn').forEach(b => b.disabled = true);
   try {
     const res = await api({ action:'markAttendance', token:userToken, status });
@@ -663,66 +518,176 @@ async function markAttendance(status) {
     } else if (res.message?.includes('session')) {
       doLogout();
     } else {
-      toast(res.message || 'Error','error');
+      toast(res.message||'Error','error');
       document.querySelectorAll('.att-btn').forEach(b => b.disabled = false);
     }
   } catch(e) {
-    toast('Network error. Please try again.','error');
+    toast('Network error. Try again.','error');
     document.querySelectorAll('.att-btn').forEach(b => b.disabled = false);
   }
+}
+
+// ─────────────────────────────────────────────
+//  RATINGS
+// ─────────────────────────────────────────────
+function renderRatingSection(menu) {
+  if (!menu) return;
+  const items = [
+    { name: menu.mainCourse, type: 'main' },
+    ...(menu.sideDishes||[]).map(d => ({ name: d.name, type: 'side' }))
+  ].filter(i => i.name);
+
+  const itemsHtml = items.map((item, idx) => {
+    const existing = userRatings[item.name];
+    const typeLabel = item.type === 'main' ? 'Main Course' : 'Side Dish';
+    const ratedHtml = existing
+      ? `<div class="rated-badge"><i class="fa-solid fa-check"></i> Rated ${existing.rating}★</div>` : '';
+    const starsHtml = [1,2,3,4,5].map(s => {
+      const active = existing && existing.rating >= s ? 'active' : '';
+      return `<span class="star ${active}" onclick="setRating('${escAttr(item.name)}',${s})" id="star-${idx}-${s}">★</span>`;
+    }).join('');
+    const commentVal = existing ? escHtml(existing.comment||'') : '';
+    return `
+      <div class="rating-item" id="ritem-${idx}">
+        <div class="rating-item-name">
+          ${escHtml(item.name)}
+          <span class="rating-item-type-badge">${typeLabel}</span>
+        </div>
+        ${ratedHtml}
+        <div class="star-row" id="stars-${idx}">${starsHtml}</div>
+        <textarea class="rating-comment" id="comment-${idx}" placeholder="Add a comment (optional)…" rows="2">${commentVal}</textarea>
+      </div>`;
+  }).join('');
+
+  document.getElementById('ratingSection').innerHTML = `
+    <div class="rating-card">
+      <div class="rating-card-header">
+        <i class="fa-solid fa-star"></i>
+        <h3>Rate Today's Menu</h3>
+      </div>
+      ${itemsHtml}
+      <div class="rating-submit-row">
+        <button class="btn-submit-rating" id="ratingSubmitBtn" onclick="submitAllRatings()">
+          <i class="fa-solid fa-paper-plane"></i> Submit Ratings
+        </button>
+      </div>
+    </div>`;
+
+  // Track pending selections from existing data
+  items.forEach((item, idx) => {
+    const existing = userRatings[item.name];
+    if (existing) {
+      pendingRatings[item.name] = { ...existing, type: item.type };
+    }
+  });
+}
+
+function setRating(itemName, rating) {
+  // Find the item index
+  const items = currentMenu ? [
+    { name: currentMenu.mainCourse, type: 'main' },
+    ...(currentMenu.sideDishes||[]).map(d => ({ name: d.name, type: 'side' }))
+  ].filter(i=>i.name) : [];
+
+  const idx = items.findIndex(i => i.name === itemName);
+  if (idx < 0) return;
+
+  if (!pendingRatings[itemName]) pendingRatings[itemName] = { type: items[idx].type };
+  pendingRatings[itemName].rating = rating;
+
+  // Update star visuals
+  for (let s=1;s<=5;s++) {
+    const el = document.getElementById(`star-${idx}-${s}`);
+    if (el) el.className = 'star' + (s <= rating ? ' active' : '');
+  }
+}
+
+async function submitAllRatings() {
+  // Collect comments from DOM
+  const items = currentMenu ? [
+    { name: currentMenu.mainCourse, type: 'main' },
+    ...(currentMenu.sideDishes||[]).map(d => ({ name: d.name, type: 'side' }))
+  ].filter(i=>i.name) : [];
+
+  let submitted = 0;
+  const toSubmit = [];
+  items.forEach((item, idx) => {
+    const pending = pendingRatings[item.name];
+    const comment = document.getElementById(`comment-${idx}`)?.value?.trim() || '';
+    if (pending && pending.rating) {
+      toSubmit.push({ itemName: item.name, itemType: item.type, rating: pending.rating, comment });
+    }
+  });
+
+  if (!toSubmit.length) { toast('Please select a star rating first','error'); return; }
+
+  const btn = document.getElementById('ratingSubmitBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner" style="width:14px;height:14px;border-width:2px"></span> Submitting…';
+
+  try {
+    for (const r of toSubmit) {
+      await api({ action:'submitRating', token:userToken, ...r });
+      submitted++;
+    }
+    toast(`${submitted} rating${submitted>1?'s':''} submitted! Thank you 🙏`,'success');
+    // Refresh ratings from server
+    const ratRes = await api({ action:'getMyRatings', token:userToken });
+    userRatings = ratRes.ratings || {};
+    renderRatingSection(currentMenu);
+  } catch(e) {
+    toast('Could not submit ratings. Try again.','error');
+  }
+
+  btn.disabled = false;
+  btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Submit Ratings';
 }
 
 // ─────────────────────────────────────────────
 //  HISTORY
 // ─────────────────────────────────────────────
 async function toggleHistory() {
-  const panel = document.getElementById('historyPanel');
   historyOpen = !historyOpen;
+  const panel = document.getElementById('historyPanel');
   panel.style.display = historyOpen ? 'block' : 'none';
-  if (historyOpen) {
-    document.getElementById('historyList').innerHTML =
-      '<div style="text-align:center;padding:1rem;color:var(--muted)"><span class="spinner spinner-dark"></span></div>';
-    try {
-      const res = await api({ action:'getMyAttendance', token:userToken });
-      if (!res.records || !res.records.length) {
-        document.getElementById('historyList').innerHTML =
-          '<div style="text-align:center;padding:1rem;color:var(--muted);font-size:.88rem">No attendance records yet.</div>';
-        return;
-      }
-      document.getElementById('historyList').innerHTML = res.records.map(r => {
-        const d = new Date(r.date + 'T00:00:00');
-        const dayName = d.toLocaleDateString('en-IN',{weekday:'short'});
-        const dateStr = d.toLocaleDateString('en-IN',{day:'numeric',month:'short'});
-        return `<div class="history-item">
-          <div><div class="hi-date">${dateStr}</div><div class="hi-day">${dayName}</div></div>
-          <span class="badge badge-${r.status}">${r.status==='present'?'✓ Present':'✗ Absent'}</span>
-        </div>`;
-      }).join('');
-    } catch(e) {
-      document.getElementById('historyList').innerHTML =
-        '<div style="text-align:center;padding:1rem;color:var(--muted);font-size:.88rem">Could not load history.</div>';
+  if (!historyOpen) return;
+
+  panel.innerHTML = `<div class="history-panel">
+    <div class="history-header"><i class="fa-solid fa-clock-rotate-left"></i> My Attendance</div>
+    <div id="historyList" style="text-align:center;padding:1.5rem"><span class="spinner"></span></div>
+  </div>`;
+
+  try {
+    const res = await api({ action:'getMyAttendance', token:userToken });
+    const list = document.getElementById('historyList');
+    if (!res.records||!res.records.length) {
+      list.innerHTML = '<div style="padding:1rem;color:var(--muted);font-size:.85rem">No records yet.</div>';
+      return;
     }
+    list.innerHTML = res.records.map(r => {
+      const d       = new Date(r.date + 'T00:00:00');
+      const dayName = d.toLocaleDateString('en-IN',{weekday:'short'});
+      const dateStr = d.toLocaleDateString('en-IN',{day:'numeric',month:'short'});
+      return `<div class="history-item">
+        <div><div class="hi-date">${dateStr}</div><div class="hi-day">${dayName}</div></div>
+        <span class="badge badge-${r.status}">${r.status==='present'?'✓ Present':'✗ Absent'}</span>
+      </div>`;
+    }).join('');
+  } catch(e) {
+    document.getElementById('historyList').innerHTML =
+      '<div style="padding:1rem;color:var(--muted);font-size:.85rem">Could not load history.</div>';
   }
 }
 
 // ─────────────────────────────────────────────
 //  UTILS
 // ─────────────────────────────────────────────
-function showMsg(id, text, type) {
-  const el = document.getElementById(id);
-  el.textContent = text; el.className = 'msg ' + type + ' show';
-}
-function hideMsg(id) { const el=document.getElementById(id); if(el){el.className='msg';el.textContent='';} }
+function showMsg(id,text,type){const el=document.getElementById(id);el.textContent=text;el.className='msg '+(type||'')+' show';}
+function hideMsg(id){const el=document.getElementById(id);if(el){el.className='msg';el.textContent='';}}
 let toastTimer;
-function toast(msg, type='') {
-  const el = document.getElementById('toast');
-  el.textContent = msg; el.className = 'toast show' + (type ? ' '+type : '');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(()=>el.className='toast', 3200);
-}
-function escHtml(str) {
-  return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
+function toast(msg,type=''){const el=document.getElementById('toast');el.textContent=msg;el.className='toast show'+(type?' '+type:'');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.className='toast',3200);}
+function escHtml(str){return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function escAttr(str){return String(str||'').replace(/'/g,"\\'").replace(/"/g,'&quot;');}
 </script>
 </body>
 </html>
