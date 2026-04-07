@@ -8,7 +8,7 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 <style>
 :root{
-  --amber:#c2692a;--green:#2d6a4f;--gold:#e8a020;--cream:#fdf8f2;--white:#ffffff;
+  --amber:#c2692a;--green:#2d6a4f;--gold:#e8a020;--cream:#fdf8f2;--white:#fff;
   --text:#1a1a1a;--muted:#6b7280;--border:#e5e0d8;--shadow:0 4px 24px rgba(0,0,0,.10);
   --shadow2:0 8px 40px rgba(0,0,0,.15);--radius:16px;--present:#059669;--absent:#dc2626;
   --star:#f59e0b;
@@ -18,54 +18,45 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;color:var(--text)}
 #bg{position:fixed;inset:0;z-index:0;background:url('https://images.unsplash.com/photo-1567337710282-00832b415979?w=1920&q=80') center/cover no-repeat}
 #bg::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(18,50,30,.82) 0%,rgba(90,40,10,.70) 100%)}
 
-/* LOGIN */
-#loginScreen{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;padding:1rem}
-.login-card{background:var(--white);border-radius:var(--radius);padding:2.5rem;width:100%;max-width:400px;box-shadow:var(--shadow2);animation:fadeUp .5s ease}
-.brand{text-align:center;margin-bottom:2rem}
-.brand-icon{width:64px;height:64px;background:linear-gradient(135deg,var(--green),var(--amber));border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:1.8rem;color:#fff}
-.brand h1{font-family:'Playfair Display',serif;font-size:1.5rem;color:var(--green)}
-.brand p{color:var(--muted);font-size:.85rem;margin-top:.2rem}
+/* APP */
+#app{position:relative;z-index:10;min-height:100vh}
+.topbar{background:rgba(18,50,30,.92);backdrop-filter:blur(12px);padding:.8rem 1.5rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;border-bottom:1px solid rgba(255,255,255,.1)}
+.topbar-brand{display:flex;align-items:center;gap:.7rem;color:#fff}
+.topbar-icon{width:34px;height:34px;background:linear-gradient(135deg,var(--gold),var(--amber));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.95rem}
+.topbar-brand h2{font-family:'Playfair Display',serif;font-size:1.1rem}
+.topbar-brand span{font-size:.68rem;opacity:.6;display:block;margin-top:-2px}
+.refresh-badge{display:flex;align-items:center;gap:.4rem;color:rgba(255,255,255,.6);font-size:.72rem;padding:.3rem .6rem;background:rgba(255,255,255,.08);border-radius:20px}
+.refresh-dot{width:7px;height:7px;border-radius:50%;background:var(--gold);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 
 /* FORM */
 .field{margin-bottom:1.1rem}
 .field label{display:block;font-size:.75rem;font-weight:700;color:var(--muted);margin-bottom:.35rem;text-transform:uppercase;letter-spacing:.05em}
-.field input,.field select,.field textarea,.field datalist-input{
-  width:100%;padding:.75rem 1rem;border:2px solid var(--border);border-radius:10px;
-  font-family:'DM Sans',sans-serif;font-size:.93rem;transition:border .2s,box-shadow .2s;background:var(--cream);color:var(--text)
-}
+.field input,.field select,.field textarea{width:100%;padding:.75rem 1rem;border:2px solid var(--border);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.93rem;transition:border .2s,box-shadow .2s;background:var(--cream);color:var(--text)}
 .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(45,106,79,.12);background:var(--white)}
 .field textarea{resize:vertical;min-height:70px}
 
 /* BUTTONS */
-.btn{display:inline-flex;align-items:center;gap:.45rem;justify-content:center;padding:.7rem 1.4rem;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:600;cursor:pointer;border:none;transition:all .2s;text-decoration:none}
+.btn{display:inline-flex;align-items:center;gap:.45rem;justify-content:center;padding:.7rem 1.4rem;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:600;cursor:pointer;border:none;transition:all .2s}
 .btn-primary{background:linear-gradient(135deg,var(--green),#1a4a32);color:#fff;width:100%}
 .btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(45,106,79,.35)}
 .btn-secondary{background:var(--cream);color:var(--green);border:2px solid var(--green)}
 .btn-secondary:hover{background:var(--green);color:#fff}
 .btn-amber{background:linear-gradient(135deg,var(--amber),#a0501a);color:#fff}
 .btn-amber:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(194,105,42,.35)}
-.btn-gold{background:linear-gradient(135deg,var(--gold),#c8860a);color:#fff}
+.btn-whatsapp{background:linear-gradient(135deg,#25D366,#1aab52);color:#fff}
+.btn-whatsapp:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(37,211,102,.4)}
 .btn-danger{background:#fee2e2;color:var(--absent);border:2px solid #fca5a5}
 .btn-danger:hover{background:var(--absent);color:#fff}
 .btn-ghost{background:rgba(45,106,79,.08);color:var(--green);border:1px solid rgba(45,106,79,.2)}
 .btn-ghost:hover{background:rgba(45,106,79,.15)}
 .btn-sm{padding:.4rem .85rem;font-size:.8rem;border-radius:8px}
-.btn-block{width:100%;display:flex}
+.btn-block{width:100%}
+.btn:disabled{opacity:.55;cursor:not-allowed;transform:none!important}
 .msg{padding:.65rem 1rem;border-radius:8px;font-size:.83rem;margin-top:.65rem;display:none}
 .msg.error{background:#fee2e2;color:#991b1b;border-left:3px solid var(--absent)}
 .msg.success{background:#d1fae5;color:#065f46;border-left:3px solid var(--present)}
 .msg.show{display:block}
-
-/* APP */
-#app{display:none;position:relative;z-index:10;min-height:100vh}
-.topbar{background:rgba(18,50,30,.92);backdrop-filter:blur(12px);padding:.8rem 1.5rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;border-bottom:1px solid rgba(255,255,255,.1)}
-.topbar-brand{display:flex;align-items:center;gap:.7rem;color:#fff}
-.topbar-icon{width:34px;height:34px;background:linear-gradient(135deg,var(--gold),var(--amber));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.95rem}
-.topbar-brand h2{font-family:'Playfair Display',serif;font-size:1.1rem}
-.topbar-brand span{font-size:.68rem;opacity:.6;display:block;margin-top:-2px}
-.topbar-date{color:rgba(255,255,255,.65);font-size:.78rem}
-.topbar-logout{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.18);padding:.38rem .85rem;border-radius:8px;cursor:pointer;font-size:.78rem;font-family:'DM Sans',sans-serif;transition:all .2s}
-.topbar-logout:hover{background:rgba(255,255,255,.22)}
 
 /* NAV */
 .nav{background:rgba(255,255,255,.97);display:flex;overflow-x:auto;border-bottom:2px solid var(--border);scrollbar-width:none}
@@ -73,14 +64,13 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;color:var(--text)}
 .nav-item{display:flex;align-items:center;gap:.4rem;padding:.8rem 1.1rem;font-size:.8rem;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;transition:all .2s}
 .nav-item:hover{color:var(--green);background:rgba(45,106,79,.04)}
 .nav-item.active{color:var(--green);border-bottom-color:var(--green)}
-.nav-item i{font-size:.85rem}
 
 /* CONTENT */
 .content{max-width:960px;margin:0 auto;padding:1.5rem 1rem 4rem}
 
 /* CARDS */
 .card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;margin-bottom:1.2rem}
-.card-header{padding:.9rem 1.2rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.card-header{padding:.9rem 1.2rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:.5rem;flex-wrap:wrap}
 .card-title{font-family:'Playfair Display',serif;font-size:1rem;color:var(--green);display:flex;align-items:center;gap:.45rem}
 .card-title i{font-size:.85rem;color:var(--amber)}
 .card-body{padding:1.2rem}
@@ -88,7 +78,8 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;color:var(--text)}
 /* STATS */
 .stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.75rem;margin-bottom:1.2rem}
 @media(min-width:600px){.stats-grid{grid-template-columns:repeat(4,1fr)}}
-.stat-card{background:var(--white);border-radius:14px;padding:1rem;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:.3rem}
+.stat-card{background:var(--white);border-radius:14px;padding:1rem;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:.3rem;transition:transform .2s}
+.stat-card:hover{transform:translateY(-2px)}
 .stat-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem}
 .stat-val{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;line-height:1}
 .stat-label{font-size:.73rem;color:var(--muted);font-weight:500}
@@ -97,13 +88,12 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;color:var(--text)}
 .stat-b .stat-icon{background:#dbeafe;color:#1d4ed8}
 .stat-a .stat-icon{background:#fef3c7;color:var(--amber)}
 
-/* MENU PREVIEW (Dashboard) */
+/* MENU PREVIEW */
 .menu-preview{background:linear-gradient(135deg,var(--cream),#f0ece4);border-radius:12px;padding:1rem;display:flex;gap:1rem;align-items:flex-start}
 .menu-img-preview{width:80px;height:80px;border-radius:10px;object-fit:cover;flex-shrink:0;border:3px solid var(--white);box-shadow:var(--shadow)}
 .menu-img-placeholder{width:80px;height:80px;border-radius:10px;background:linear-gradient(135deg,#e5e0d8,#d0cab8);display:flex;align-items:center;justify-content:center;font-size:2rem;flex-shrink:0}
 .menu-preview-info h3{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--green)}
 .menu-preview-info .menu-date{font-size:.73rem;color:var(--amber);font-weight:600;margin-bottom:.2rem}
-.menu-preview-info .menu-desc{font-size:.82rem;color:var(--muted);margin-top:.2rem}
 .side-chips{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.5rem}
 .side-chip{background:rgba(45,106,79,.1);color:var(--green);border:1px solid rgba(45,106,79,.2);border-radius:20px;padding:.18rem .65rem;font-size:.75rem;font-weight:600}
 
@@ -119,7 +109,11 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;color:var(--text)}
 .img-input-row input{flex:1}
 .img-thumb{width:44px;height:44px;border-radius:8px;object-fit:cover;border:2px solid var(--border);display:none;flex-shrink:0}
 
-/* IMAGE PICKER MODAL */
+/* SAVE + WA row */
+.save-wa-row{display:flex;gap:.7rem;flex-wrap:wrap;margin-top:1rem}
+.save-wa-row .btn{flex:1;min-width:150px}
+
+/* IMAGE MODALS */
 .modal-overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:1rem}
 .modal-overlay.open{display:flex}
 .modal{background:var(--white);border-radius:var(--radius);width:100%;max-width:560px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow2)}
@@ -142,7 +136,7 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;color:var(--text)}
 .empty{text-align:center;padding:2rem;color:var(--muted);grid-column:1/-1}
 .empty i{font-size:2rem;opacity:.3;display:block;margin-bottom:.5rem}
 
-/* ATTENDANCE TABLE */
+/* TABLE */
 .table-wrap{overflow-x:auto}
 table{width:100%;border-collapse:collapse}
 th{background:var(--cream);color:var(--muted);font-size:.73rem;text-transform:uppercase;letter-spacing:.06em;padding:.6rem .9rem;text-align:left;font-weight:700;border-bottom:2px solid var(--border)}
@@ -160,93 +154,75 @@ tr:hover td{background:var(--cream)}
 .rating-item-name{font-family:'Playfair Display',serif;font-size:.98rem;color:var(--green)}
 .rating-item-type{font-size:.7rem;background:rgba(45,106,79,.1);color:var(--green);border-radius:20px;padding:.15rem .5rem;font-weight:600}
 .avg-rating{display:flex;align-items:center;gap:.4rem}
-.avg-stars{color:var(--star);font-size:1rem;letter-spacing:.05rem}
-.avg-num{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--text);font-weight:700}
+.avg-stars{color:var(--star);font-size:1rem}
+.avg-num{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700}
 .avg-count{font-size:.75rem;color:var(--muted)}
 .comments-list{display:flex;flex-direction:column;gap:.5rem;margin-top:.7rem}
 .comment-item{background:var(--white);border-radius:8px;padding:.6rem .85rem;border:1px solid var(--border)}
 .comment-meta{display:flex;align-items:center;gap:.5rem;margin-bottom:.25rem}
-.comment-user{font-size:.78rem;font-weight:700;color:var(--text)}
+.comment-user{font-size:.78rem;font-weight:700}
 .comment-stars{color:var(--star);font-size:.75rem}
 .comment-text{font-size:.82rem;color:var(--muted)}
 .no-ratings{text-align:center;padding:2rem;color:var(--muted)}
 .no-ratings i{font-size:2rem;opacity:.3;display:block;margin-bottom:.5rem}
 
 /* REPORT */
-.report-controls{display:flex;gap:.6rem;align-items:flex-end;flex-wrap:wrap;margin-bottom:1rem}
-.report-controls .field{margin:0;flex:1;min-width:160px}
-.report-controls .btn{white-space:nowrap}
+.report-tabs{display:flex;gap:.5rem;margin-bottom:1rem;flex-wrap:wrap}
+.report-tab{padding:.45rem 1rem;border-radius:20px;font-size:.82rem;font-weight:600;cursor:pointer;border:2px solid var(--border);background:var(--cream);color:var(--muted);transition:all .2s}
+.report-tab.active{background:var(--green);color:#fff;border-color:var(--green)}
+.date-range-row{display:flex;gap:.6rem;align-items:flex-end;flex-wrap:wrap;margin-bottom:1rem}
+.date-range-row .field{margin:0;flex:1;min-width:130px}
+.date-range-row .btn{white-space:nowrap;padding:.75rem 1.1rem}
+.report-summary-box{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:.8rem}
 
-/* SPINNER */
+/* WHATSAPP */
+.wa-box{background:linear-gradient(135deg,#d1fae5,#a7f3d0);border-radius:12px;padding:1rem;border:1px solid #6ee7b7}
+
+/* SPINNER / TOAST */
 .spinner{width:24px;height:24px;border:2.5px solid rgba(45,106,79,.2);border-top-color:var(--green);border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
-
-/* TOAST */
 .toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(100px);background:#1a1a1a;color:#fff;padding:.7rem 1.4rem;border-radius:30px;font-size:.85rem;font-weight:500;z-index:9999;transition:transform .3s,opacity .3s;opacity:0;pointer-events:none}
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
 .toast.success{background:var(--present)}
 .toast.error{background:var(--absent)}
-
-/* WHATSAPP */
-.wa-box{background:linear-gradient(135deg,#d1fae5,#a7f3d0);border-radius:12px;padding:1rem;border:1px solid #6ee7b7}
-.wa-box textarea{background:rgba(255,255,255,.7);min-height:100px}
-.wa-actions{display:flex;gap:.6rem;margin-top:.7rem;flex-wrap:wrap}
+.hint{font-size:.72rem;color:var(--muted);margin-top:.3rem}
+input[type="date"],input[type="month"]{cursor:pointer}
 
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 @keyframes spin{to{transform:rotate(360deg)}}
-
-/* Date input */
-input[type="date"]{cursor:pointer}
 </style>
 </head>
 <body>
 <div id="bg"></div>
 
-<!-- LOGIN -->
-<div id="loginScreen">
-  <div class="login-card">
-    <div class="brand">
-      <div class="brand-icon"><i class="fa-solid fa-utensils"></i></div>
-      <h1>Canteen Manager</h1>
-      <p>Dashboard & Control Panel</p>
-    </div>
-    <div class="field">
-      <label>Manager Password</label>
-      <input type="password" id="mgrPass" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()">
-    </div>
-    <button class="btn btn-primary" onclick="doLogin()"><i class="fa-solid fa-right-to-bracket"></i> Login</button>
-    <div id="loginMsg" class="msg"></div>
-  </div>
-</div>
-
-<!-- APP -->
+<!-- APP (no login required) -->
 <div id="app">
   <div class="topbar">
     <div class="topbar-brand">
       <div class="topbar-icon"><i class="fa-solid fa-utensils"></i></div>
-      <div><h2>Canteen Manager</h2><span id="todayLabel"></span></div>
+      <div><h2>Canteen Manager</h2><span>Control Panel</span></div>
     </div>
     <div style="display:flex;align-items:center;gap:.8rem">
-      <span class="topbar-date" id="topbarDate"></span>
-      <button class="topbar-logout" onclick="doLogout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+      <div class="refresh-badge"><span class="refresh-dot"></span> Live · 5s</div>
+      <span style="color:rgba(255,255,255,.6);font-size:.78rem" id="topbarDate"></span>
     </div>
   </div>
 
   <div class="nav">
     <div class="nav-item active" onclick="showTab('dashboard')" id="tab-dashboard"><i class="fa-solid fa-gauge"></i> Dashboard</div>
-    <div class="nav-item" onclick="showTab('setmenu')" id="tab-setmenu"><i class="fa-solid fa-bowl-food"></i> Set Menu</div>
+    <div class="nav-item" onclick="showTab('setmenu')"    id="tab-setmenu"><i class="fa-solid fa-bowl-food"></i> Set Menu</div>
     <div class="nav-item" onclick="showTab('attendance')" id="tab-attendance"><i class="fa-solid fa-clipboard-list"></i> Attendance</div>
-    <div class="nav-item" onclick="showTab('ratings')" id="tab-ratings"><i class="fa-solid fa-star"></i> Ratings</div>
-    <div class="nav-item" onclick="showTab('report')" id="tab-report"><i class="fa-solid fa-file-csv"></i> Report</div>
-    <div class="nav-item" onclick="showTab('users')" id="tab-users"><i class="fa-solid fa-users"></i> Users</div>
-    <div class="nav-item" onclick="showTab('images')" id="tab-images"><i class="fa-solid fa-images"></i> Images</div>
+    <div class="nav-item" onclick="showTab('ratings')"    id="tab-ratings"><i class="fa-solid fa-star"></i> Ratings</div>
+    <div class="nav-item" onclick="showTab('report')"     id="tab-report"><i class="fa-solid fa-file-csv"></i> Report</div>
+    <div class="nav-item" onclick="showTab('users')"      id="tab-users"><i class="fa-solid fa-users"></i> Users</div>
+    <div class="nav-item" onclick="showTab('images')"     id="tab-images"><i class="fa-solid fa-images"></i> Images</div>
   </div>
 
   <div class="content">
 
-    <!-- ═══ DASHBOARD ═══ -->
+    <!-- DASHBOARD -->
     <div id="pane-dashboard">
       <div class="stats-grid">
-        <div class="stat-card stat-b"><div class="stat-icon"><i class="fa-solid fa-users"></i></div><div class="stat-val" id="st-users">—</div><div class="stat-label">Registered Users</div></div>
+        <div class="stat-card stat-b"><div class="stat-icon"><i class="fa-solid fa-users"></i></div><div class="stat-val" id="st-users">—</div><div class="stat-label">Registered</div></div>
         <div class="stat-card stat-g"><div class="stat-icon"><i class="fa-solid fa-utensils"></i></div><div class="stat-val" id="st-present">—</div><div class="stat-label">Present Today</div></div>
         <div class="stat-card stat-r"><div class="stat-icon"><i class="fa-solid fa-ban"></i></div><div class="stat-val" id="st-absent">—</div><div class="stat-label">Absent Today</div></div>
         <div class="stat-card stat-a"><div class="stat-icon"><i class="fa-solid fa-star"></i></div><div class="stat-val" id="st-ratings">—</div><div class="stat-label">Ratings Today</div></div>
@@ -261,21 +237,23 @@ input[type="date"]{cursor:pointer}
       </div>
 
       <div class="card">
-        <div class="card-header"><div class="card-title"><i class="fa-solid fa-share-nodes"></i> Share on WhatsApp</div></div>
+        <div class="card-header"><div class="card-title"><i class="fa-brands fa-whatsapp"></i> Share on WhatsApp</div></div>
         <div class="card-body">
           <div class="wa-box">
-            <div class="field" style="margin-bottom:.5rem"><label>User Page Link</label><input type="url" id="waLink" placeholder="https://yourusername.github.io/canteen/user.html"></div>
-            <div class="field" style="margin-bottom:0"><label>Message Preview</label><textarea id="waMsg" rows="4"></textarea></div>
-            <div class="wa-actions">
+            <div class="field" style="margin-bottom:.5rem">
+              <label>Message Preview</label>
+              <textarea id="waMsg" rows="5"></textarea>
+            </div>
+            <div style="display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.6rem">
               <button class="btn btn-sm btn-amber" onclick="buildWaMsg()"><i class="fa-solid fa-rotate"></i> Refresh</button>
-              <button class="btn btn-sm" style="background:#25D366;color:#fff" onclick="openWhatsApp()"><i class="fa-brands fa-whatsapp"></i> Share on WhatsApp</button>
+              <button class="btn btn-sm btn-whatsapp" onclick="openWhatsApp()"><i class="fa-brands fa-whatsapp"></i> Share</button>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- ═══ SET MENU ═══ -->
+    <!-- SET MENU -->
     <div id="pane-setmenu" style="display:none">
       <div class="card">
         <div class="card-header">
@@ -283,11 +261,10 @@ input[type="date"]{cursor:pointer}
           <input type="date" id="menuDate" class="btn btn-sm btn-ghost" style="cursor:pointer;font-size:.8rem;padding:.4rem .8rem">
         </div>
         <div class="card-body">
-
           <div class="section-label"><i class="fa-solid fa-star"></i> Main Course</div>
           <div class="field">
             <label>Dish Name <span style="color:var(--absent)">*</span></label>
-            <input list="mainDishList" id="mainCourseName" placeholder="Type or select main course…" autocomplete="off">
+            <input list="mainDishList" id="mainCourseName" placeholder="Type or select…" autocomplete="off">
             <datalist id="mainDishList"></datalist>
           </div>
           <div class="field">
@@ -295,7 +272,7 @@ input[type="date"]{cursor:pointer}
             <div class="img-input-row">
               <input type="url" id="mainCourseImg" placeholder="Paste image URL or pick from library" oninput="previewThumb('mainCourseImg','mainThumb')">
               <img id="mainThumb" class="img-thumb">
-              <button class="btn btn-sm btn-ghost" onclick="openImgPicker('mainCourseImg','mainThumb')" title="Pick from library"><i class="fa-solid fa-images"></i></button>
+              <button class="btn btn-sm btn-ghost" onclick="openImgPicker('mainCourseImg','mainThumb')" title="Pick"><i class="fa-solid fa-images"></i></button>
             </div>
           </div>
 
@@ -305,12 +282,15 @@ input[type="date"]{cursor:pointer}
           <button class="btn btn-sm btn-ghost" onclick="addSideDish()" style="margin-bottom:1rem"><i class="fa-solid fa-plus"></i> Add Side Dish</button>
 
           <div id="setMenuMsg" class="msg"></div>
-          <button class="btn btn-primary" onclick="saveMenu()"><i class="fa-solid fa-floppy-disk"></i> Save Menu</button>
+          <div class="save-wa-row">
+            <button class="btn btn-primary" onclick="saveMenu(false)"><i class="fa-solid fa-floppy-disk"></i> Save Menu</button>
+            <button class="btn btn-whatsapp" onclick="saveMenu(true)"><i class="fa-brands fa-whatsapp"></i> Save &amp; Share</button>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- ═══ ATTENDANCE ═══ -->
+    <!-- ATTENDANCE -->
     <div id="pane-attendance" style="display:none">
       <div class="card">
         <div class="card-header">
@@ -328,7 +308,7 @@ input[type="date"]{cursor:pointer}
       </div>
     </div>
 
-    <!-- ═══ RATINGS ═══ -->
+    <!-- RATINGS -->
     <div id="pane-ratings" style="display:none">
       <div class="card">
         <div class="card-header">
@@ -341,30 +321,68 @@ input[type="date"]{cursor:pointer}
       </div>
     </div>
 
-    <!-- ═══ REPORT ═══ -->
+    <!-- REPORT -->
     <div id="pane-report" style="display:none">
       <div class="card">
-        <div class="card-header"><div class="card-title"><i class="fa-solid fa-file-csv"></i> Monthly Report</div></div>
+        <div class="card-header"><div class="card-title"><i class="fa-solid fa-file-csv"></i> Attendance Report</div></div>
         <div class="card-body">
-          <div class="report-controls">
-            <div class="field"><label>Select Month</label><input type="month" id="reportMonth"></div>
-            <button class="btn btn-secondary" onclick="loadReport()"><i class="fa-solid fa-magnifying-glass"></i> Load</button>
-            <button class="btn btn-amber" onclick="downloadCSV()"><i class="fa-solid fa-download"></i> CSV</button>
+
+          <!-- Report type tabs -->
+          <div class="report-tabs">
+            <div class="report-tab active" id="rtab-summary" onclick="switchReportTab('summary')">
+              <i class="fa-solid fa-chart-bar"></i> Summary (per user)
+            </div>
+            <div class="report-tab" id="rtab-detailed" onclick="switchReportTab('detailed')">
+              <i class="fa-solid fa-list"></i> Detailed (all records)
+            </div>
           </div>
-          <div id="reportSummary"></div>
-          <div class="table-wrap" style="margin-top:.8rem">
-            <table><thead><tr><th>Date</th><th>Name</th><th>Username</th><th>Status</th></tr></thead>
-            <tbody id="reportTbody"></tbody>
-            </table>
+
+          <!-- Date range selector -->
+          <div class="date-range-row">
+            <div style="display:flex;gap:.4rem;margin-bottom:.5rem;width:100%;flex-wrap:wrap">
+              <button class="btn btn-sm btn-ghost" onclick="setQuickRange('month')">This Month</button>
+              <button class="btn btn-sm btn-ghost" onclick="setQuickRange('lastmonth')">Last Month</button>
+              <button class="btn btn-sm btn-ghost" onclick="setQuickRange('week')">This Week</button>
+            </div>
+            <div class="field"><label>From</label><input type="date" id="rptFrom"></div>
+            <div class="field"><label>To</label><input type="date" id="rptTo"></div>
+            <button class="btn btn-secondary" onclick="loadReport()"><i class="fa-solid fa-magnifying-glass"></i> Load</button>
+          </div>
+
+          <div id="reportSummaryBox" class="report-summary-box"></div>
+
+          <!-- Summary report -->
+          <div id="summaryReport">
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>#</th><th>Name</th><th>Username</th><th style="text-align:center">Present</th><th style="text-align:center">Absent</th><th style="text-align:center">Total</th></tr></thead>
+                <tbody id="summaryTbody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Detailed report -->
+          <div id="detailedReport" style="display:none">
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Date</th><th>Name</th><th>Username</th><th>Status</th></tr></thead>
+                <tbody id="detailedTbody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem" id="downloadRow" style="display:none">
+            <button class="btn btn-sm btn-amber" onclick="downloadCSV('summary')"><i class="fa-solid fa-download"></i> Summary CSV</button>
+            <button class="btn btn-sm btn-secondary" onclick="downloadCSV('detailed')"><i class="fa-solid fa-download"></i> Detailed CSV</button>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- ═══ USERS ═══ -->
+    <!-- USERS -->
     <div id="pane-users" style="display:none">
       <div class="card">
-        <div class="card-header"><div class="card-title"><i class="fa-solid fa-users"></i> Registered Users</div></div>
+        <div class="card-header"><div class="card-title"><i class="fa-solid fa-users"></i> Registered Users</div><span id="userCount" style="font-size:.82rem;color:var(--muted)"></span></div>
         <div class="table-wrap">
           <table><thead><tr><th>#</th><th>Name</th><th>Username</th><th>Joined</th></tr></thead>
           <tbody id="usersTbody"><tr><td colspan="4" style="text-align:center;padding:1.5rem"><span class="spinner"></span></td></tr></tbody>
@@ -373,35 +391,29 @@ input[type="date"]{cursor:pointer}
       </div>
     </div>
 
-    <!-- ═══ IMAGES ═══ -->
+    <!-- IMAGES -->
     <div id="pane-images" style="display:none">
       <div class="card">
         <div class="card-header">
           <div class="card-title"><i class="fa-solid fa-images"></i> Image Library</div>
           <button class="btn btn-sm btn-amber" onclick="openAddImageModal()"><i class="fa-solid fa-plus"></i> Add Image</button>
         </div>
-        <div class="card-body">
-          <div class="img-grid" id="imgLibrary"></div>
-        </div>
+        <div class="card-body"><div class="img-grid" id="imgLibrary"></div></div>
       </div>
     </div>
 
-  </div><!-- /content -->
-</div><!-- /app -->
+  </div>
+</div>
 
-<!-- IMAGE PICKER MODAL (for set menu) -->
+<!-- IMAGE PICKER MODAL -->
 <div class="modal-overlay" id="imgPickerModal">
   <div class="modal">
     <div class="modal-header">
       <div class="modal-title"><i class="fa-solid fa-images" style="color:var(--amber)"></i> Pick an Image</div>
       <button class="modal-close" onclick="closeModal('imgPickerModal')"><i class="fa-solid fa-xmark"></i></button>
     </div>
-    <div class="modal-body">
-      <div class="img-grid" id="imgPickerGrid"></div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-sm btn-secondary" onclick="closeModal('imgPickerModal')">Cancel</button>
-    </div>
+    <div class="modal-body"><div class="img-grid" id="imgPickerGrid"></div></div>
+    <div class="modal-footer"><button class="btn btn-sm btn-secondary" onclick="closeModal('imgPickerModal')">Cancel</button></div>
   </div>
 </div>
 
@@ -416,8 +428,8 @@ input[type="date"]{cursor:pointer}
       <div class="field"><label>Image Name</label><input type="text" id="newImgName" placeholder="e.g. Kerala Sadya"></div>
       <div class="field">
         <label>Image URL</label>
-        <input type="url" id="newImgUrl" placeholder="https://drive.google.com/uc?export=view&id=…" oninput="previewNewImg()">
-        <div class="hint" style="font-size:.72rem;color:var(--muted);margin-top:.3rem">Google Drive: share link → convert to direct URL (uc?export=view&id=FILE_ID)</div>
+        <input type="url" id="newImgUrl" placeholder="https://…" oninput="previewNewImg()">
+        <div class="hint">Google Drive: share → convert to direct URL (uc?export=view&amp;id=FILE_ID)</div>
       </div>
       <div id="newImgPreviewWrap" style="display:none;margin-top:.5rem">
         <img id="newImgPreview" style="width:100%;max-height:180px;object-fit:cover;border-radius:10px;border:2px solid var(--border)">
@@ -434,30 +446,29 @@ input[type="date"]{cursor:pointer}
 <div class="toast" id="toast"></div>
 
 <script>
-// ─────────────────────────────────────────────
-//  CONFIG — replace with your deployed Apps Script URL
-// ─────────────────────────────────────────────
-const API_URL = 'https://script.google.com/macros/s/AKfycbyHt28kb7fgtqubTXXJ0AEbRhsdBihwWuMgnSNTBWFeLviyJM_IBzGPneTYTDHftv1g/exec';
+// ── CONFIG ──────────────────────────────────────────────────
+const API_URL  = 'https://script.google.com/macros/s/AKfycby5ZP70p6XvfovTKLAdi9MqcuhoxpwuVf-PPy5zAY5kT8POqIDyjA-HDt9fmiy9vX0ahw/exec';
+const USER_URL = 'https://cpatsbi-hub.github.io/office-canteen/';
 
-// ─────────────────────────────────────────────
-//  STATE
-// ─────────────────────────────────────────────
-let mgrToken   = '';
-let sideDishes = [];     // [{name, imgUrl}]
-let imgPickerTarget = { inputId: '', thumbId: '' };
-let allImages   = [];
-let reportData  = [];
-let mainItems   = [];
-let sideItems   = [];
+// ── STATE ───────────────────────────────────────────────────
+let sideDishes       = [];
+let imgPickerTarget  = { inputId:'', thumbId:'' };
+let pickerSideIdx    = -1;
+let allImages        = [];
+let summaryData      = [];
+let detailedData     = [];
+let currentTab       = 'dashboard';
+let currentReportTab = 'summary';
+let refreshTimer     = null;
+let mainItems        = [];
+let sideItems        = [];
 
-// ─────────────────────────────────────────────
-//  API (JSONP)
-// ─────────────────────────────────────────────
+// ── API ──────────────────────────────────────────────────────
 function api(params) {
   return new Promise((resolve, reject) => {
-    const cb  = 'cb_' + Date.now() + '_' + Math.floor(Math.random()*9999);
-    const qs  = Object.entries({ ...params, callback: cb })
-                      .map(([k,v]) => encodeURIComponent(k) + '=' + encodeURIComponent(v)).join('&');
+    const cb = 'cb_' + Date.now() + '_' + Math.floor(Math.random()*9999);
+    const qs = Object.entries({ ...params, callback: cb })
+                     .map(([k,v]) => encodeURIComponent(k) + '=' + encodeURIComponent(v)).join('&');
     const script = document.createElement('script');
     const timer  = setTimeout(() => { cleanup(); reject(new Error('Timeout')); }, 15000);
     window[cb]   = data => { cleanup(); resolve(data); };
@@ -468,54 +479,28 @@ function api(params) {
   });
 }
 
-// ─────────────────────────────────────────────
-//  INIT
-// ─────────────────────────────────────────────
+// ── INIT ─────────────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', () => {
-  const savedToken = sessionStorage.getItem('mgrToken');
-  if (savedToken) { mgrToken = savedToken; showApp(); }
   const now = new Date();
   document.getElementById('topbarDate').textContent =
     now.toLocaleDateString('en-IN', { weekday:'short', day:'numeric', month:'short', year:'numeric' });
-  document.getElementById('todayLabel').textContent = 'Control Panel';
+  showTab('dashboard');
+  startAutoRefresh();
 });
 
-// ─────────────────────────────────────────────
-//  LOGIN / LOGOUT
-// ─────────────────────────────────────────────
-async function doLogin() {
-  const pass = document.getElementById('mgrPass').value;
-  if (!pass) { showMsg('loginMsg','Enter password','error'); return; }
-  showMsg('loginMsg','Verifying…','');
-  try {
-    const res = await api({ action:'managerLogin', password:pass });
-    if (res.success) {
-      mgrToken = res.token;
-      sessionStorage.setItem('mgrToken', mgrToken);
-      hideMsg('loginMsg');
-      showApp();
-    } else showMsg('loginMsg', res.message,'error');
-  } catch(e) { showMsg('loginMsg','Connection error. Check API_URL.','error'); }
+// ── AUTO-REFRESH ─────────────────────────────────────────────
+function startAutoRefresh() {
+  if (refreshTimer) clearInterval(refreshTimer);
+  refreshTimer = setInterval(() => {
+    if (currentTab === 'dashboard')  loadDashboard(true);
+    if (currentTab === 'attendance') loadAttendance(true);
+    if (currentTab === 'ratings')    loadRatings(true);
+  }, 5000);
 }
 
-function doLogout() {
-  mgrToken = '';
-  sessionStorage.removeItem('mgrToken');
-  document.getElementById('app').style.display = 'none';
-  document.getElementById('loginScreen').style.display = 'flex';
-  document.getElementById('mgrPass').value = '';
-}
-
-function showApp() {
-  document.getElementById('loginScreen').style.display = 'none';
-  document.getElementById('app').style.display = 'block';
-  showTab('dashboard');
-}
-
-// ─────────────────────────────────────────────
-//  TABS
-// ─────────────────────────────────────────────
+// ── TABS ──────────────────────────────────────────────────────
 function showTab(name) {
+  currentTab = name;
   document.querySelectorAll('[id^="pane-"]').forEach(p => p.style.display='none');
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.getElementById('pane-' + name).style.display = 'block';
@@ -523,10 +508,10 @@ function showTab(name) {
 
   const today = todayStr();
   if (name === 'dashboard')  loadDashboard();
-  if (name === 'setmenu')  { loadSetMenuPane(today); loadMenuItems(); }
+  if (name === 'setmenu')    { loadSetMenuPane(today); loadMenuItems(); loadAllImages(); }
   if (name === 'attendance') { document.getElementById('attDate').value = today; loadAttendance(); }
   if (name === 'ratings')    { document.getElementById('ratDate').value = today; loadRatings(); }
-  if (name === 'report')     { document.getElementById('reportMonth').value = today.slice(0,7); }
+  if (name === 'report')     { setQuickRange('month'); }
   if (name === 'users')      loadUsers();
   if (name === 'images')     loadImages();
 }
@@ -536,56 +521,60 @@ function todayStr() {
   return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
 }
 
-// ─────────────────────────────────────────────
-//  DASHBOARD
-// ─────────────────────────────────────────────
-async function loadDashboard() {
+// ── DASHBOARD ────────────────────────────────────────────────
+async function loadDashboard(silent=false) {
   try {
-    const res = await api({ action:'getStats', mtoken:mgrToken });
-    if (!res.success) { toast(res.message,'error'); return; }
+    const res = await api({ action:'getStats' });
+    if (!res.success) { if(!silent) toast(res.message,'error'); return; }
     document.getElementById('st-users').textContent   = res.totalUsers;
     document.getElementById('st-present').textContent = res.todayPresent;
     document.getElementById('st-absent').textContent  = res.todayAbsent;
     document.getElementById('st-ratings').textContent = res.todayRatings || 0;
 
-    const m = res.menu;
+    const m    = res.menu;
     const wrap = document.getElementById('dashboardMenuPreview');
     if (!m) {
-      wrap.innerHTML = '<div style="text-align:center;padding:1.5rem;color:var(--muted)"><i class="fa-solid fa-bowl-food" style="font-size:2rem;opacity:.3;display:block;margin-bottom:.5rem"></i>No menu set for today.<br><small>Go to <b>Set Menu</b> tab.</small></div>';
+      wrap.innerHTML = '<div style="text-align:center;padding:1.5rem;color:var(--muted)"><i class="fa-solid fa-bowl-food" style="font-size:2rem;opacity:.3;display:block;margin-bottom:.5rem"></i>No menu set for today.</div>';
     } else {
-      const imgHtml = m.mainCourseImg
-        ? `<img src="${escHtml(m.mainCourseImg)}" class="menu-img-preview" onerror="this.style.display='none'">`
-        : `<div class="menu-img-placeholder">🍱</div>`;
+      const imgHtml   = m.mainCourseImg ? `<img src="${escHtml(m.mainCourseImg)}" class="menu-img-preview" onerror="this.style.display='none'">` : `<div class="menu-img-placeholder">🍱</div>`;
       const sidesHtml = (m.sideDishes||[]).length
-        ? `<div class="side-chips">${m.sideDishes.map(s=>`<span class="side-chip"><i class="fa-solid fa-leaf" style="font-size:.65rem"></i> ${escHtml(s.name||'')}</span>`).join('')}</div>`
-        : '';
-      wrap.innerHTML = `<div class="menu-preview">${imgHtml}<div class="menu-preview-info"><div class="menu-date">${m.date}</div><h3>${escHtml(m.mainCourse)}</h3>${sidesHtml}</div></div>`;
+        ? `<div class="side-chips">${m.sideDishes.map(s=>`<span class="side-chip"><i class="fa-solid fa-leaf" style="font-size:.65rem"></i> ${escHtml(s.name||'')}</span>`).join('')}</div>` : '';
+      wrap.innerHTML  = `<div class="menu-preview">${imgHtml}<div class="menu-preview-info"><div class="menu-date">${m.date}</div><h3>${escHtml(m.mainCourse)}</h3>${sidesHtml}</div></div>`;
     }
     buildWaMsg();
-  } catch(e) { toast('Network error','error'); }
+  } catch(e) { if(!silent) toast('Network error','error'); }
 }
 
 function buildWaMsg() {
-  const link = document.getElementById('waLink').value.trim();
-  const menu = document.getElementById('dashboardMenuPreview').querySelector('h3')?.textContent || '(Menu TBD)';
-  const sides = [...document.querySelectorAll('.side-chip')].map(s=>s.textContent.trim()).join(', ');
-  const d = new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long'});
+  const mainEl = document.querySelector('#dashboardMenuPreview h3');
+  const menu   = mainEl ? mainEl.textContent : '(Menu TBD)';
+  const sides  = [...document.querySelectorAll('.side-chip')].map(s=>s.textContent.trim()).join(', ');
+  const d      = new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long'});
   let msg = `🍽️ *Office Canteen — ${d}*\n\n*Main Course:* ${menu}`;
   if (sides) msg += `\n*Side Dishes:* ${sides}`;
-  if (link) msg += `\n\n👉 Mark your attendance: ${link}`;
+  msg += `\n\n👉 Mark attendance: ${USER_URL}`;
   msg += '\n\n_Enjoy your meal!_ 🌿';
-  document.getElementById('waMsg').value = msg;
+  const el = document.getElementById('waMsg');
+  if (el) el.value = msg;
+}
+
+function buildWaMsgFromData(mainCourse, sides) {
+  const d = new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long'});
+  let msg = `🍽️ *Office Canteen — ${d}*\n\n*Main Course:* ${mainCourse}`;
+  const sideNames = sides.filter(s=>s.name).map(s=>s.name).join(', ');
+  if (sideNames) msg += `\n*Side Dishes:* ${sideNames}`;
+  msg += `\n\n👉 Mark attendance: ${USER_URL}`;
+  msg += '\n\n_Enjoy your meal!_ 🌿';
+  return msg;
 }
 
 function openWhatsApp() {
-  const msg = document.getElementById('waMsg').value.trim();
+  const msg = document.getElementById('waMsg')?.value.trim();
   if (!msg) { toast('No message to share','error'); return; }
   window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
 }
 
-// ─────────────────────────────────────────────
-//  SET MENU
-// ─────────────────────────────────────────────
+// ── SET MENU ─────────────────────────────────────────────────
 async function loadSetMenuPane(date) {
   document.getElementById('menuDate').value = date;
   sideDishes = [];
@@ -593,14 +582,13 @@ async function loadSetMenuPane(date) {
   document.getElementById('mainCourseName').value = '';
   document.getElementById('mainCourseImg').value  = '';
   document.getElementById('mainThumb').style.display = 'none';
-  hideMsg('setMenuMsg');
   try {
     const res = await api({ action:'getMenu', date });
     if (res.menu) {
       document.getElementById('mainCourseName').value = res.menu.mainCourse || '';
       document.getElementById('mainCourseImg').value  = res.menu.mainCourseImg || '';
       previewThumb('mainCourseImg','mainThumb');
-      (res.menu.sideDishes || []).forEach(d => addSideDish(d.name, d.imgUrl));
+      (res.menu.sideDishes||[]).forEach(d => addSideDish(d.name, d.imgUrl));
     }
   } catch(e) {}
 }
@@ -610,13 +598,18 @@ async function loadMenuItems() {
     const res = await api({ action:'getMenuItems' });
     mainItems = res.mainItems || [];
     sideItems = res.sideItems || [];
-    // Populate main datalist
     const dl = document.getElementById('mainDishList');
-    dl.innerHTML = mainItems.map(n=>`<option value="${escHtml(n)}">`).join('');
-    // Update any existing side dish datalists
+    if (dl) dl.innerHTML = mainItems.map(n=>`<option value="${escHtml(n)}">`).join('');
     document.querySelectorAll('.side-datalist').forEach(dl => {
       dl.innerHTML = sideItems.map(n=>`<option value="${escHtml(n)}">`).join('');
     });
+  } catch(e) {}
+}
+
+async function loadAllImages() {
+  try {
+    const res = await api({ action:'getImages' });
+    allImages = res.images || [];
   } catch(e) {}
 }
 
@@ -633,14 +626,13 @@ function removeSideDish(idx) {
 function renderSideDishes() {
   const container = document.getElementById('sideDishesContainer');
   container.innerHTML = sideDishes.map((d, i) => `
-    <div class="side-dish-row" id="side-row-${i}">
+    <div class="side-dish-row">
       <div class="side-dish-num">${i+1}</div>
       <div style="flex:1;display:grid;grid-template-columns:1fr 1fr;gap:.5rem">
         <div class="field">
-          <label>Side Dish Name</label>
+          <label>Dish Name</label>
           <input list="sideList-${i}" class="side-name" data-idx="${i}" value="${escHtml(d.name)}"
-                 placeholder="Type or select…" autocomplete="off"
-                 oninput="sideDishes[${i}].name=this.value">
+                 placeholder="Type or select…" autocomplete="off" oninput="sideDishes[${i}].name=this.value">
           <datalist id="sideList-${i}" class="side-datalist">
             ${sideItems.map(n=>`<option value="${escHtml(n)}">`).join('')}
           </datalist>
@@ -655,11 +647,11 @@ function renderSideDishes() {
           </div>
         </div>
       </div>
-      <button class="remove-side" onclick="removeSideDish(${i})" title="Remove"><i class="fa-solid fa-xmark"></i></button>
+      <button class="remove-side" onclick="removeSideDish(${i})"><i class="fa-solid fa-xmark"></i></button>
     </div>`).join('');
 }
 
-async function saveMenu() {
+async function saveMenu(shareWhatsApp=false) {
   const date       = document.getElementById('menuDate').value || todayStr();
   const mainCourse = document.getElementById('mainCourseName').value.trim();
   const mainImg    = document.getElementById('mainCourseImg').value.trim();
@@ -675,22 +667,28 @@ async function saveMenu() {
 
   showMsg('setMenuMsg','Saving…','');
   try {
-    const res = await api({ action:'setMenu', mtoken:mgrToken, date, mainCourse, mainCourseImg:mainImg, sideDishes:JSON.stringify(sides) });
-    if (res.success) { showMsg('setMenuMsg', res.message,'success'); toast('Menu saved!','success'); }
-    else showMsg('setMenuMsg', res.message,'error');
+    const res = await api({ action:'setMenu', date, mainCourse, mainCourseImg:mainImg, sideDishes:JSON.stringify(sides) });
+    if (res.success) {
+      showMsg('setMenuMsg', res.message, 'success');
+      toast('Menu saved! ✓','success');
+      if (shareWhatsApp) {
+        const msg = buildWaMsgFromData(mainCourse, sides);
+        setTimeout(() => window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank'), 400);
+      }
+    } else {
+      showMsg('setMenuMsg', res.message, 'error');
+    }
   } catch(e) { showMsg('setMenuMsg','Network error','error'); }
 }
 
-// ─────────────────────────────────────────────
-//  ATTENDANCE
-// ─────────────────────────────────────────────
-async function loadAttendance() {
+// ── ATTENDANCE ───────────────────────────────────────────────
+async function loadAttendance(silent=false) {
   const date  = document.getElementById('attDate').value || todayStr();
   const tbody = document.getElementById('attTbody');
-  tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:1.5rem"><span class="spinner"></span></td></tr>';
+  if (!silent) tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:1.5rem"><span class="spinner"></span></td></tr>';
   try {
-    const res = await api({ action:'getAttendanceSummary', mtoken:mgrToken, date });
-    if (!res.success) { toast(res.message,'error'); return; }
+    const res = await api({ action:'getAttendanceSummary', date });
+    if (!res.success) { if(!silent) toast(res.message,'error'); return; }
 
     document.getElementById('attSummary').innerHTML = `
       <span class="badge badge-present">✓ ${res.presentCount} Present</span>
@@ -698,7 +696,7 @@ async function loadAttendance() {
       <span class="badge badge-info">${res.records.length} Total</span>`;
 
     if (!res.records.length) {
-      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:2rem">No attendance for ' + date + '</td></tr>';
+      tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:2rem">No records for ${date}</td></tr>`;
       return;
     }
     tbody.innerHTML = res.records.map((r,i) => `<tr>
@@ -708,137 +706,182 @@ async function loadAttendance() {
       <td><span class="badge badge-${r.status}">${r.status==='present'?'✓ Present':'✗ Absent'}</span></td>
       <td style="color:var(--muted);font-size:.8rem">${formatTime(r.markedAt)}</td>
     </tr>`).join('');
-  } catch(e) { toast('Network error','error'); }
+  } catch(e) { if(!silent) toast('Network error','error'); }
 }
 
-// ─────────────────────────────────────────────
-//  RATINGS
-// ─────────────────────────────────────────────
-async function loadRatings() {
+// ── RATINGS ──────────────────────────────────────────────────
+async function loadRatings(silent=false) {
   const date = document.getElementById('ratDate').value || todayStr();
   const body = document.getElementById('ratingsBody');
-  body.innerHTML = '<div style="text-align:center;padding:2rem"><span class="spinner"></span></div>';
+  if (!silent) body.innerHTML = '<div style="text-align:center;padding:2rem"><span class="spinner"></span></div>';
   try {
-    const res = await api({ action:'getRatings', mtoken:mgrToken, date });
-    if (!res.success) { toast(res.message,'error'); return; }
+    const res = await api({ action:'getRatings', date });
+    if (!res.success) { if(!silent) toast(res.message,'error'); return; }
     if (!res.items.length) {
-      body.innerHTML = '<div class="no-ratings"><i class="fa-solid fa-star"></i><p>No ratings submitted for ' + date + '</p></div>';
+      body.innerHTML = `<div class="no-ratings"><i class="fa-solid fa-star"></i><p>No ratings for ${date}</p></div>`;
       return;
     }
-
-    // Main first, then sides
     const sorted = [...res.items].sort((a,b) => (a.type==='main'?0:1)-(b.type==='main'?0:1));
     body.innerHTML = sorted.map(item => {
-      const starsHtml = starsDisplay(parseFloat(item.avgRating)||0);
-      const commentsHtml = item.comments.length ? item.comments.map(c => `
-        <div class="comment-item">
-          <div class="comment-meta">
-            <span class="comment-user">${escHtml(c.name)} <span style="color:var(--muted);font-weight:400">@${escHtml(c.username)}</span></span>
-            <span class="comment-stars">${starsDisplay(c.rating)}</span>
-          </div>
-          ${c.comment ? `<div class="comment-text">"${escHtml(c.comment)}"</div>` : ''}
-        </div>`).join('') : '<div style="color:var(--muted);font-size:.8rem;padding:.4rem 0">No comments yet.</div>';
-
+      const commentsHtml = item.comments.length
+        ? item.comments.map(c=>`<div class="comment-item"><div class="comment-meta">
+            <span class="comment-user">${escHtml(c.name)}</span>
+            <span class="comment-stars">${starsDisplay(c.rating)}</span></div>
+            ${c.comment?`<div class="comment-text">"${escHtml(c.comment)}"</div>`:''}</div>`).join('')
+        : '<div style="color:var(--muted);font-size:.8rem">No comments yet.</div>';
       return `<div class="rating-item-card">
         <div class="rating-item-header">
           <div class="rating-item-name">${escHtml(item.name)}</div>
-          <span class="rating-item-type">${item.type==='main'?'Main Course':'Side Dish'}</span>
+          <span class="rating-item-type">${item.type==='main'?'Main':'Side'}</span>
         </div>
         <div class="avg-rating">
-          <span class="avg-stars">${starsHtml}</span>
+          <span class="avg-stars">${starsDisplay(parseFloat(item.avgRating)||0)}</span>
           <span class="avg-num">${item.avgRating}</span>
           <span class="avg-count">(${item.totalRatings} review${item.totalRatings!==1?'s':''})</span>
         </div>
         <div class="comments-list">${commentsHtml}</div>
       </div>`;
     }).join('');
-  } catch(e) { toast('Network error','error'); }
+  } catch(e) { if(!silent) toast('Network error','error'); }
 }
 
 function starsDisplay(val) {
-  const n = parseFloat(val) || 0;
-  let html = '';
-  for (let i=1;i<=5;i++) {
-    if (n >= i) html += '★';
-    else if (n >= i-0.5) html += '⭐';
-    else html += '☆';
-  }
-  return html;
+  const n = parseFloat(val)||0;
+  let h='';
+  for(let i=1;i<=5;i++) h += (n>=i?'★':(n>=i-.5?'⭐':'☆'));
+  return h;
 }
 
-// ─────────────────────────────────────────────
-//  REPORT
-// ─────────────────────────────────────────────
+// ── REPORT ───────────────────────────────────────────────────
+function switchReportTab(tab) {
+  currentReportTab = tab;
+  document.querySelectorAll('.report-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('rtab-' + tab).classList.add('active');
+  document.getElementById('summaryReport').style.display  = tab==='summary'  ? 'block':'none';
+  document.getElementById('detailedReport').style.display = tab==='detailed' ? 'block':'none';
+}
+
+function setQuickRange(range) {
+  const now   = new Date();
+  let from, to;
+  if (range === 'month') {
+    from = new Date(now.getFullYear(), now.getMonth(), 1);
+    to   = new Date(now.getFullYear(), now.getMonth()+1, 0);
+  } else if (range === 'lastmonth') {
+    from = new Date(now.getFullYear(), now.getMonth()-1, 1);
+    to   = new Date(now.getFullYear(), now.getMonth(), 0);
+  } else if (range === 'week') {
+    const day = now.getDay();
+    from = new Date(now); from.setDate(now.getDate() - day + (day===0?-6:1));
+    to   = new Date(from); to.setDate(from.getDate()+6);
+  }
+  document.getElementById('rptFrom').value = dateStr(from);
+  document.getElementById('rptTo').value   = dateStr(to);
+}
+
+function dateStr(d) {
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+
 async function loadReport() {
-  const month = document.getElementById('reportMonth').value;
-  if (!month) { toast('Select a month','error'); return; }
-  const tbody = document.getElementById('reportTbody');
-  tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:1.5rem"><span class="spinner"></span></td></tr>';
+  const fromDate = document.getElementById('rptFrom').value;
+  const toDate   = document.getElementById('rptTo').value;
+  if (!fromDate||!toDate) { toast('Select date range','error'); return; }
+
+  document.getElementById('summaryTbody').innerHTML  = '<tr><td colspan="6" style="text-align:center;padding:1.5rem"><span class="spinner"></span></td></tr>';
+  document.getElementById('detailedTbody').innerHTML = '<tr><td colspan="4" style="text-align:center;padding:1.5rem"><span class="spinner"></span></td></tr>';
+
   try {
-    const res = await api({ action:'getMonthlyData', mtoken:mgrToken, month });
-    if (!res.success) { toast(res.message,'error'); return; }
-    reportData = res.records;
-    const present = reportData.filter(r=>r.status==='present').length;
-    const absent  = reportData.filter(r=>r.status==='absent').length;
-    document.getElementById('reportSummary').innerHTML = `
-      <div style="display:flex;gap:.6rem;flex-wrap:wrap">
-        <span class="badge badge-present">✓ ${present} Present</span>
-        <span class="badge badge-absent">✗ ${absent} Absent</span>
-        <span class="badge badge-info">${reportData.length} Entries</span>
-      </div>`;
-    if (!reportData.length) {
-      tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:2rem">No data for ' + month + '</td></tr>';
-      return;
-    }
-    tbody.innerHTML = reportData.map(r => `<tr>
-      <td>${r.date}</td>
-      <td><strong>${escHtml(r.name)}</strong></td>
-      <td style="color:var(--muted);font-size:.82rem">@${escHtml(r.username)}</td>
-      <td><span class="badge badge-${r.status}">${r.status==='present'?'✓ Present':'✗ Absent'}</span></td>
-    </tr>`).join('');
+    const [sumRes, detRes] = await Promise.all([
+      api({ action:'getMonthlyReport', fromDate, toDate }),
+      api({ action:'getMonthlyData',   fromDate, toDate })
+    ]);
+
+    summaryData  = sumRes.summary  || [];
+    detailedData = detRes.records  || [];
+
+    const totalPresent = summaryData.reduce((a,u)=>a+u.presentDays,0);
+    const totalAbsent  = summaryData.reduce((a,u)=>a+u.absentDays, 0);
+    document.getElementById('reportSummaryBox').innerHTML = `
+      <span class="badge badge-info">${summaryData.length} Users</span>
+      <span class="badge badge-present">✓ ${totalPresent} Present entries</span>
+      <span class="badge badge-absent">✗ ${totalAbsent} Absent entries</span>
+      <span class="badge" style="background:var(--cream);color:var(--muted)">${detailedData.length} Total records</span>`;
+
+    // Summary table
+    document.getElementById('summaryTbody').innerHTML = summaryData.length
+      ? summaryData.map((u,i) => `<tr>
+          <td style="color:var(--muted)">${i+1}</td>
+          <td><strong>${escHtml(u.name)}</strong></td>
+          <td style="color:var(--muted);font-size:.82rem">@${escHtml(u.username)}</td>
+          <td style="text-align:center"><span class="badge badge-present">${u.presentDays}</span></td>
+          <td style="text-align:center"><span class="badge badge-absent">${u.absentDays}</span></td>
+          <td style="text-align:center;font-weight:700">${u.totalDays}</td>
+        </tr>`).join('')
+      : '<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:2rem">No data in range</td></tr>';
+
+    // Detailed table
+    document.getElementById('detailedTbody').innerHTML = detailedData.length
+      ? detailedData.map(r => `<tr>
+          <td>${r.date}</td>
+          <td><strong>${escHtml(r.name)}</strong></td>
+          <td style="color:var(--muted);font-size:.82rem">@${escHtml(r.username)}</td>
+          <td><span class="badge badge-${r.status}">${r.status==='present'?'✓ Present':'✗ Absent'}</span></td>
+        </tr>`).join('')
+      : '<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:2rem">No records</td></tr>';
+
+    document.getElementById('downloadRow').style.display = 'flex';
   } catch(e) { toast('Network error','error'); }
 }
 
-function downloadCSV() {
-  if (!reportData.length) { toast('Load a month first','error'); return; }
-  const month   = document.getElementById('reportMonth').value;
-  const headers = ['Date','Name','Username','Status','Marked At'];
-  const rows    = reportData.map(r=>[r.date,r.name,r.username,r.status,r.markedAt]);
-  const csv     = [headers,...rows].map(r=>r.map(c=>'"'+(c||'').toString().replace(/"/g,'""')+'"').join(',')).join('\n');
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
-  a.download = `canteen-attendance-${month}.csv`;
+function downloadCSV(type) {
+  let csv, filename;
+  const from = document.getElementById('rptFrom').value;
+  const to   = document.getElementById('rptTo').value;
+
+  if (type === 'summary') {
+    if (!summaryData.length) { toast('Load report first','error'); return; }
+    const headers = ['Name','Username','Present Days','Absent Days','Total Days'];
+    const rows    = summaryData.map(u=>[u.name, u.username, u.presentDays, u.absentDays, u.totalDays]);
+    csv      = [headers,...rows].map(r=>r.map(c=>'"'+String(c||'').replace(/"/g,'""')+'"').join(',')).join('\n');
+    filename = `canteen-summary-${from}-to-${to}.csv`;
+  } else {
+    if (!detailedData.length) { toast('Load report first','error'); return; }
+    const headers = ['Date','Name','Username','Status'];
+    const rows    = detailedData.map(r=>[r.date, r.name, r.username, r.status]);
+    csv      = [headers,...rows].map(r=>r.map(c=>'"'+String(c||'').replace(/"/g,'""')+'"').join(',')).join('\n');
+    filename = `canteen-detailed-${from}-to-${to}.csv`;
+  }
+
+  const a  = document.createElement('a');
+  a.href   = URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download = filename;
   a.click();
   toast('CSV downloaded!','success');
 }
 
-// ─────────────────────────────────────────────
-//  USERS
-// ─────────────────────────────────────────────
+// ── USERS ────────────────────────────────────────────────────
 async function loadUsers() {
   const tbody = document.getElementById('usersTbody');
   try {
-    const res = await api({ action:'getAllUsers', mtoken:mgrToken });
+    const res = await api({ action:'getAllUsers' });
     if (!res.success) { toast(res.message,'error'); return; }
-    if (!res.users.length) {
-      tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:2rem">No users registered yet</td></tr>';
-      return;
-    }
-    tbody.innerHTML = res.users.map((u,i) => `<tr>
-      <td style="color:var(--muted)">${i+1}</td>
-      <td><strong>${escHtml(u.name)}</strong></td>
-      <td style="color:var(--muted);font-size:.82rem">@${escHtml(u.username)}</td>
-      <td style="color:var(--muted);font-size:.8rem">${u.joinedAt ? new Date(u.joinedAt).toLocaleDateString('en-IN') : '—'}</td>
-    </tr>`).join('');
+    document.getElementById('userCount').textContent = res.users.length + ' registered';
+    tbody.innerHTML = res.users.length
+      ? res.users.map((u,i)=>`<tr>
+          <td style="color:var(--muted)">${i+1}</td>
+          <td><strong>${escHtml(u.name)}</strong></td>
+          <td style="color:var(--muted);font-size:.82rem">@${escHtml(u.username)}</td>
+          <td style="color:var(--muted);font-size:.8rem">${u.joinedAt?new Date(u.joinedAt).toLocaleDateString('en-IN'):'—'}</td>
+        </tr>`).join('')
+      : '<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:2rem">No users registered yet</td></tr>';
   } catch(e) { toast('Network error','error'); }
 }
 
-// ─────────────────────────────────────────────
-//  IMAGES
-// ─────────────────────────────────────────────
+// ── IMAGES ───────────────────────────────────────────────────
 async function loadImages() {
   const container = document.getElementById('imgLibrary');
-  container.innerHTML = '<div class="empty" style="grid-column:1/-1"><span class="spinner"></span></div>';
+  container.innerHTML = '<div class="empty"><span class="spinner"></span></div>';
   try {
     const res = await api({ action:'getImages' });
     allImages = res.images || [];
@@ -848,14 +891,14 @@ async function loadImages() {
 
 function renderImageGrid(container, imgs, withDelete) {
   if (!imgs.length) {
-    container.innerHTML = '<div class="empty" style="grid-column:1/-1"><i class="fa-regular fa-image"></i><p>No images added yet.</p></div>';
+    container.innerHTML = '<div class="empty"><i class="fa-regular fa-image"></i><p>No images added yet.</p></div>';
     return;
   }
-  container.innerHTML = imgs.map(img => `
+  container.innerHTML = imgs.map(img=>`
     <div class="img-tile" id="imgtile-${img.id}">
       <img src="${escHtml(img.url)}" alt="${escHtml(img.name)}" loading="lazy" onerror="this.src='https://placehold.co/120x90/e5e0d8/6b7280?text=Error'">
       <div class="img-tile-check"><i class="fa-solid fa-check"></i></div>
-      ${withDelete ? `<button class="del-btn" onclick="event.stopPropagation();deleteImage('${img.id}','${escHtml(img.name)}')" title="Delete"><i class="fa-solid fa-trash"></i></button>` : ''}
+      ${withDelete?`<button class="del-btn" onclick="event.stopPropagation();deleteImage('${img.id}','${escHtml(img.name)}')" title="Delete"><i class="fa-solid fa-trash"></i></button>`:''}
       <div class="img-tile-name">${escHtml(img.name)}</div>
     </div>`).join('');
 }
@@ -863,24 +906,22 @@ function renderImageGrid(container, imgs, withDelete) {
 async function deleteImage(id, name) {
   if (!confirm(`Delete "${name}"?`)) return;
   try {
-    const res = await api({ action:'deleteImage', mtoken:mgrToken, id });
+    const res = await api({ action:'deleteImage', id });
     if (res.success) { toast('Image deleted'); loadImages(); }
     else toast(res.message,'error');
   } catch(e) { toast('Network error','error'); }
 }
 
-// Image picker (for set menu)
-let pickerSideIdx = -1;
 function openImgPicker(inputId, thumbId, sideIdx) {
   imgPickerTarget = { inputId, thumbId };
   pickerSideIdx   = (sideIdx !== undefined) ? sideIdx : -1;
   const grid = document.getElementById('imgPickerGrid');
   if (!allImages.length) {
-    grid.innerHTML = '<div class="empty" style="grid-column:1/-1"><i class="fa-regular fa-image"></i><p>No images. Add from Images tab first.</p></div>';
+    grid.innerHTML = '<div class="empty"><i class="fa-regular fa-image"></i><p>No images. Add from Images tab first.</p></div>';
   } else {
-    grid.innerHTML = allImages.map(img => `
-      <div class="img-tile" onclick="selectPickedImage('${img.id}','${escHtml(img.url)}')">
-        <img src="${escHtml(img.url)}" alt="${escHtml(img.name)}" loading="lazy" onerror="this.src='https://placehold.co/120x90?text=Error'">
+    grid.innerHTML = allImages.map(img=>`
+      <div class="img-tile" onclick="selectPickedImage('${escHtml(img.url)}')">
+        <img src="${escHtml(img.url)}" alt="${escHtml(img.name)}" loading="lazy">
         <div class="img-tile-check"><i class="fa-solid fa-check"></i></div>
         <div class="img-tile-name">${escHtml(img.name)}</div>
       </div>`).join('');
@@ -888,15 +929,12 @@ function openImgPicker(inputId, thumbId, sideIdx) {
   document.getElementById('imgPickerModal').classList.add('open');
 }
 
-function selectPickedImage(id, url) {
+function selectPickedImage(url) {
   const inputEl = document.getElementById(imgPickerTarget.inputId);
   const thumbEl = document.getElementById(imgPickerTarget.thumbId);
-  if (inputEl) { inputEl.value = url; }
+  if (inputEl) inputEl.value = url;
   if (thumbEl) { thumbEl.src = url; thumbEl.style.display = 'block'; }
-  // Update sideDishes state if applicable
-  if (pickerSideIdx >= 0 && sideDishes[pickerSideIdx]) {
-    sideDishes[pickerSideIdx].imgUrl = url;
-  }
+  if (pickerSideIdx >= 0 && sideDishes[pickerSideIdx]) sideDishes[pickerSideIdx].imgUrl = url;
   closeModal('imgPickerModal');
   toast('Image selected');
 }
@@ -905,49 +943,46 @@ function previewThumb(inputId, thumbId) {
   const url  = document.getElementById(inputId)?.value?.trim();
   const thumb = document.getElementById(thumbId);
   if (!thumb) return;
-  if (url) { thumb.src = url; thumb.style.display = 'block'; }
-  else thumb.style.display = 'none';
+  if (url) { thumb.src = url; thumb.style.display='block'; }
+  else thumb.style.display='none';
 }
 
 function openAddImageModal() { document.getElementById('addImgModal').classList.add('open'); }
 
 function closeModal(id) {
   document.getElementById(id).classList.remove('open');
-  if (id === 'addImgModal') {
-    document.getElementById('newImgName').value = '';
-    document.getElementById('newImgUrl').value  = '';
-    document.getElementById('newImgPreviewWrap').style.display = 'none';
-    hideMsg('imgModalMsg');
+  if (id==='addImgModal') {
+    document.getElementById('newImgName').value='';
+    document.getElementById('newImgUrl').value='';
+    document.getElementById('newImgPreviewWrap').style.display='none';
+    const mm=document.getElementById('imgModalMsg'); if(mm){mm.className='msg';mm.textContent='';}
   }
 }
 
 function previewNewImg() {
-  const url = document.getElementById('newImgUrl').value.trim();
+  const url  = document.getElementById('newImgUrl').value.trim();
   const wrap = document.getElementById('newImgPreviewWrap');
-  if (url) { document.getElementById('newImgPreview').src = url; wrap.style.display = 'block'; }
-  else wrap.style.display = 'none';
+  if (url) { document.getElementById('newImgPreview').src=url; wrap.style.display='block'; }
+  else wrap.style.display='none';
 }
 
 async function saveNewImage() {
   const name = document.getElementById('newImgName').value.trim();
   const url  = document.getElementById('newImgUrl').value.trim();
-  if (!name || !url) { showMsg('imgModalMsg','Name and URL are required','error'); return; }
+  if (!name||!url) { showMsg('imgModalMsg','Name and URL required','error'); return; }
   try {
-    const res = await api({ action:'addImage', mtoken:mgrToken, name, url });
-    if (res.success) { toast('Image added!','success'); closeModal('addImgModal'); loadImages(); }
+    const res = await api({ action:'addImage', name, url });
+    if (res.success) { toast('Image added!','success'); closeModal('addImgModal'); loadImages(); loadAllImages(); }
     else showMsg('imgModalMsg', res.message,'error');
   } catch(e) { showMsg('imgModalMsg','Network error','error'); }
 }
 
-// ─────────────────────────────────────────────
-//  UTILS
-// ─────────────────────────────────────────────
-function showMsg(id, text, type) { const el=document.getElementById(id); el.textContent=text; el.className='msg '+(type?type:'')+(text?' show':''); }
-function hideMsg(id) { const el=document.getElementById(id); if(el){el.className='msg';el.textContent='';} }
+// ── UTILS ────────────────────────────────────────────────────
+function showMsg(id,text,type){ const el=document.getElementById(id); if(!el)return; el.textContent=text; el.className='msg '+(type||'')+(text?' show':''); }
 let toastTimer;
-function toast(msg, type='') { const el=document.getElementById('toast'); el.textContent=msg; el.className='toast show'+(type?' '+type:''); clearTimeout(toastTimer); toastTimer=setTimeout(()=>el.className='toast',3000); }
-function escHtml(str) { return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-function formatTime(iso) { if(!iso)return'—'; try{return new Date(iso).toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});}catch(e){return iso;} }
+function toast(msg,type=''){ const el=document.getElementById('toast'); el.textContent=msg; el.className='toast show'+(type?' '+type:''); clearTimeout(toastTimer); toastTimer=setTimeout(()=>el.className='toast',3000); }
+function escHtml(str){ return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function formatTime(iso){ if(!iso)return'—'; try{return new Date(iso).toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});}catch(e){return iso;} }
 </script>
 </body>
 </html>
