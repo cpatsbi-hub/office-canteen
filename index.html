@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ml">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Office Canteen</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Malayalam:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 <style>
 :root{
@@ -15,6 +15,7 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;font-family:'DM Sans',sans-serif;color:var(--text)}
+.ml{font-family:'Noto Sans Malayalam','DM Sans',sans-serif}
 #bg{position:fixed;inset:0;z-index:0;background:url('https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=1920&q=80') center/cover no-repeat}
 #bg::after{content:'';position:absolute;inset:0;background:linear-gradient(160deg,rgba(12,40,25,.78) 0%,rgba(80,35,5,.65) 100%)}
 #root{position:relative;z-index:10;min-height:100vh;display:flex;flex-direction:column}
@@ -27,22 +28,18 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;color:var(--text)}
 .auth-brand p{opacity:.75;font-size:.88rem;margin-top:.2rem}
 .auth-card{background:rgba(255,255,255,.97);border-radius:var(--radius);width:100%;max-width:400px;overflow:hidden;box-shadow:var(--shadow2)}
 .auth-card-body{padding:1.8rem}
-
-/* returning-user pill */
 .user-pill{display:flex;align-items:center;gap:.85rem;background:var(--cream);border-radius:14px;padding:.9rem 1.1rem;border:2px solid var(--border);margin-bottom:1.2rem}
-.user-pill-avatar{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--green),#1a4a32);display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.1rem;font-weight:700;flex-shrink:0}
-.user-pill-info{flex:1;min-width:0}
-.user-pill-name{font-weight:700;font-size:.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.user-pill-sub{font-size:.75rem;color:var(--muted)}
-.auth-switch{text-align:center;font-size:.78rem;color:var(--muted);margin-top:1rem}
-.auth-switch a{color:var(--green);font-weight:600;cursor:pointer;text-decoration:none}
-.auth-switch a:hover{text-decoration:underline}
+.user-pill-avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--green),#1a4a32);display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.2rem;font-weight:700;flex-shrink:0}
+.user-pill-name{font-weight:700;font-size:.95rem}
+.user-pill-sub{font-size:.73rem;color:var(--muted)}
 .auth-heading{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--green);margin-bottom:1.2rem;text-align:center}
+.auth-switch{text-align:center;font-size:.78rem;color:var(--muted);margin-top:1rem}
+.auth-switch a{color:var(--green);font-weight:600;cursor:pointer}
 
 /* FORM */
 .field{margin-bottom:1rem}
 .field label{display:block;font-size:.76rem;font-weight:700;color:var(--muted);margin-bottom:.35rem;text-transform:uppercase;letter-spacing:.06em}
-.field input{width:100%;padding:.78rem 1rem;border:2px solid var(--border);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:.93rem;background:var(--cream);transition:all .2s;color:var(--text)}
+.field input{width:100%;padding:.78rem 1rem;border:2px solid var(--border);border-radius:12px;font-family:'Noto Sans Malayalam','DM Sans',sans-serif;font-size:.93rem;background:var(--cream);transition:all .2s;color:var(--text)}
 .field input:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 4px rgba(45,106,79,.12);background:var(--white)}
 .field .hint{font-size:.72rem;color:var(--muted);margin-top:.3rem}
 .btn{display:inline-flex;align-items:center;gap:.5rem;justify-content:center;padding:.8rem 1.5rem;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:.93rem;font-weight:700;cursor:pointer;border:none;transition:all .2s;width:100%}
@@ -78,20 +75,20 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;color:var(--text)}
 .menu-hero-placeholder{width:100%;height:160px;background:linear-gradient(135deg,#e8f4ea,#d0e8d8);display:flex;align-items:center;justify-content:center;font-size:4rem}
 .menu-card-body{padding:1.4rem}
 .menu-label{font-size:.7rem;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.35rem;display:flex;align-items:center;gap:.3rem}
-.menu-name{font-family:'Playfair Display',serif;font-size:1.55rem;color:var(--green);line-height:1.2}
+.menu-name{font-family:'Noto Sans Malayalam','Playfair Display',serif;font-size:1.55rem;color:var(--green);line-height:1.3}
 .menu-divider{height:1px;background:var(--border);margin:1.1rem 0}
 .sides-section{margin-top:.8rem}
 .sides-label{font-size:.73rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.6rem}
 .side-dish-item{display:flex;align-items:center;gap:.75rem;background:var(--cream);border-radius:12px;padding:.65rem .85rem;margin-bottom:.5rem;border:1px solid var(--border)}
 .side-dish-img{width:44px;height:44px;border-radius:8px;object-fit:cover;flex-shrink:0;border:2px solid var(--white)}
 .side-dish-img-placeholder{width:44px;height:44px;border-radius:8px;background:linear-gradient(135deg,#d0e8d8,#b8d8c0);display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
-.side-dish-name{font-size:.9rem;font-weight:600;color:var(--text)}
+.side-dish-name{font-size:.9rem;font-weight:600;color:var(--text);font-family:'Noto Sans Malayalam','DM Sans',sans-serif}
 
 /* ATTENDANCE */
 .att-question{font-size:.88rem;font-weight:600;color:var(--text);margin-bottom:.9rem;display:flex;align-items:center;gap:.45rem}
 .att-question i{color:var(--amber)}
 .att-buttons{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}
-.att-btn{padding:.95rem;border-radius:14px;cursor:pointer;border:2px solid var(--border);font-family:'DM Sans',sans-serif;font-weight:700;font-size:.95rem;display:flex;flex-direction:column;align-items:center;gap:.35rem;transition:all .25s;background:var(--cream)}
+.att-btn{padding:.95rem;border-radius:14px;cursor:pointer;border:2px solid var(--border);font-family:'DM Sans',sans-serif;font-weight:700;font-size:.95rem;display:flex;flex-direction:column;align-items:center;gap:.35rem;transition:all .25s;background:var(--cream);-webkit-tap-highlight-color:transparent}
 .att-btn .att-icon{font-size:1.65rem}
 .att-btn .att-label{font-size:.78rem;font-weight:600}
 .att-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:var(--shadow)}
@@ -112,14 +109,15 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;color:var(--text)}
 .rating-card-header h3{font-family:'Playfair Display',serif;font-size:1rem}
 .rating-item{padding:1rem 1.2rem;border-bottom:1px solid var(--border)}
 .rating-item:last-child{border-bottom:none}
-.rating-item-name{font-weight:700;font-size:.92rem;color:var(--text);margin-bottom:.5rem;display:flex;align-items:center;gap:.5rem}
-.rating-item-type-badge{font-size:.66rem;background:rgba(45,106,79,.1);color:var(--green);border-radius:20px;padding:.1rem .45rem;font-weight:600}
+.rating-item-name{font-weight:700;font-size:.92rem;color:var(--text);margin-bottom:.5rem;display:flex;align-items:center;gap:.5rem;font-family:'Noto Sans Malayalam','DM Sans',sans-serif}
+.rating-item-type-badge{font-size:.66rem;background:rgba(45,106,79,.1);color:var(--green);border-radius:20px;padding:.1rem .45rem;font-weight:600;font-family:'DM Sans',sans-serif}
 .star-row{display:flex;align-items:center;gap:.3rem;margin-bottom:.5rem}
-.star{font-size:1.6rem;cursor:pointer;color:#d1d5db;transition:color .15s,transform .1s;user-select:none;line-height:1}
+.star{font-size:1.6rem;cursor:pointer;color:#d1d5db;transition:color .15s,transform .1s;user-select:none;line-height:1;-webkit-tap-highlight-color:transparent}
 .star.active{color:var(--star)}
 .star:hover{transform:scale(1.15)}
-.rating-comment{width:100%;padding:.55rem .85rem;border:2px solid var(--border);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.85rem;resize:vertical;min-height:56px;background:var(--cream);transition:border .2s}
+.rating-comment{width:100%;padding:.55rem .85rem;border:2px solid var(--border);border-radius:10px;font-family:'Noto Sans Malayalam','DM Sans',sans-serif;font-size:.85rem;resize:vertical;min-height:60px;background:var(--cream);transition:border .2s}
 .rating-comment:focus{outline:none;border-color:var(--green);background:var(--white)}
+.comment-hint{font-size:.7rem;color:var(--muted);margin-top:.2rem}
 .rated-badge{display:inline-flex;align-items:center;gap:.35rem;background:#d1fae5;color:#065f46;border-radius:20px;padding:.25rem .75rem;font-size:.78rem;font-weight:700;margin-bottom:.4rem}
 .rating-submit-row{padding:.85rem 1.2rem;background:var(--cream);display:flex;justify-content:flex-end}
 .btn-submit-rating{background:linear-gradient(135deg,var(--amber),#9a4418);color:#fff;border:none;padding:.6rem 1.4rem;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:.4rem}
@@ -146,7 +144,7 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;color:var(--text)}
 .spinner{width:28px;height:28px;border:3px solid rgba(45,106,79,.18);border-top-color:var(--green);border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
 
 /* TOAST */
-.toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(100px);background:#1a1a1a;color:#fff;padding:.65rem 1.3rem;border-radius:30px;font-size:.83rem;font-weight:500;z-index:9999;transition:transform .3s,opacity .3s;opacity:0;pointer-events:none}
+.toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(100px);background:#1a1a1a;color:#fff;padding:.65rem 1.3rem;border-radius:30px;font-size:.83rem;font-weight:500;z-index:9999;transition:transform .3s,opacity .3s;opacity:0;pointer-events:none;max-width:90vw;text-align:center}
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
 .toast.success{background:var(--present)}
 .toast.error{background:var(--absent)}
@@ -170,13 +168,13 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;color:var(--text)}
     <div class="auth-card">
       <div class="auth-card-body">
 
-        <!-- RETURNING USER VIEW -->
+        <!-- RETURNING USER -->
         <div id="returningView" style="display:none">
           <div class="auth-heading">Welcome back! 👋</div>
-          <div class="user-pill" id="userPill">
+          <div class="user-pill">
             <div class="user-pill-avatar" id="pillAvatar">?</div>
-            <div class="user-pill-info">
-              <div class="user-pill-name" id="pillName">—</div>
+            <div>
+              <div class="user-pill-name ml" id="pillName">—</div>
               <div class="user-pill-sub" id="pillUsername">—</div>
             </div>
           </div>
@@ -184,23 +182,20 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;color:var(--text)}
             <i class="fa-solid fa-right-to-bracket"></i> Sign In
           </button>
           <div id="loginMsg" class="msg"></div>
-          <div class="auth-switch">Not you? <a onclick="showNewUserView()">Register new account</a></div>
+          <div class="auth-switch" style="margin-top:.9rem">Not you? <a onclick="showNewUserView()">Register new account</a></div>
         </div>
 
-        <!-- NEW USER VIEW -->
+        <!-- NEW USER -->
         <div id="newUserView" style="display:none">
           <div class="auth-heading">Join the Canteen 🍽️</div>
           <div class="field">
             <label>Your Full Name</label>
-            <input type="text" id="r-name" placeholder="e.g. Rahul Sharma"
-                   autocomplete="name"
-                   oninput="autoCapitalize(this)"
-                   onkeydown="if(event.key==='Enter')document.getElementById('r-username').focus()">
+            <input type="text" id="r-name" placeholder="e.g. Rahul Sharma" autocomplete="name"
+                   class="ml" oninput="autoCapitalize(this)" onkeydown="if(event.key==='Enter')document.getElementById('r-username').focus()">
           </div>
           <div class="field">
             <label>Username</label>
-            <input type="text" id="r-username" placeholder="e.g. rahul.sharma"
-                   autocomplete="username"
+            <input type="text" id="r-username" placeholder="e.g. rahul.sharma" autocomplete="username"
                    onkeydown="if(event.key==='Enter')doRegister()">
             <div class="hint">Only letters, numbers, dot, underscore. No spaces.</div>
           </div>
@@ -208,7 +203,7 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;color:var(--text)}
             <i class="fa-solid fa-user-plus"></i> Create Account
           </button>
           <div id="regMsg" class="msg"></div>
-          <div class="auth-switch" id="switchToLogin" style="display:none">
+          <div class="auth-switch" id="switchToLogin" style="display:none;margin-top:.9rem">
             Already registered? <a onclick="showReturningView()">Sign in</a>
           </div>
         </div>
@@ -222,7 +217,7 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;color:var(--text)}
     <div class="app-header">
       <div class="user-greeting">
         <div class="label">Signed in as</div>
-        <div class="name" id="userName">—</div>
+        <div class="name ml" id="userName">—</div>
         <div style="font-size:.72rem;color:rgba(255,255,255,.5);margin-top:.1rem" id="userUsername"></div>
       </div>
       <div class="header-actions">
@@ -247,412 +242,212 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;color:var(--text)}
 <div class="toast" id="toast"></div>
 
 <script>
-// ── CONFIG ──────────────────────────────────────────────────
-const API_URL = 'https://script.google.com/macros/s/AKfycby5ZP70p6XvfovTKLAdi9MqcuhoxpwuVf-PPy5zAY5kT8POqIDyjA-HDt9fmiy9vX0ahw/exec';
+const API_URL='https://script.google.com/macros/s/AKfycbxIT1x52Wo--2NCspuELSCRdlxM0iimcYPeaJbNAoouuIa3T3VMm9D0VzFyk2glCoxGJw/exec';
 
-// ── STATE ───────────────────────────────────────────────────
-let userToken     = '';
-let userData      = null;
-let historyOpen   = false;
-let currentMenu   = null;
-let userRatings   = {};
-let pendingRatings = {};
-let todayStatus   = null; // 'present' | 'absent' | null
+let userToken='',userData=null,historyOpen=false,currentMenu=null,userRatings={},pendingRatings={},todayStatus=null;
 
-// ── API (JSONP) ─────────────────────────────────────────────
-function api(params) {
-  return new Promise((resolve, reject) => {
-    const cb = 'cb_' + Date.now() + '_' + Math.floor(Math.random()*9999);
-    const qs = Object.entries({ ...params, callback: cb })
-                     .map(([k,v]) => encodeURIComponent(k) + '=' + encodeURIComponent(v)).join('&');
-    const script = document.createElement('script');
-    const timer  = setTimeout(() => { cleanup(); reject(new Error('Timeout')); }, 15000);
-    window[cb]   = data => { cleanup(); resolve(data); };
-    function cleanup() { clearTimeout(timer); delete window[cb]; script.remove(); }
-    script.onerror = () => { cleanup(); reject(new Error('Network error')); };
-    script.src = API_URL + '?' + qs;
-    document.head.appendChild(script);
+function api(params){
+  return new Promise((resolve,reject)=>{
+    const cb='cb_'+Date.now()+'_'+Math.floor(Math.random()*9999);
+    const qs=Object.entries({...params,callback:cb}).map(([k,v])=>encodeURIComponent(k)+'='+encodeURIComponent(v)).join('&');
+    const s=document.createElement('script');
+    const t=setTimeout(()=>{cleanup();reject(new Error('Timeout'));},15000);
+    window[cb]=d=>{cleanup();resolve(d);};
+    function cleanup(){clearTimeout(t);delete window[cb];s.remove();}
+    s.onerror=()=>{cleanup();reject(new Error('Network error'));};
+    s.src=API_URL+'?'+qs; document.head.appendChild(s);
   });
 }
 
-// ── UTILS ───────────────────────────────────────────────────
-function autoCapitalize(input) {
-  const pos = input.selectionStart;
-  input.value = input.value.replace(/\b\w/g, c => c.toUpperCase());
-  input.setSelectionRange(pos, pos);
+function autoCapitalize(input){
+  const pos=input.selectionStart;
+  input.value=input.value.replace(/\b\w/g,c=>c.toUpperCase());
+  try{input.setSelectionRange(pos,pos);}catch(e){}
 }
 
-function escHtml(str) {
-  return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-function escAttr(str) { return String(str||'').replace(/'/g,"\\'").replace(/"/g,'&quot;'); }
-function showMsg(id,text,type){ const el=document.getElementById(id); if(!el)return; el.textContent=text; el.className='msg '+(type||'')+' show'; }
-let toastTimer;
-function toast(msg,type=''){ const el=document.getElementById('toast'); el.textContent=msg; el.className='toast show'+(type?' '+type:''); clearTimeout(toastTimer); toastTimer=setTimeout(()=>el.className='toast',3200); }
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function escA(s){return String(s||'').replace(/'/g,"\\'").replace(/"/g,'&quot;');}
+function showMsg(id,t,type){const el=document.getElementById(id);if(!el)return;el.textContent=t;el.className='msg '+(type||'')+' show';}
+let tT;
+function toast(msg,type=''){const el=document.getElementById('toast');el.textContent=msg;el.className='toast show'+(type?' '+type:'');clearTimeout(tT);tT=setTimeout(()=>el.className='toast',3200);}
 
-// ── INIT ────────────────────────────────────────────────────
-window.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('dateStrip').textContent =
-    new Date().toLocaleDateString('en-IN', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
-
-  userToken = localStorage.getItem('userToken') || '';
-  userData  = JSON.parse(localStorage.getItem('userData') || 'null');
-  const savedUsername = localStorage.getItem('savedUsername') || '';
-
-  if (userToken && userData) {
-    showApp(userData);
-  } else if (savedUsername) {
-    showReturningView(savedUsername);
-  } else {
-    showNewUserView();
-  }
+window.addEventListener('DOMContentLoaded',()=>{
+  document.getElementById('dateStrip').textContent=new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  userToken=localStorage.getItem('userToken')||'';
+  userData=JSON.parse(localStorage.getItem('userData')||'null');
+  const su=localStorage.getItem('savedUsername')||'';
+  if(userToken&&userData) showApp(userData);
+  else if(su) showReturningView(su);
+  else showNewUserView();
 });
 
-function showReturningView(username) {
-  const name = localStorage.getItem('savedName') || username;
-  document.getElementById('returningView').style.display = 'block';
-  document.getElementById('newUserView').style.display   = 'none';
-  document.getElementById('pillName').textContent     = name;
-  document.getElementById('pillUsername').textContent = '@' + (username || localStorage.getItem('savedUsername') || '');
-  document.getElementById('pillAvatar').textContent   = (name[0] || '?').toUpperCase();
+function showReturningView(username){
+  const name=localStorage.getItem('savedName')||username;
+  document.getElementById('returningView').style.display='block';
+  document.getElementById('newUserView').style.display='none';
+  document.getElementById('pillName').textContent=name;
+  document.getElementById('pillUsername').textContent='@'+(username||localStorage.getItem('savedUsername')||'');
+  document.getElementById('pillAvatar').textContent=(name[0]||'?').toUpperCase();
+}
+function showNewUserView(){
+  document.getElementById('returningView').style.display='none';
+  document.getElementById('newUserView').style.display='block';
+  if(localStorage.getItem('savedUsername')) document.getElementById('switchToLogin').style.display='block';
 }
 
-function showNewUserView() {
-  document.getElementById('returningView').style.display = 'none';
-  document.getElementById('newUserView').style.display   = 'block';
-  const savedUsername = localStorage.getItem('savedUsername');
-  if (savedUsername) {
-    document.getElementById('switchToLogin').style.display = 'block';
-  }
-}
-
-// ── REGISTER ────────────────────────────────────────────────
-async function doRegister() {
-  const name  = document.getElementById('r-name').value.trim();
-  const uname = document.getElementById('r-username').value.trim().toLowerCase().replace(/\s+/g,'');
-  if (!name)  { showMsg('regMsg','Please enter your full name','error'); return; }
-  if (!uname) { showMsg('regMsg','Please choose a username','error'); return; }
-  if (!/^[a-z0-9._]+$/.test(uname)) { showMsg('regMsg','Username: only letters, numbers, dot, underscore','error'); return; }
-
-  const btn = document.getElementById('regBtn');
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner" style="width:16px;height:16px;border-width:2px"></span> Creating…';
+async function doRegister(){
+  const name=document.getElementById('r-name').value.trim();
+  const uname=document.getElementById('r-username').value.trim().toLowerCase().replace(/\s+/g,'');
+  if(!name){showMsg('regMsg','Please enter your full name','error');return;}
+  if(!uname){showMsg('regMsg','Please choose a username','error');return;}
+  if(!/^[a-z0-9._]+$/.test(uname)){showMsg('regMsg','Username: only letters, numbers, dot, underscore','error');return;}
+  const btn=document.getElementById('regBtn'); btn.disabled=true; btn.innerHTML='<span class="spinner" style="width:16px;height:16px;border-width:2px"></span> Creating…';
   try {
-    const res = await api({ action:'register', name, username:uname });
-    if (res.success) {
-      saveSession(res);
-      showApp(res);
-      toast('Welcome, ' + res.name + '! 🎉','success');
-    } else {
-      showMsg('regMsg', res.message, 'error');
-    }
-  } catch(e) { showMsg('regMsg','Connection error. Please try again.','error'); }
-  btn.disabled = false;
-  btn.innerHTML = '<i class="fa-solid fa-user-plus"></i> Create Account';
+    const res=await api({action:'register',name,username:uname});
+    if(res.success){saveSession(res);showApp(res);toast('Welcome, '+res.name+'! 🎉','success');}
+    else showMsg('regMsg',res.message,'error');
+  } catch(e){showMsg('regMsg','Connection error. Try again.','error');}
+  btn.disabled=false; btn.innerHTML='<i class="fa-solid fa-user-plus"></i> Create Account';
 }
 
-// ── LOGIN (returning user) ───────────────────────────────────
-async function doLogin() {
-  const savedUsername = localStorage.getItem('savedUsername') || '';
-  if (!savedUsername) { showReturningView(''); return; }
-
-  const btn = document.getElementById('signInBtn');
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner" style="width:16px;height:16px;border-width:2px"></span> Signing in…';
+async function doLogin(){
+  const su=localStorage.getItem('savedUsername')||'';
+  if(!su){showNewUserView();return;}
+  const btn=document.getElementById('signInBtn'); btn.disabled=true; btn.innerHTML='<span class="spinner" style="width:16px;height:16px;border-width:2px"></span> Signing in…';
   try {
-    const res = await api({ action:'login', username: savedUsername });
-    if (res.success) {
-      saveSession(res);
-      showApp(res);
-    } else {
-      showMsg('loginMsg', res.message, 'error');
-    }
-  } catch(e) { showMsg('loginMsg','Connection error. Please try again.','error'); }
-  btn.disabled = false;
-  btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Sign In';
+    const res=await api({action:'login',username:su});
+    if(res.success){saveSession(res);showApp(res);}
+    else showMsg('loginMsg',res.message,'error');
+  } catch(e){showMsg('loginMsg','Connection error. Try again.','error');}
+  btn.disabled=false; btn.innerHTML='<i class="fa-solid fa-right-to-bracket"></i> Sign In';
 }
 
-// ── SESSION ──────────────────────────────────────────────────
-function saveSession(res) {
-  userToken = res.token;
-  userData  = { name: res.name, username: res.username };
-  localStorage.setItem('userToken',    userToken);
-  localStorage.setItem('userData',     JSON.stringify(userData));
-  localStorage.setItem('savedUsername', res.username);
-  localStorage.setItem('savedName',     res.name);
+function saveSession(res){
+  userToken=res.token; userData={name:res.name,username:res.username};
+  localStorage.setItem('userToken',userToken); localStorage.setItem('userData',JSON.stringify(userData));
+  localStorage.setItem('savedUsername',res.username); localStorage.setItem('savedName',res.name);
 }
-
-function doLogout() {
-  userToken = ''; userData = null; todayStatus = null;
-  localStorage.removeItem('userToken');
-  localStorage.removeItem('userData');
-  document.getElementById('authScreen').style.display = 'flex';
-  document.getElementById('appScreen').style.display  = 'none';
+function doLogout(){
+  userToken='';userData=null;todayStatus=null;
+  localStorage.removeItem('userToken');localStorage.removeItem('userData');
+  document.getElementById('authScreen').style.display='flex';
+  document.getElementById('appScreen').style.display='none';
   showReturningView();
 }
 
-// ── SHOW APP ─────────────────────────────────────────────────
-function showApp(user) {
-  document.getElementById('authScreen').style.display = 'none';
-  document.getElementById('appScreen').style.display  = 'flex';
-  document.getElementById('userName').textContent    = user.name;
-  document.getElementById('userUsername').textContent = '@' + user.username;
+function showApp(user){
+  document.getElementById('authScreen').style.display='none';
+  document.getElementById('appScreen').style.display='flex';
+  document.getElementById('userName').textContent=user.name;
+  document.getElementById('userUsername').textContent='@'+user.username;
   loadMenuAndAttendance();
 }
 
-// ── MENU + ATTENDANCE ────────────────────────────────────────
-async function loadMenuAndAttendance() {
-  document.getElementById('mainContent').innerHTML = `
-    <div class="loading-card">
-      <span class="spinner" style="width:36px;height:36px;border-width:3px;display:block;margin:0 auto 1rem"></span>
-      <p style="color:var(--muted);font-size:.88rem">Loading today's menu…</p>
-    </div>`;
-  document.getElementById('ratingSection').innerHTML = '';
-
+async function loadMenuAndAttendance(){
+  document.getElementById('mainContent').innerHTML=`<div class="loading-card"><span class="spinner" style="width:36px;height:36px;border-width:3px;display:block;margin:0 auto 1rem"></span><p style="color:var(--muted);font-size:.88rem">Loading today's menu…</p></div>`;
+  document.getElementById('ratingSection').innerHTML='';
   try {
-    const [menuRes, attRes, ratRes] = await Promise.all([
-      api({ action:'getMenu' }),
-      api({ action:'checkAttendance', token:userToken }),
-      api({ action:'getMyRatings',    token:userToken })
+    const [menuRes,attRes,ratRes]=await Promise.all([
+      api({action:'getMenu'}),api({action:'checkAttendance',token:userToken}),api({action:'getMyRatings',token:userToken})
     ]);
-
-    if (attRes.message?.includes('session')) { doLogout(); return; }
-
-    currentMenu    = menuRes.menu;
-    userRatings    = ratRes.ratings || {};
-    pendingRatings = {};
-    todayStatus    = attRes.marked ? attRes.status : null;
-
-    if (!currentMenu) {
-      document.getElementById('mainContent').innerHTML = `
-        <div class="no-menu-card">
-          <span class="nm-icon">🍽️</span>
-          <h2>Menu Not Set Yet</h2>
-          <p>Today's menu hasn't been announced. Check back later!</p>
-        </div>`;
+    if(attRes.message?.includes('session')){doLogout();return;}
+    currentMenu=menuRes.menu; userRatings=ratRes.ratings||{}; pendingRatings={}; todayStatus=attRes.marked?attRes.status:null;
+    if(!currentMenu){
+      document.getElementById('mainContent').innerHTML=`<div class="no-menu-card"><span class="nm-icon">🍽️</span><h2>Menu Not Set Yet</h2><p>Today's menu hasn't been announced. Check back later!</p></div>`;
       return;
     }
-
-    renderMenuCard(currentMenu, attRes);
-    // Only show rating section if user is present (or hasn't marked yet)
-    if (!attRes.marked || attRes.status === 'present') {
-      renderRatingSection(currentMenu);
-    }
-  } catch(e) {
-    document.getElementById('mainContent').innerHTML = `
-      <div class="no-menu-card">
-        <span class="nm-icon">⚠️</span>
-        <h2>Connection Error</h2>
-        <p>Could not load menu. <a href="#" onclick="loadMenuAndAttendance()" style="color:var(--amber)">Try again</a></p>
-      </div>`;
+    renderMenuCard(currentMenu,attRes);
+    if(!attRes.marked||attRes.status==='present') renderRatingSection(currentMenu);
+  } catch(e){
+    document.getElementById('mainContent').innerHTML=`<div class="no-menu-card"><span class="nm-icon">⚠️</span><h2>Connection Error</h2><p><a href="#" onclick="loadMenuAndAttendance()" style="color:var(--amber)">Try again</a></p></div>`;
   }
 }
 
-function renderMenuCard(menu, attRes) {
-  const heroHtml = menu.mainCourseImg
-    ? `<img src="${escHtml(menu.mainCourseImg)}" class="menu-hero" loading="eager" alt="${escHtml(menu.mainCourse)}"
-           onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">` : '';
-  const heroPlaceholder = !menu.mainCourseImg
-    ? `<div class="menu-hero-placeholder">🍱</div>`
-    : `<div class="menu-hero-placeholder" style="display:none">🍱</div>`;
-
-  const sidesHtml = (menu.sideDishes||[]).length ? `
-    <div class="sides-section">
-      <div class="sides-label"><i class="fa-solid fa-leaf" style="color:var(--green);font-size:.75rem"></i> Side Dishes</div>
-      ${menu.sideDishes.map(s => {
-        const sImg = s.imgUrl
-          ? `<img src="${escHtml(s.imgUrl)}" class="side-dish-img" alt="${escHtml(s.name||'')}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="side-dish-img-placeholder" style="display:none">🥗</div>`
-          : `<div class="side-dish-img-placeholder">🥗</div>`;
-        return `<div class="side-dish-item">${sImg}<div class="side-dish-name">${escHtml(s.name||'')}</div></div>`;
-      }).join('')}
-    </div>` : '';
-
-  const attHtml = attRes.marked
-    ? buildMarkedHtml(attRes.status)
-    : `<div class="att-question"><i class="fa-solid fa-circle-question"></i> Will you have lunch today?</div>
-       <div class="att-buttons">
-         <button class="att-btn att-btn-present" onclick="markAttendance('present')">
-           <span class="att-icon">✅</span><span class="att-label">Yes, I'll eat!</span>
-         </button>
-         <button class="att-btn att-btn-absent" onclick="markAttendance('absent')">
-           <span class="att-icon">🚫</span><span class="att-label">No, I'll skip</span>
-         </button>
-       </div>`;
-
-  document.getElementById('mainContent').innerHTML = `
-    <div class="menu-card">
-      ${heroHtml}${heroPlaceholder}
-      <div class="menu-card-body">
-        <div class="menu-label"><i class="fa-solid fa-star"></i> Today's Main Course</div>
-        <div class="menu-name">${escHtml(menu.mainCourse)}</div>
-        ${sidesHtml}
-        <div class="menu-divider"></div>
-        <div id="attendanceSection">${attHtml}</div>
-      </div>
-    </div>`;
+function renderMenuCard(menu,attRes){
+  const heroHtml=menu.mainCourseImg?`<img src="${esc(menu.mainCourseImg)}" class="menu-hero" loading="eager" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`:'' ;
+  const heroPlaceholder=!menu.mainCourseImg?`<div class="menu-hero-placeholder">🍱</div>`:`<div class="menu-hero-placeholder" style="display:none">🍱</div>`;
+  const sidesHtml=(menu.sideDishes||[]).length?`<div class="sides-section"><div class="sides-label"><i class="fa-solid fa-leaf" style="color:var(--green);font-size:.75rem"></i> Side Dishes</div>${menu.sideDishes.map(s=>{const sI=s.imgUrl?`<img src="${esc(s.imgUrl)}" class="side-dish-img" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="side-dish-img-placeholder" style="display:none">🥗</div>`:`<div class="side-dish-img-placeholder">🥗</div>`;return`<div class="side-dish-item">${sI}<div class="side-dish-name">${esc(s.name||'')}</div></div>`;}).join('')}</div>`:'';
+  const attHtml=attRes.marked?buildMarkedHtml(attRes.status):`<div class="att-question"><i class="fa-solid fa-circle-question"></i> Will you have lunch today?</div><div class="att-buttons"><button class="att-btn att-btn-present" onclick="markAtt('present')"><span class="att-icon">✅</span><span class="att-label">Yes, I'll eat!</span></button><button class="att-btn att-btn-absent" onclick="markAtt('absent')"><span class="att-icon">🚫</span><span class="att-label">No, I'll skip</span></button></div>`;
+  document.getElementById('mainContent').innerHTML=`<div class="menu-card">${heroHtml}${heroPlaceholder}<div class="menu-card-body"><div class="menu-label"><i class="fa-solid fa-star"></i> Today's Main Course</div><div class="menu-name">${esc(menu.mainCourse)}</div>${sidesHtml}<div class="menu-divider"></div><div id="attendanceSection">${attHtml}</div></div></div>`;
 }
 
-function buildMarkedHtml(status) {
-  const p = status === 'present';
-  return `<div class="att-marked ${status}">
-    <span class="marked-icon">${p?'✅':'🚫'}</span>
-    <div class="marked-title">${p?'Attending Lunch!':'Skipping Today'}</div>
-    <div class="marked-sub">${p?'Your attendance is confirmed. Enjoy your meal!':'You\'ve marked absent for today.'}</div>
-  </div>`;
+function buildMarkedHtml(status){
+  const p=status==='present';
+  return`<div class="att-marked ${status}"><span class="marked-icon">${p?'✅':'🚫'}</span><div class="marked-title">${p?'Attending Lunch!':'Skipping Today'}</div><div class="marked-sub">${p?'Your attendance is confirmed. Enjoy your meal!':'You\'ve marked absent for today.'}</div></div>`;
 }
 
-async function markAttendance(status) {
-  document.querySelectorAll('.att-btn').forEach(b => b.disabled = true);
+async function markAtt(status){
+  document.querySelectorAll('.att-btn').forEach(b=>b.disabled=true);
   try {
-    const res = await api({ action:'markAttendance', token:userToken, status });
-    if (res.success) {
-      todayStatus = status;
-      document.getElementById('attendanceSection').innerHTML = buildMarkedHtml(status);
-      toast(res.message, 'success');
-      // Hide rating section if absent
-      if (status === 'absent') {
-        document.getElementById('ratingSection').innerHTML = '';
-      } else if (status === 'present' && currentMenu) {
-        renderRatingSection(currentMenu);
-      }
-    } else if (res.alreadyMarked) {
-      todayStatus = res.status;
-      document.getElementById('attendanceSection').innerHTML = buildMarkedHtml(res.status);
-    } else if (res.message?.includes('session')) {
-      doLogout();
-    } else {
-      toast(res.message||'Error','error');
-      document.querySelectorAll('.att-btn').forEach(b => b.disabled = false);
-    }
-  } catch(e) {
-    toast('Network error. Try again.','error');
-    document.querySelectorAll('.att-btn').forEach(b => b.disabled = false);
-  }
+    const res=await api({action:'markAttendance',token:userToken,status});
+    if(res.success){
+      todayStatus=status;
+      document.getElementById('attendanceSection').innerHTML=buildMarkedHtml(status);
+      toast(res.message,'success');
+      if(status==='absent') document.getElementById('ratingSection').innerHTML='';
+      else if(status==='present'&&currentMenu) renderRatingSection(currentMenu);
+    } else if(res.alreadyMarked){
+      todayStatus=res.status;
+      document.getElementById('attendanceSection').innerHTML=buildMarkedHtml(res.status);
+    } else if(res.message?.includes('session')){doLogout();}
+    else{toast(res.message||'Error','error');document.querySelectorAll('.att-btn').forEach(b=>b.disabled=false);}
+  } catch(e){toast('Network error. Try again.','error');document.querySelectorAll('.att-btn').forEach(b=>b.disabled=false);}
 }
 
-// ── RATINGS ──────────────────────────────────────────────────
-function renderRatingSection(menu) {
-  if (!menu) return;
-  const items = [
-    { name: menu.mainCourse, type: 'main' },
-    ...(menu.sideDishes||[]).map(d => ({ name: d.name, type: 'side' }))
-  ].filter(i => i.name);
-
-  const itemsHtml = items.map((item, idx) => {
-    const existing  = userRatings[item.name];
-    const typeLabel = item.type === 'main' ? 'Main Course' : 'Side Dish';
-    const ratedHtml = existing
-      ? `<div class="rated-badge"><i class="fa-solid fa-check"></i> Rated ${existing.rating}★</div>` : '';
-    const starsHtml = [1,2,3,4,5].map(s => {
-      const active = existing && existing.rating >= s ? 'active' : '';
-      return `<span class="star ${active}" onclick="setRating('${escAttr(item.name)}',${s})" id="star-${idx}-${s}">★</span>`;
-    }).join('');
-    const commentVal = existing ? escHtml(existing.comment||'') : '';
-    return `
-      <div class="rating-item" id="ritem-${idx}">
-        <div class="rating-item-name">
-          ${escHtml(item.name)}
-          <span class="rating-item-type-badge">${typeLabel}</span>
-        </div>
-        ${ratedHtml}
-        <div class="star-row" id="stars-${idx}">${starsHtml}</div>
-        <textarea class="rating-comment" id="comment-${idx}" placeholder="Add a comment (optional)…" rows="2">${commentVal}</textarea>
-      </div>`;
+function renderRatingSection(menu){
+  if(!menu)return;
+  const items=[{name:menu.mainCourse,type:'main'},...(menu.sideDishes||[]).map(d=>({name:d.name,type:'side'}))].filter(i=>i.name);
+  const itemsHtml=items.map((item,idx)=>{
+    const ex=userRatings[item.name]; const tl=item.type==='main'?'Main Course':'Side Dish';
+    const ratedHtml=ex?`<div class="rated-badge"><i class="fa-solid fa-check"></i> Rated ${ex.rating}★</div>`:'';
+    const starsHtml=[1,2,3,4,5].map(s=>`<span class="star ${ex&&ex.rating>=s?'active':''}" onclick="setRating('${escA(item.name)}',${s})" id="star-${idx}-${s}">★</span>`).join('');
+    const cVal=ex?esc(ex.comment||''):'';
+    return`<div class="rating-item"><div class="rating-item-name">${esc(item.name)}<span class="rating-item-type-badge">${tl}</span></div>${ratedHtml}<div class="star-row" id="stars-${idx}">${starsHtml}</div><textarea class="rating-comment" id="comment-${idx}" placeholder="Comment in Malayalam or English… (ഇവിടെ ടൈപ്പ് ചെയ്യാം)" rows="2" lang="ml">${cVal}</textarea><div class="comment-hint"> മലയാളത്തിൽ കമന്റ് ചെയ്യാം</div></div>`;
   }).join('');
-
-  document.getElementById('ratingSection').innerHTML = `
-    <div class="rating-card">
-      <div class="rating-card-header">
-        <i class="fa-solid fa-star"></i>
-        <h3>Rate Today's Menu</h3>
-      </div>
-      ${itemsHtml}
-      <div class="rating-submit-row">
-        <button class="btn-submit-rating" id="ratingSubmitBtn" onclick="submitAllRatings()">
-          <i class="fa-solid fa-paper-plane"></i> Submit Ratings
-        </button>
-      </div>
-    </div>`;
-
-  items.forEach((item) => {
-    const existing = userRatings[item.name];
-    if (existing) pendingRatings[item.name] = { ...existing, type: item.type };
-  });
+  document.getElementById('ratingSection').innerHTML=`<div class="rating-card"><div class="rating-card-header"><i class="fa-solid fa-star"></i><h3>Rate Today's Menu</h3></div>${itemsHtml}<div class="rating-submit-row"><button class="btn-submit-rating" id="ratingSubmitBtn" onclick="submitAllRatings()"><i class="fa-solid fa-paper-plane"></i> Submit Ratings</button></div></div>`;
+  items.forEach(item=>{const ex=userRatings[item.name];if(ex) pendingRatings[item.name]={...ex,type:item.type};});
 }
 
-function setRating(itemName, rating) {
-  const items = currentMenu ? [
-    { name: currentMenu.mainCourse, type: 'main' },
-    ...(currentMenu.sideDishes||[]).map(d => ({ name: d.name, type: 'side' }))
-  ].filter(i=>i.name) : [];
-  const idx = items.findIndex(i => i.name === itemName);
-  if (idx < 0) return;
-  if (!pendingRatings[itemName]) pendingRatings[itemName] = { type: items[idx].type };
-  pendingRatings[itemName].rating = rating;
-  for (let s=1;s<=5;s++) {
-    const el = document.getElementById(`star-${idx}-${s}`);
-    if (el) el.className = 'star' + (s <= rating ? ' active' : '');
-  }
+function setRating(name,rating){
+  const items=currentMenu?[{name:currentMenu.mainCourse,type:'main'},...(currentMenu.sideDishes||[]).map(d=>({name:d.name,type:'side'}))].filter(i=>i.name):[];
+  const idx=items.findIndex(i=>i.name===name); if(idx<0)return;
+  if(!pendingRatings[name]) pendingRatings[name]={type:items[idx].type};
+  pendingRatings[name].rating=rating;
+  for(let s=1;s<=5;s++){const el=document.getElementById(`star-${idx}-${s}`);if(el)el.className='star'+(s<=rating?' active':'');}
 }
 
-async function submitAllRatings() {
-  const items = currentMenu ? [
-    { name: currentMenu.mainCourse, type: 'main' },
-    ...(currentMenu.sideDishes||[]).map(d => ({ name: d.name, type: 'side' }))
-  ].filter(i=>i.name) : [];
-
-  const toSubmit = [];
-  items.forEach((item, idx) => {
-    const pending = pendingRatings[item.name];
-    const comment = document.getElementById(`comment-${idx}`)?.value?.trim() || '';
-    if (pending && pending.rating) toSubmit.push({ itemName: item.name, itemType: item.type, rating: pending.rating, comment });
+async function submitAllRatings(){
+  const items=currentMenu?[{name:currentMenu.mainCourse,type:'main'},...(currentMenu.sideDishes||[]).map(d=>({name:d.name,type:'side'}))].filter(i=>i.name):[];
+  const toSubmit=[];
+  items.forEach((item,idx)=>{
+    const p=pendingRatings[item.name]; const comment=document.getElementById(`comment-${idx}`)?.value?.trim()||'';
+    if(p&&p.rating) toSubmit.push({itemName:item.name,itemType:item.type,rating:p.rating,comment});
   });
-
-  if (!toSubmit.length) { toast('Please select a star rating first','error'); return; }
-
-  const btn = document.getElementById('ratingSubmitBtn');
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner" style="width:14px;height:14px;border-width:2px"></span> Submitting…';
+  if(!toSubmit.length){toast('Please select a star rating first','error');return;}
+  const btn=document.getElementById('ratingSubmitBtn'); btn.disabled=true; btn.innerHTML='<span class="spinner" style="width:14px;height:14px;border-width:2px"></span> Submitting…';
   try {
-    for (const r of toSubmit) await api({ action:'submitRating', token:userToken, ...r });
+    for(const r of toSubmit) await api({action:'submitRating',token:userToken,...r});
     toast(`${toSubmit.length} rating${toSubmit.length>1?'s':''} submitted! 🙏`,'success');
-    const ratRes = await api({ action:'getMyRatings', token:userToken });
-    userRatings = ratRes.ratings || {};
+    const ratRes=await api({action:'getMyRatings',token:userToken}); userRatings=ratRes.ratings||{};
     renderRatingSection(currentMenu);
-  } catch(e) { toast('Could not submit. Try again.','error'); }
-  btn.disabled = false;
-  btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Submit Ratings';
+  } catch(e){toast('Could not submit. Try again.','error');}
+  btn.disabled=false; btn.innerHTML='<i class="fa-solid fa-paper-plane"></i> Submit Ratings';
 }
 
-// ── HISTORY ──────────────────────────────────────────────────
-async function toggleHistory() {
-  historyOpen = !historyOpen;
-  const panel = document.getElementById('historyPanel');
-  panel.style.display = historyOpen ? 'block' : 'none';
-  if (!historyOpen) return;
-
-  panel.innerHTML = `<div class="history-panel">
-    <div class="history-header"><i class="fa-solid fa-clock-rotate-left"></i> My Attendance</div>
-    <div id="historyList" style="text-align:center;padding:1.5rem"><span class="spinner"></span></div>
-  </div>`;
+async function toggleHistory(){
+  historyOpen=!historyOpen;
+  const panel=document.getElementById('historyPanel'); panel.style.display=historyOpen?'block':'none';
+  if(!historyOpen)return;
+  panel.innerHTML=`<div class="history-panel"><div class="history-header"><i class="fa-solid fa-clock-rotate-left"></i> My Attendance</div><div id="historyList" style="text-align:center;padding:1.5rem"><span class="spinner"></span></div></div>`;
   try {
-    const res = await api({ action:'getMyAttendance', token:userToken });
-    const list = document.getElementById('historyList');
-    if (!res.records||!res.records.length) {
-      list.innerHTML = '<div style="padding:1rem;color:var(--muted);font-size:.85rem">No records yet.</div>';
-      return;
-    }
-    list.innerHTML = res.records.map(r => {
-      const d = new Date(r.date + 'T00:00:00');
-      return `<div class="history-item">
-        <div><div class="hi-date">${d.toLocaleDateString('en-IN',{day:'numeric',month:'short'})}</div>
-             <div class="hi-day">${d.toLocaleDateString('en-IN',{weekday:'short'})}</div></div>
-        <span class="badge badge-${r.status}">${r.status==='present'?'✓ Present':'✗ Absent'}</span>
-      </div>`;
+    const res=await api({action:'getMyAttendance',token:userToken});
+    const list=document.getElementById('historyList');
+    if(!res.records||!res.records.length){list.innerHTML='<div style="padding:1rem;color:var(--muted);font-size:.85rem">No records yet.</div>';return;}
+    list.innerHTML=res.records.map(r=>{
+      const d=new Date(r.date+'T00:00:00');
+      return`<div class="history-item"><div><div class="hi-date">${d.toLocaleDateString('en-IN',{day:'numeric',month:'short'})}</div><div class="hi-day">${d.toLocaleDateString('en-IN',{weekday:'short'})}</div></div><span class="badge badge-${r.status}">${r.status==='present'?'✓ Present':'✗ Absent'}</span></div>`;
     }).join('');
-  } catch(e) {
-    document.getElementById('historyList').innerHTML = '<div style="padding:1rem;color:var(--muted)">Could not load.</div>';
-  }
+  } catch(e){document.getElementById('historyList').innerHTML='<div style="padding:1rem;color:var(--muted)">Could not load.</div>';}
 }
 </script>
 </body>
