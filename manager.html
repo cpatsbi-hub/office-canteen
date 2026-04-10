@@ -549,7 +549,7 @@ input[type="date"],input[type="month"]{cursor:pointer}
 
 <script>
 // ── CONFIG ────────────────────────────────────────────────────
-const API_URL  = 'https://script.google.com/macros/s/AKfycbxIT1x52Wo--2NCspuELSCRdlxM0iimcYPeaJbNAoouuIa3T3VMm9D0VzFyk2glCoxGJw/exec';
+const API_URL  = 'https://script.google.com/macros/s/AKfycbyudvNo2zbkIaMDMKog2481J0S5Czd85z0DgkvHf9lZvb5uzxrezcBgmrizFaSXgs8mTA/exec';
 const USER_URL = 'https://cpatsbi-hub.github.io/office-canteen/';
 const LOW_RATING_THRESHOLD = 3.0; // avg below this = warning
 
@@ -1016,5 +1016,9 @@ function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').
 function escAttr(s){return String(s||'').replace(/'/g,"\\'").replace(/"/g,'&quot;');}
 function fmtTime(iso){if(!iso)return'—';try{return new Date(iso).toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});}catch(e){return iso;}}
 </script>
+
+<div style="position:fixed;bottom:0;left:0;right:0;text-align:center;padding:.55rem 1rem;font-size:.7rem;color:rgba(255,255,255,.45);background:rgba(0,0,0,.18);backdrop-filter:blur(6px);z-index:999;letter-spacing:.03em;pointer-events:none">
+  Developed by <strong style="color:rgba(255,255,255,.65)">CPATSBI IT Team</strong> &nbsp;·&nbsp; Dedicated to <strong style="color:rgba(255,255,255,.65)">RBO</strong> with <span style="color:#f87171">❤️</span>
+</div>
 </body>
 </html>
