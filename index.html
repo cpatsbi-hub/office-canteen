@@ -27,14 +27,31 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;color:var(--text)}
 .auth-brand h1{font-family:'Playfair Display',serif;font-size:1.9rem;letter-spacing:-.01em}
 .auth-brand p{opacity:.75;font-size:.88rem;margin-top:.2rem}
 .auth-card{background:rgba(255,255,255,.97);border-radius:var(--radius);width:100%;max-width:400px;overflow:hidden;box-shadow:var(--shadow2)}
-.auth-card-body{padding:1.8rem}
-.user-pill{display:flex;align-items:center;gap:.85rem;background:var(--cream);border-radius:14px;padding:.9rem 1.1rem;border:2px solid var(--border);margin-bottom:1.2rem}
-.user-pill-avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--green),#1a4a32);display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.2rem;font-weight:700;flex-shrink:0}
-.user-pill-name{font-weight:700;font-size:.95rem}
-.user-pill-sub{font-size:.73rem;color:var(--muted)}
-.auth-heading{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--green);margin-bottom:1.2rem;text-align:center}
-.auth-switch{text-align:center;font-size:.78rem;color:var(--muted);margin-top:1rem}
-.auth-switch a{color:var(--green);font-weight:600;cursor:pointer}
+.auth-tabs{display:flex;border-bottom:2px solid var(--border)}
+.auth-tab{flex:1;padding:.72rem .4rem;text-align:center;font-size:.76rem;font-weight:700;cursor:pointer;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;transition:all .2s;border-bottom:3px solid transparent;margin-bottom:-2px;user-select:none}
+.auth-tab:hover{color:var(--green)}
+.auth-tab.active{color:var(--green);border-bottom-color:var(--green)}
+.auth-panel{padding:1.4rem;display:none}
+.auth-panel.active{display:block;animation:fadeUp .25s ease}
+.user-pill{display:flex;align-items:center;gap:.75rem;background:var(--cream);border-radius:13px;padding:.8rem .95rem;border:2px solid var(--border);margin-bottom:1rem}
+.user-pill-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--green),#1a4a32);display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.05rem;font-weight:700;flex-shrink:0}
+.user-pill-name{font-weight:700;font-size:.92rem}
+.user-pill-sub{font-size:.71rem;color:var(--muted)}
+.pill-clear{margin-left:auto;background:none;border:none;color:var(--muted);cursor:pointer;font-size:.88rem;padding:.22rem;border-radius:6px;flex-shrink:0;transition:all .2s;line-height:1}
+.pill-clear:hover{background:#fee2e2;color:var(--absent)}
+.auth-switch{text-align:center;font-size:.78rem;color:var(--muted)}
+.auth-switch a{color:var(--green);font-weight:600;cursor:pointer;text-decoration:none}
+.auth-switch a:hover{text-decoration:underline}
+.find-intro{text-align:center;margin-bottom:1.1rem;padding:.8rem;background:linear-gradient(135deg,#eff6ff,#dbeafe);border-radius:12px;border:1px solid #bfdbfe}
+.find-intro p{font-size:.82rem;color:#1e40af;line-height:1.55}
+.find-icon{font-size:1.3rem;color:#3b82f6;display:block;margin-bottom:.35rem}
+.btn-ghost{background:transparent;color:var(--green);border:2px solid var(--green)}
+.btn-ghost:hover{background:var(--green);color:#fff}
+.find-result-item{display:flex;align-items:center;justify-content:space-between;gap:.6rem;background:var(--cream);border:2px solid var(--border);border-radius:12px;padding:.75rem .95rem;margin-top:.55rem;animation:fadeUp .2s ease}
+.find-result-name{font-weight:700;font-size:.89rem}
+.find-result-un{font-size:.75rem;color:var(--muted);margin-top:.1rem;font-family:monospace,monospace}
+.find-use-btn{background:var(--green);color:#fff;border:none;border-radius:9px;padding:.42rem .85rem;font-size:.79rem;font-weight:700;cursor:pointer;white-space:nowrap;transition:all .2s;font-family:'DM Sans',sans-serif;flex-shrink:0}
+.find-use-btn:hover{background:#1a4a32}
 
 /* FORM */
 .field{margin-bottom:1rem}
@@ -166,49 +183,93 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;color:var(--text)}
     </div>
 
     <div class="auth-card">
-      <div class="auth-card-body">
+      <!-- TABS -->
+      <div class="auth-tabs">
+        <div class="auth-tab active" id="atab-login"    onclick="switchTab('login')">Sign In</div>
+        <div class="auth-tab"        id="atab-register" onclick="switchTab('register')">Register</div>
+        <div class="auth-tab"        id="atab-find"     onclick="switchTab('find')">Forgot?</div>
+      </div>
 
-        <!-- RETURNING USER -->
-        <div id="returningView" style="display:none">
-          <div class="auth-heading">Welcome back! 👋</div>
-          <div class="user-pill">
+      <!-- ── LOGIN ── -->
+      <div class="auth-panel active" id="apanel-login">
+        <!-- Returning user pill (shown when username saved) -->
+        <div id="returningPill" style="display:none">
+          <div class="user-pill" id="userPill">
             <div class="user-pill-avatar" id="pillAvatar">?</div>
             <div>
               <div class="user-pill-name ml" id="pillName">—</div>
               <div class="user-pill-sub" id="pillUsername">—</div>
             </div>
+            <button class="pill-clear" onclick="clearSaved()" title="Not you?"><i class="fa-solid fa-xmark"></i></button>
           </div>
-          <button class="btn btn-green" id="signInBtn" onclick="doLogin()">
+          <button class="btn btn-green" id="quickSignInBtn" onclick="doQuickLogin()">
+            <i class="fa-solid fa-right-to-bracket"></i> Sign In
+          </button>
+          <div id="quickLoginMsg" class="msg"></div>
+          <div class="auth-switch" style="margin-top:.9rem">Different account? <a onclick="clearSaved()">Use username</a></div>
+        </div>
+
+        <!-- Manual username login -->
+        <div id="manualLoginForm">
+          <div class="field">
+            <label>Username</label>
+            <input type="text" id="l-username" placeholder="your.username" autocomplete="username"
+                   autocapitalize="none" spellcheck="false"
+                   onkeydown="if(event.key==='Enter')doLogin()">
+          </div>
+          <button class="btn btn-green" id="loginBtn" onclick="doLogin()">
             <i class="fa-solid fa-right-to-bracket"></i> Sign In
           </button>
           <div id="loginMsg" class="msg"></div>
-          <div class="auth-switch" style="margin-top:.9rem">Not you? <a onclick="showNewUserView()">Register new account</a></div>
-        </div>
-
-        <!-- NEW USER -->
-        <div id="newUserView" style="display:none">
-          <div class="auth-heading">Join the Canteen 🍽️</div>
-          <div class="field">
-            <label>Your Full Name</label>
-            <input type="text" id="r-name" placeholder="e.g. Rahul Sharma" autocomplete="name"
-                   class="ml" oninput="autoCapitalize(this)" onkeydown="if(event.key==='Enter')document.getElementById('r-username').focus()">
-          </div>
-          <div class="field">
-            <label>Username</label>
-            <input type="text" id="r-username" placeholder="e.g. rahul.sharma" autocomplete="username"
-                   onkeydown="if(event.key==='Enter')doRegister()">
-            <div class="hint">Only letters, numbers, dot, underscore. No spaces.</div>
-          </div>
-          <button class="btn btn-amber" id="regBtn" onclick="doRegister()">
-            <i class="fa-solid fa-user-plus"></i> Create Account
-          </button>
-          <div id="regMsg" class="msg"></div>
-          <div class="auth-switch" id="switchToLogin" style="display:none;margin-top:.9rem">
-            Already registered? <a onclick="showReturningView()">Sign in</a>
+          <div class="auth-switch" style="margin-top:.9rem">
+            Don't know your username? <a onclick="switchTab('find')">Find it →</a>
           </div>
         </div>
-
       </div>
+
+      <!-- ── REGISTER ── -->
+      <div class="auth-panel" id="apanel-register">
+        <div class="field">
+          <label>Your Full Name</label>
+          <input type="text" id="r-name" placeholder="e.g. Rahul Sharma"
+                 autocomplete="name" class="ml"
+                 oninput="autoCapitalize(this)"
+                 onkeydown="if(event.key==='Enter')document.getElementById('r-username').focus()">
+        </div>
+        <div class="field">
+          <label>Choose a Username</label>
+          <input type="text" id="r-username" placeholder="e.g. rahul.sharma"
+                 autocomplete="username" autocapitalize="none" spellcheck="false"
+                 onkeydown="if(event.key==='Enter')doRegister()">
+          <div class="hint">Only letters, numbers, dot, underscore. No spaces. <strong>Remember this!</strong></div>
+        </div>
+        <button class="btn btn-amber" id="regBtn" onclick="doRegister()">
+          <i class="fa-solid fa-user-plus"></i> Create Account
+        </button>
+        <div id="regMsg" class="msg"></div>
+        <div class="auth-switch" style="margin-top:.9rem">Already registered? <a onclick="switchTab('login')">Sign in</a></div>
+      </div>
+
+      <!-- ── FORGOT USERNAME ── -->
+      <div class="auth-panel" id="apanel-find">
+        <div class="find-intro">
+          <i class="fa-solid fa-magnifying-glass find-icon"></i>
+          <p>Enter your name as you registered and we'll find your username.</p>
+        </div>
+        <div class="field">
+          <label>Your Full Name</label>
+          <input type="text" id="f-name" placeholder="e.g. Rahul Sharma" class="ml"
+                 autocomplete="name"
+                 onkeydown="if(event.key==='Enter')doFind()">
+        </div>
+        <button class="btn btn-ghost" id="findBtn" onclick="doFind()">
+          <i class="fa-solid fa-magnifying-glass"></i> Find My Username
+        </button>
+        <div id="findMsg" class="msg"></div>
+        <!-- Results appear here -->
+        <div id="findResults"></div>
+      </div>
+
     </div>
   </div>
 
@@ -242,7 +303,7 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;color:var(--text)}
 <div class="toast" id="toast"></div>
 
 <script>
-const API_URL='https://script.google.com/macros/s/AKfycbxIT1x52Wo--2NCspuELSCRdlxM0iimcYPeaJbNAoouuIa3T3VMm9D0VzFyk2glCoxGJw/exec';
+const API_URL='https://script.google.com/macros/s/AKfycbyudvNo2zbkIaMDMKog2481J0S5Czd85z0DgkvHf9lZvb5uzxrezcBgmrizFaSXgs8mTA/exec';
 
 let userToken='',userData=null,historyOpen=false,currentMenu=null,userRatings={},pendingRatings={},todayStatus=null;
 
@@ -276,32 +337,75 @@ window.addEventListener('DOMContentLoaded',()=>{
   userToken=localStorage.getItem('userToken')||'';
   userData=JSON.parse(localStorage.getItem('userData')||'null');
   const su=localStorage.getItem('savedUsername')||'';
-  if(userToken&&userData) showApp(userData);
-  else if(su) showReturningView(su);
-  else showNewUserView();
+  const sn=localStorage.getItem('savedName')||'';
+  if(userToken&&userData){showApp(userData);return;}
+  // Always start on Sign In tab
+  switchTab('login');
+  if(su&&sn){
+    // Returning user: show pill in login tab
+    document.getElementById('returningPill').style.display='block';
+    document.getElementById('manualLoginForm').style.display='none';
+    document.getElementById('pillName').textContent=sn;
+    document.getElementById('pillUsername').textContent='@'+su;
+    document.getElementById('pillAvatar').textContent=(sn[0]||'?').toUpperCase();
+  } else {
+    document.getElementById('returningPill').style.display='none';
+    document.getElementById('manualLoginForm').style.display='block';
+  }
 });
 
-function showReturningView(username){
-  const name=localStorage.getItem('savedName')||username;
-  document.getElementById('returningView').style.display='block';
-  document.getElementById('newUserView').style.display='none';
-  document.getElementById('pillName').textContent=name;
-  document.getElementById('pillUsername').textContent='@'+(username||localStorage.getItem('savedUsername')||'');
-  document.getElementById('pillAvatar').textContent=(name[0]||'?').toUpperCase();
-}
-function showNewUserView(){
-  document.getElementById('returningView').style.display='none';
-  document.getElementById('newUserView').style.display='block';
-  if(localStorage.getItem('savedUsername')) document.getElementById('switchToLogin').style.display='block';
+// ── TAB SWITCHER ──
+function switchTab(name){
+  document.querySelectorAll('.auth-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.auth-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('atab-'+name).classList.add('active');
+  document.getElementById('apanel-'+name).classList.add('active');
 }
 
+// ── CLEAR SAVED — show manual username input ──
+function clearSaved(){
+  document.getElementById('returningPill').style.display='none';
+  document.getElementById('manualLoginForm').style.display='block';
+  document.getElementById('l-username').focus();
+}
+
+// ── QUICK LOGIN (returning user pill) ──
+async function doQuickLogin(){
+  const su=localStorage.getItem('savedUsername')||'';
+  if(!su){clearSaved();return;}
+  const btn=document.getElementById('quickSignInBtn');
+  btn.disabled=true; btn.innerHTML='<span class="spinner" style="width:16px;height:16px;border-width:2px"></span> Signing in…';
+  try {
+    const res=await api({action:'login',username:su});
+    if(res.success){saveSession(res);showApp(res);}
+    else showMsg('quickLoginMsg',res.message,'error');
+  } catch(e){showMsg('quickLoginMsg','Connection error. Try again.','error');}
+  btn.disabled=false; btn.innerHTML='<i class="fa-solid fa-right-to-bracket"></i> Sign In';
+}
+
+// ── MANUAL LOGIN (username typed in) ──
+async function doLogin(){
+  const uname=document.getElementById('l-username').value.trim().toLowerCase();
+  if(!uname){showMsg('loginMsg','Please enter your username','error');return;}
+  const btn=document.getElementById('loginBtn');
+  btn.disabled=true; btn.innerHTML='<span class="spinner" style="width:16px;height:16px;border-width:2px"></span> Signing in…';
+  try {
+    const res=await api({action:'login',username:uname});
+    if(res.success){saveSession(res);showApp(res);}
+    else showMsg('loginMsg',res.message,'error');
+  } catch(e){showMsg('loginMsg','Connection error. Try again.','error');}
+  btn.disabled=false; btn.innerHTML='<i class="fa-solid fa-right-to-bracket"></i> Sign In';
+}
+
+// ── REGISTER ──
 async function doRegister(){
   const name=document.getElementById('r-name').value.trim();
   const uname=document.getElementById('r-username').value.trim().toLowerCase().replace(/\s+/g,'');
   if(!name){showMsg('regMsg','Please enter your full name','error');return;}
   if(!uname){showMsg('regMsg','Please choose a username','error');return;}
   if(!/^[a-z0-9._]+$/.test(uname)){showMsg('regMsg','Username: only letters, numbers, dot, underscore','error');return;}
-  const btn=document.getElementById('regBtn'); btn.disabled=true; btn.innerHTML='<span class="spinner" style="width:16px;height:16px;border-width:2px"></span> Creating…';
+  const btn=document.getElementById('regBtn');
+  btn.disabled=true; btn.innerHTML='<span class="spinner" style="width:16px;height:16px;border-width:2px"></span> Creating…';
   try {
     const res=await api({action:'register',name,username:uname});
     if(res.success){saveSession(res);showApp(res);toast('Welcome, '+res.name+'! 🎉','success');}
@@ -310,29 +414,71 @@ async function doRegister(){
   btn.disabled=false; btn.innerHTML='<i class="fa-solid fa-user-plus"></i> Create Account';
 }
 
-async function doLogin(){
-  const su=localStorage.getItem('savedUsername')||'';
-  if(!su){showNewUserView();return;}
-  const btn=document.getElementById('signInBtn'); btn.disabled=true; btn.innerHTML='<span class="spinner" style="width:16px;height:16px;border-width:2px"></span> Signing in…';
+// ── FIND USERNAME BY NAME ──
+async function doFind(){
+  const name=document.getElementById('f-name').value.trim();
+  if(name.length<2){showMsg('findMsg','Enter at least 2 characters of your name','error');return;}
+  const btn=document.getElementById('findBtn');
+  btn.disabled=true; btn.innerHTML='<span class="spinner" style="width:16px;height:16px;border-width:2px"></span> Searching…';
+  document.getElementById('findResults').innerHTML='';
   try {
-    const res=await api({action:'login',username:su});
+    const res=await api({action:'findUsername',name});
+    if(res.success&&res.matches&&res.matches.length){
+      showMsg('findMsg','','');
+      document.getElementById('findResults').innerHTML=res.matches.map(m=>`
+        <div class="find-result-item">
+          <div>
+            <div class="find-result-name ml">${esc(m.name)}</div>
+            <div class="find-result-un">@${esc(m.username)}</div>
+          </div>
+          <button class="find-use-btn" onclick="useFoundUsername('${escA(m.username)}','${escA(m.name)}')">
+            Sign In →
+          </button>
+        </div>`).join('');
+    } else {
+      showMsg('findMsg',res.message||'No account found with that name','error');
+    }
+  } catch(e){showMsg('findMsg','Connection error. Try again.','error');}
+  btn.disabled=false; btn.innerHTML='<i class="fa-solid fa-magnifying-glass"></i> Find My Username';
+}
+
+// User tapped "Sign In →" next to a found username
+async function useFoundUsername(username, name){
+  toast('Signing in as '+name+'…');
+  try {
+    const res=await api({action:'login',username});
     if(res.success){saveSession(res);showApp(res);}
-    else showMsg('loginMsg',res.message,'error');
-  } catch(e){showMsg('loginMsg','Connection error. Try again.','error');}
-  btn.disabled=false; btn.innerHTML='<i class="fa-solid fa-right-to-bracket"></i> Sign In';
+    else toast(res.message,'error');
+  } catch(e){toast('Connection error','error');}
 }
 
 function saveSession(res){
   userToken=res.token; userData={name:res.name,username:res.username};
-  localStorage.setItem('userToken',userToken); localStorage.setItem('userData',JSON.stringify(userData));
-  localStorage.setItem('savedUsername',res.username); localStorage.setItem('savedName',res.name);
+  localStorage.setItem('userToken',userToken);
+  localStorage.setItem('userData',JSON.stringify(userData));
+  localStorage.setItem('savedUsername',res.username);
+  localStorage.setItem('savedName',res.name);
 }
+
 function doLogout(){
   userToken='';userData=null;todayStatus=null;
   localStorage.removeItem('userToken');localStorage.removeItem('userData');
   document.getElementById('authScreen').style.display='flex';
   document.getElementById('appScreen').style.display='none';
-  showReturningView();
+  // Show pill if username still saved, else manual form
+  const su=localStorage.getItem('savedUsername')||'';
+  const sn=localStorage.getItem('savedName')||'';
+  switchTab('login');
+  if(su&&sn){
+    document.getElementById('returningPill').style.display='block';
+    document.getElementById('manualLoginForm').style.display='none';
+    document.getElementById('pillName').textContent=sn;
+    document.getElementById('pillUsername').textContent='@'+su;
+    document.getElementById('pillAvatar').textContent=(sn[0]||'?').toUpperCase();
+  } else {
+    document.getElementById('returningPill').style.display='none';
+    document.getElementById('manualLoginForm').style.display='block';
+  }
 }
 
 function showApp(user){
@@ -373,22 +519,33 @@ function renderMenuCard(menu,attRes){
 
 function buildMarkedHtml(status){
   const p=status==='present';
-  return`<div class="att-marked ${status}"><span class="marked-icon">${p?'✅':'🚫'}</span><div class="marked-title">${p?'Attending Lunch!':'Skipping Today'}</div><div class="marked-sub">${p?'Your attendance is confirmed. Enjoy your meal!':'You\'ve marked absent for today.'}</div></div>`;
+  const changeBtn=!p
+    ? `<button onclick="markAtt('present')" style="margin-top:.9rem;background:linear-gradient(135deg,#059669,#047857);color:#fff;border:none;border-radius:11px;padding:.65rem 1.25rem;font-family:'DM Sans',sans-serif;font-size:.84rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:.4rem;box-shadow:0 4px 14px rgba(5,150,105,.35)">
+        <i class="fa-solid fa-circle-check"></i> Changed my mind — I'll eat today!
+      </button>`
+    : `<div style="margin-top:.6rem;font-size:.72rem;opacity:.55;display:flex;align-items:center;gap:.3rem;justify-content:center"><i class="fa-solid fa-lock"></i> Cannot opt out after confirming</div>`;
+  return `<div class="att-marked ${status}" style="display:flex;flex-direction:column;align-items:center">
+    <span class="marked-icon">${p?'✅':'🚫'}</span>
+    <div class="marked-title">${p?'Attending Lunch!':'Skipping Today'}</div>
+    <div class="marked-sub">${p?'Your attendance is confirmed. Enjoy your meal!':'You\'ve marked absent for today.'}</div>
+    ${changeBtn}
+  </div>`;
 }
 
 async function markAtt(status){
-  document.querySelectorAll('.att-btn').forEach(b=>b.disabled=true);
+  document.querySelectorAll('.att-btn, .att-marked button').forEach(b=>b.disabled=true);
   try {
     const res=await api({action:'markAttendance',token:userToken,status});
     if(res.success){
-      todayStatus=status;
-      document.getElementById('attendanceSection').innerHTML=buildMarkedHtml(status);
+      todayStatus=res.status;
+      document.getElementById('attendanceSection').innerHTML=buildMarkedHtml(res.status);
       toast(res.message,'success');
-      if(status==='absent') document.getElementById('ratingSection').innerHTML='';
-      else if(status==='present'&&currentMenu) renderRatingSection(currentMenu);
+      if(res.status==='absent') document.getElementById('ratingSection').innerHTML='';
+      else if(res.status==='present'&&currentMenu) renderRatingSection(currentMenu);
     } else if(res.alreadyMarked){
       todayStatus=res.status;
       document.getElementById('attendanceSection').innerHTML=buildMarkedHtml(res.status);
+      if(res.locked) toast(res.message,'error');
     } else if(res.message?.includes('session')){doLogout();}
     else{toast(res.message||'Error','error');document.querySelectorAll('.att-btn').forEach(b=>b.disabled=false);}
   } catch(e){toast('Network error. Try again.','error');document.querySelectorAll('.att-btn').forEach(b=>b.disabled=false);}
@@ -450,5 +607,9 @@ async function toggleHistory(){
   } catch(e){document.getElementById('historyList').innerHTML='<div style="padding:1rem;color:var(--muted)">Could not load.</div>';}
 }
 </script>
+
+<div style="position:fixed;bottom:0;left:0;right:0;text-align:center;padding:.55rem 1rem;font-size:.7rem;color:rgba(255,255,255,.45);background:rgba(0,0,0,.18);backdrop-filter:blur(6px);z-index:999;letter-spacing:.03em;pointer-events:none">
+  Developed by <strong style="color:rgba(255,255,255,.65)">CPATSBI IT Team</strong> &nbsp;·&nbsp; Dedicated to <strong style="color:rgba(255,255,255,.65)">RBO</strong> with <span style="color:#f87171">❤️</span>
+</div>
 </body>
 </html>
