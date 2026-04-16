@@ -168,6 +168,39 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;color:var(--text)}
 
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 @keyframes spin{to{transform:rotate(360deg)}}
+
+/* SUGGESTIONS */
+.sug-card{background:var(--white);border-radius:18px;overflow:hidden;box-shadow:var(--shadow);margin-bottom:1.1rem}
+.sug-card-header{background:linear-gradient(135deg,#4f46e5,#3730a3);color:#fff;padding:.9rem 1.2rem;display:flex;align-items:center;justify-content:space-between}
+.sug-card-header h3{font-family:'Playfair Display',serif;font-size:1rem;display:flex;align-items:center;gap:.5rem}
+.sug-add-row{display:flex;gap:.5rem;padding:1rem 1.2rem;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.sug-add-row input{flex:1;min-width:120px;padding:.6rem .85rem;border:2px solid var(--border);border-radius:10px;font-family:'Noto Sans Malayalam','DM Sans',sans-serif;font-size:.88rem;background:var(--cream);color:var(--text);transition:border .2s}
+.sug-add-row input:focus{outline:none;border-color:#4f46e5;background:var(--white)}
+.sug-add-row select{padding:.6rem .7rem;border:2px solid var(--border);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.85rem;background:var(--cream);color:var(--text);cursor:pointer}
+.sug-add-btn{background:linear-gradient(135deg,#4f46e5,#3730a3);color:#fff;border:none;border-radius:10px;padding:.6rem 1rem;font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:700;cursor:pointer;white-space:nowrap;transition:all .2s;display:flex;align-items:center;gap:.35rem}
+.sug-add-btn:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(79,70,229,.4)}
+.sug-add-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.sug-list{padding:.5rem 0}
+.sug-item{display:flex;align-items:center;gap:.7rem;padding:.75rem 1.2rem;border-bottom:1px solid var(--border);transition:background .15s}
+.sug-item:last-child{border-bottom:none}
+.sug-item:hover{background:var(--cream)}
+.sug-type-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.sug-type-main{background:#4f46e5}
+.sug-type-side{background:#f59e0b}
+.sug-info{flex:1;min-width:0}
+.sug-name{font-weight:700;font-size:.9rem;color:var(--text);font-family:'Noto Sans Malayalam','DM Sans',sans-serif}
+.sug-meta{font-size:.7rem;color:var(--muted);margin-top:.1rem}
+.sug-vote-row{display:flex;align-items:center;gap:.35rem;flex-shrink:0}
+.vote-btn{width:34px;height:34px;border-radius:10px;border:2px solid var(--border);background:var(--cream);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.85rem;transition:all .2s;flex-shrink:0}
+.vote-btn:hover{transform:scale(1.08)}
+.vote-btn.voted-up{background:#d1fae5;border-color:var(--present);color:var(--present)}
+.vote-btn.voted-down{background:#fee2e2;border-color:var(--absent);color:var(--absent)}
+.vote-count{font-size:.78rem;font-weight:700;color:var(--muted);min-width:16px;text-align:center}
+.sug-net{font-size:.72rem;font-weight:700;padding:.12rem .4rem;border-radius:20px}
+.sug-net-pos{background:#d1fae5;color:#065f46}
+.sug-net-neg{background:#fee2e2;color:#991b1b}
+.sug-net-zero{background:var(--cream);color:var(--muted);border:1px solid var(--border)}
+.sug-empty{text-align:center;padding:1.5rem;color:var(--muted);font-size:.85rem}
 </style>
 </head>
 <body>
@@ -295,6 +328,7 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;color:var(--text)}
       </div>
       <div id="mainContent"></div>
       <div id="ratingSection"></div>
+      <div id="suggestionSection"></div>
       <div id="historyPanel" style="display:none"></div>
     </div>
   </div>
@@ -303,7 +337,7 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;color:var(--text)}
 <div class="toast" id="toast"></div>
 
 <script>
-const API_URL='https://script.google.com/macros/s/AKfycbzD5BmX3BQZBIGqQ3wd9rDQXl37vB_BINTjXMS3GedPWvbdiuHyrVGisiOeXQUEsyAj/exec';
+const API_URL='https://script.google.com/macros/s/AKfycbz7aBuVK1x2Y2xNDYEBcM2xoXJJxNoOfMkwGYRfsh5cJtP4j3fKqb2oOmDzO1SIz17s/exec';
 
 let userToken='',userData=null,historyOpen=false,currentMenu=null,userRatings={},pendingRatings={},todayStatus=null;
 
@@ -504,6 +538,7 @@ async function loadMenuAndAttendance(){
     }
     renderMenuCard(currentMenu,attRes);
     if(!attRes.marked||attRes.status==='present') renderRatingSection(currentMenu);
+    loadSuggestions();
   } catch(e){
     document.getElementById('mainContent').innerHTML=`<div class="no-menu-card"><span class="nm-icon">⚠️</span><h2>Connection Error</h2><p><a href="#" onclick="loadMenuAndAttendance()" style="color:var(--amber)">Try again</a></p></div>`;
   }
@@ -542,6 +577,7 @@ async function markAtt(status){
       toast(res.message,'success');
       if(res.status==='absent') document.getElementById('ratingSection').innerHTML='';
       else if(res.status==='present'&&currentMenu) renderRatingSection(currentMenu);
+      loadSuggestions();
     } else if(res.alreadyMarked){
       todayStatus=res.status;
       document.getElementById('attendanceSection').innerHTML=buildMarkedHtml(res.status);
@@ -589,6 +625,79 @@ async function submitAllRatings(){
     renderRatingSection(currentMenu);
   } catch(e){toast('Could not submit. Try again.','error');}
   btn.disabled=false; btn.innerHTML='<i class="fa-solid fa-paper-plane"></i> Submit Ratings';
+}
+
+
+// ── SUGGESTIONS ──────────────────────────────────────────────
+async function loadSuggestions(){
+  const sec=document.getElementById('suggestionSection');
+  if(!sec) return;
+  try {
+    const res=await api({action:'getSuggestions'});
+    renderSuggestions(res.items||[]);
+  } catch(e){ renderSuggestions([]); }
+}
+
+function renderSuggestions(items){
+  const sec=document.getElementById('suggestionSection');
+  if(!sec) return;
+  const listHtml=items.length ? items.map(s=>{
+    const myUp=s.upVoters.includes(userData?.id||'__');
+    const myDn=s.downVoters.includes(userData?.id||'__');
+    const net=s.upVotes-s.downVotes;
+    const netCls=net>0?'sug-net-pos':net<0?'sug-net-neg':'sug-net-zero';
+    const netStr=net>0?'+'+net:String(net);
+    return `<div class="sug-item" id="sugitem-${esc(s.id)}">
+      <span class="sug-type-dot sug-type-${esc(s.type)}"></span>
+      <div class="sug-info">
+        <div class="sug-name">${esc(s.name)}</div>
+        <div class="sug-meta">${s.type==='main'?'Main':'Side'} · by ${esc(s.suggestedBy)}</div>
+      </div>
+      <div class="sug-vote-row">
+        <span class="sug-net ${netCls}">${netStr}</span>
+        <button class="vote-btn ${myUp?'voted-up':''}" onclick="vote('${esc(s.id)}','${myUp?'remove':'up'}')" title="Thumbs up">👍</button>
+        <span class="vote-count">${s.upVotes}</span>
+        <button class="vote-btn ${myDn?'voted-down':''}" onclick="vote('${esc(s.id)}','${myDn?'remove':'down'}')" title="Thumbs down">👎</button>
+        <span class="vote-count">${s.downVotes}</span>
+      </div>
+    </div>`;
+  }).join('') : '<div class="sug-empty"><i class="fa-solid fa-lightbulb" style="opacity:.3;display:block;font-size:1.6rem;margin-bottom:.4rem"></i>No suggestions yet. Be the first!</div>';
+
+  sec.innerHTML=`<div class="sug-card">
+    <div class="sug-card-header">
+      <h3><i class="fa-solid fa-lightbulb"></i> Dish Suggestions</h3>
+      <span style="font-size:.7rem;opacity:.7">${items.length} idea${items.length!==1?'s':''}</span>
+    </div>
+    <div class="sug-add-row">
+      <input type="text" id="sugInput" class="ml" placeholder="Suggest a dish… (Malayalam / English)" lang="ml" onkeydown="if(event.key==='Enter')submitSuggestion()">
+      <select id="sugType"><option value="main">Main</option><option value="side">Side</option></select>
+      <button class="sug-add-btn" onclick="submitSuggestion()"><i class="fa-solid fa-paper-plane"></i> Suggest</button>
+    </div>
+    <div class="sug-list">${listHtml}</div>
+  </div>`;
+}
+
+async function submitSuggestion(){
+  const name=document.getElementById('sugInput')?.value.trim();
+  const type=document.getElementById('sugType')?.value||'main';
+  if(!name){toast('Enter a dish name','error');return;}
+  const btn=document.querySelector('.sug-add-btn');
+  if(btn){btn.disabled=true;btn.innerHTML='<span class="spinner" style="width:13px;height:13px;border-width:2px"></span>';}
+  try {
+    const res=await api({action:'submitSuggestion',token:userToken,name,type});
+    if(res.success){toast(res.message,'success');loadSuggestions();}
+    else toast(res.message,'error');
+  } catch(e){toast('Network error','error');}
+  if(btn){btn.disabled=false;btn.innerHTML='<i class="fa-solid fa-paper-plane"></i> Suggest';}
+}
+
+async function vote(id, voteType){
+  try {
+    const res=await api({action:'voteSuggestion',token:userToken,id,vote:voteType});
+    if(res.success) loadSuggestions();
+    else if(res.message?.includes('session')) doLogout();
+    else toast(res.message,'error');
+  } catch(e){toast('Network error','error');}
 }
 
 async function toggleHistory(){
