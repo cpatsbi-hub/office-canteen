@@ -235,6 +235,26 @@ tr:hover td{background:var(--cream)}
 .toast.success{background:var(--present)}
 .toast.error{background:var(--absent)}
 input[type="date"],input[type="month"]{cursor:pointer}
+/* SUGGESTIONS (manager) */
+.msug-item{display:flex;align-items:center;gap:.75rem;padding:.8rem .95rem;border-bottom:1px solid var(--border);transition:background .15s}
+.msug-item:last-child{border-bottom:none}
+.msug-item:hover{background:var(--cream)}
+.msug-type-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.msug-type-main{background:#4f46e5}
+.msug-type-side{background:#f59e0b}
+.msug-info{flex:1;min-width:0}
+.msug-name{font-weight:700;font-size:.9rem;color:var(--text);font-family:'Noto Sans Malayalam','DM Sans',sans-serif}
+.msug-meta{font-size:.72rem;color:var(--muted);margin-top:.1rem}
+.msug-votes{display:flex;align-items:center;gap:.5rem;flex-shrink:0}
+.msug-up{background:#d1fae5;color:#065f46;border-radius:20px;padding:.18rem .55rem;font-size:.78rem;font-weight:700;display:flex;align-items:center;gap:.2rem}
+.msug-dn{background:#fee2e2;color:#991b1b;border-radius:20px;padding:.18rem .55rem;font-size:.78rem;font-weight:700;display:flex;align-items:center;gap:.2rem}
+.msug-net{font-size:.72rem;font-weight:700;padding:.15rem .45rem;border-radius:20px}
+.msug-net-pos{background:#d1fae5;color:#065f46}
+.msug-net-neg{background:#fee2e2;color:#991b1b}
+.msug-net-zero{background:var(--cream);color:var(--muted);border:1px solid var(--border)}
+.add-to-master-btn{background:linear-gradient(135deg,var(--green),#1a4a32);color:#fff;border:none;border-radius:8px;padding:.35rem .75rem;font-size:.76rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;transition:all .2s}
+.add-to-master-btn:hover{transform:translateY(-1px);box-shadow:0 3px 10px rgba(45,106,79,.35)}
+
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 @keyframes spin{to{transform:rotate(360deg)}}
 </style>
@@ -261,6 +281,7 @@ input[type="date"],input[type="month"]{cursor:pointer}
     <div class="nav-item" onclick="showTab('ratings')"           id="tab-ratings"><i class="fa-solid fa-star"></i> Ratings</div>
     <div class="nav-item" onclick="showTab('report')"            id="tab-report"><i class="fa-solid fa-file-csv"></i> Report</div>
     <div class="nav-item" onclick="showTab('users')"             id="tab-users"><i class="fa-solid fa-users"></i> Users</div>
+    <div class="nav-item" onclick="showTab('suggestions')"       id="tab-suggestions"><i class="fa-solid fa-lightbulb"></i> Suggestions</div>
     <div class="nav-item" onclick="showTab('images')"            id="tab-images"><i class="fa-solid fa-images"></i> Images</div>
   </div>
 
@@ -499,6 +520,19 @@ input[type="date"],input[type="month"]{cursor:pointer}
       </div>
     </div>
 
+    <!-- ═══ SUGGESTIONS ═══ -->
+    <div id="pane-suggestions" style="display:none">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><i class="fa-solid fa-lightbulb" style="color:#4f46e5"></i> User Dish Suggestions</div>
+          <span id="sugCount" style="font-size:.78rem;color:var(--muted)"></span>
+        </div>
+        <div class="card-body" id="mgrSugBody">
+          <div style="text-align:center;padding:2rem"><span class="spinner"></span></div>
+        </div>
+      </div>
+    </div>
+
     <!-- ═══ IMAGES ═══ -->
     <div id="pane-images" style="display:none">
       <div class="card">
@@ -549,7 +583,7 @@ input[type="date"],input[type="month"]{cursor:pointer}
 
 <script>
 // ── CONFIG ────────────────────────────────────────────────────
-const API_URL  = 'https://script.google.com/macros/s/AKfycbzD5BmX3BQZBIGqQ3wd9rDQXl37vB_BINTjXMS3GedPWvbdiuHyrVGisiOeXQUEsyAj/exec';
+const API_URL  = 'https://script.google.com/macros/s/AKfycbz7aBuVK1x2Y2xNDYEBcM2xoXJJxNoOfMkwGYRfsh5cJtP4j3fKqb2oOmDzO1SIz17s/exec';
 const USER_URL = 'https://cpatsbi-hub.github.io/office-canteen/';
 const LOW_RATING_THRESHOLD = 3.0; // avg below this = warning
 
@@ -615,6 +649,7 @@ function showTab(name){
   if(name==='ratings')    { document.getElementById('ratDate').value=today; loadRatings(); }
   if(name==='report')     setQuickRange('month');
   if(name==='users')      loadUsers();
+  if(name==='suggestions') loadMgrSuggestions();
   if(name==='images')     loadImages();
 }
 
@@ -1009,6 +1044,72 @@ async function saveNewImage(){
 }
 
 // ── UTILS ─────────────────────────────────────────────────────
+
+// ── MANAGER: SUGGESTIONS ─────────────────────────────────────
+async function loadMgrSuggestions(silent=false){
+  const body=document.getElementById('mgrSugBody');
+  if(!silent&&body) body.innerHTML='<div style="text-align:center;padding:2rem"><span class="spinner"></span></div>';
+  try {
+    const res=await api({action:'getSuggestions'});
+    const items=res.items||[];
+    const countEl=document.getElementById('sugCount');
+    if(countEl) countEl.textContent=items.length+' suggestion'+(items.length!==1?'s':'');
+    if(!items.length){
+      if(body) body.innerHTML='<div style="text-align:center;padding:2.5rem;color:var(--muted)"><i class="fa-solid fa-lightbulb" style="font-size:2rem;opacity:.3;display:block;margin-bottom:.6rem"></i>No suggestions from users yet.</div>';
+      return;
+    }
+    if(body) body.innerHTML=`
+      <div style="font-size:.75rem;color:var(--muted);margin-bottom:.6rem;padding:0 .2rem">Sorted by net votes. Click + to add to Master List.</div>
+      ${items.map(s=>{
+        const net=s.upVotes-s.downVotes;
+        const netCls=net>0?'msug-net-pos':net<0?'msug-net-neg':'msug-net-zero';
+        const netStr=net>0?'+'+net:String(net);
+        return `<div class="msug-item">
+          <span class="msug-type-dot msug-type-${esc(s.type)}"></span>
+          <div class="msug-info">
+            <div class="msug-name">${esc(s.name)}</div>
+            <div class="msug-meta">
+              ${s.type==='main'?'Main Course':'Side Dish'} · by <strong>${esc(s.suggestedBy)}</strong>
+              · ${new Date(s.suggestedAt).toLocaleDateString('en-IN',{day:'numeric',month:'short'})}
+            </div>
+          </div>
+          <div class="msug-votes">
+            <span class="msug-up">👍 ${s.upVotes}</span>
+            <span class="msug-dn">👎 ${s.downVotes}</span>
+            <span class="msug-net ${netCls}">${netStr}</span>
+            <button class="add-to-master-btn" onclick="addSuggestionToMaster('${esc(s.id)}','${escA(s.name)}','${esc(s.type)}')" title="Add to Master List">
+              <i class="fa-solid fa-plus"></i> Add
+            </button>
+            <button class="btn btn-sm btn-danger" onclick="deleteMgrSuggestion('${esc(s.id)}','${escA(s.name)}')" title="Delete" style="width:32px;height:32px;padding:0;flex-shrink:0">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
+        </div>`;
+      }).join('')}`;
+  } catch(e){ if(!silent) toast('Network error','error'); }
+}
+
+async function addSuggestionToMaster(id, name, type){
+  try {
+    const res=await api({action:'addMasterItem',name,type});
+    if(res.success){
+      toast('"'+name+'" added to Master List ✓','success');
+      // Optionally delete the suggestion after adding
+      await api({action:'deleteSuggestion',id});
+      loadMgrSuggestions();
+    } else toast(res.message,'error');
+  } catch(e){ toast('Network error','error'); }
+}
+
+async function deleteMgrSuggestion(id, name){
+  if(!confirm('Remove suggestion "'+name+'"?')) return;
+  try {
+    const res=await api({action:'deleteSuggestion',id});
+    if(res.success){ toast('Removed','success'); loadMgrSuggestions(); }
+    else toast(res.message,'error');
+  } catch(e){ toast('Network error','error'); }
+}
+
 function showMsg(id,text,type){const el=document.getElementById(id);if(!el)return;el.textContent=text;el.className='msg '+(type||'')+(text?' show':'');}
 let toastTimer;
 function toast(msg,type=''){const el=document.getElementById('toast');el.textContent=msg;el.className='toast show'+(type?' '+type:'');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.className='toast',3000);}
